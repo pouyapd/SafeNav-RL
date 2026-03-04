@@ -1,0 +1,101 @@
+# SafeNav-RL Configuration
+# All hyperparameters are centralized here.
+# Pass this file to train.py: python scripts/train.py --config configs/default_config.yaml
+
+# ─────────────────────────────────────────────
+# Environment
+# ─────────────────────────────────────────────
+env:
+  workspace_size: 10.0          # Workspace is a square [0, workspace_size]^2
+  dt: 0.1                       # Simulation timestep (seconds)
+  robot_radius: 0.3             # Robot collision radius (meters)
+  goal_radius: 0.5              # Goal reached threshold (meters)
+  max_steps: 200                # Max steps per episode (overridden by curriculum)
+  sensor_noise_std: 0.02        # Gaussian noise on observations (sim-to-real)
+
+# ─────────────────────────────────────────────
+# Reward
+# ─────────────────────────────────────────────
+reward:
+  step_penalty: -0.01
+  distance_shaping_alpha: 1.0
+  risk_penalty_beta: 0.5
+  goal_reward: 10.0
+  collision_penalty: -5.0
+
+# ─────────────────────────────────────────────
+# Safety Layer
+# ─────────────────────────────────────────────
+safety:
+  enabled: true
+  safe_distance: 0.8            # Minimum allowed distance to obstacles (meters)
+  cbf_gamma: 0.5                # CBF decay rate
+  qp_solver: "analytical"       # "analytical" (fast) or "cvxpy" (exact)
+
+# ─────────────────────────────────────────────
+# Curriculum Learning
+# ─────────────────────────────────────────────
+curriculum:
+  enabled: true
+  advance_threshold: 0.70       # Success rate to advance to next stage
+  window_size: 100              # Episodes to compute success rate over
+  stages:
+    - name: "beginner"
+      min_obstacles: 2
+      max_obstacles: 4
+      min_goal_dist: 3.0
+      max_goal_dist: 5.0
+      max_steps: 200
+    - name: "intermediate"
+      min_obstacles: 4
+      max_obstacles: 8
+      min_goal_dist: 5.0
+      max_goal_dist: 8.0
+      max_steps: 300
+    - name: "expert"
+      min_obstacles: 8
+      max_obstacles: 15
+      min_goal_dist: 5.0
+      max_goal_dist: 12.0
+      max_steps: 400
+
+# ─────────────────────────────────────────────
+# PPO Hyperparameters
+# ─────────────────────────────────────────────
+ppo:
+  total_timesteps: 1_000_000
+  rollout_steps: 2048           # Steps collected per update
+  n_epochs: 10                  # Optimization epochs per rollout
+  batch_size: 64
+  gamma: 0.99                   # Discount factor
+  gae_lambda: 0.95              # GAE lambda
+  clip_epsilon: 0.2             # PPO clipping parameter
+  value_loss_coef: 0.5
+  entropy_coef: 0.01
+  max_grad_norm: 0.5
+  learning_rate: 3.0e-4
+  lr_schedule: "linear"         # "constant" or "linear" decay
+
+# ─────────────────────────────────────────────
+# Network Architecture
+# ─────────────────────────────────────────────
+network:
+  obs_dim: 7
+  action_dim: 2
+  hidden_dims: [256, 256]
+  activation: "tanh"
+  log_std_init: -0.5
+  log_std_min: -3.0
+  log_std_max: 1.0
+
+# ─────────────────────────────────────────────
+# Training
+# ─────────────────────────────────────────────
+training:
+  seed: 42
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  save_every: 50_000            # Timesteps between checkpoints
+  eval_every: 10_000            # Timesteps between evaluations
+  eval_episodes: 20
+  device: "auto"                # "auto", "cpu", or "cuda"
