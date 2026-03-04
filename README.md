@@ -112,7 +112,7 @@ python scripts/visualize_trajectory.py --checkpoint checkpoints/best_model.pt
 
 The robot operates in a bounded 2D workspace with randomly placed circular obstacles.
 
-**Observation space (6D):**
+**Observation space (7D):**
 - `(x, y)` — robot position
 - `θ` — heading angle
 - `d_goal` — normalized distance to goal
