@@ -25,11 +25,18 @@ Existing neural trajectory predictors (e.g., Social Force, LSTM-based models) ma
 This is directly relevant to assistive robotics, autonomous wheelchairs, and any safety-critical mobile robot deployment.
 
 ---
+
 ## Demo
 
-![Navigation Trajectory](assets/trajectory_demo.png)
+**Example 1 — Short path:**
+![Trajectory 1](assets/trajectory_1.png)
 
-*Agent navigating from start (red) to goal (green star) while avoiding obstacles (grey circles). Trained with PPO + CBF safety layer and curriculum learning.*
+**Example 2 — Longer path:**
+![Trajectory 2](assets/trajectory_2.png)
+
+*Agent navigating from start (red) to goal (green star) while avoiding 
+obstacles (grey circles). Trained with PPO + CBF safety layer.*
+
 
 ---
 
