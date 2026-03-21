@@ -199,8 +199,15 @@ ros2 run safenav_rl nav_agent_node --ros-args -p model_path:=checkpoints/best_mo
 
 This project is part of a broader research line on **safety-critical autonomous navigation**:
 
-1. [SafeTraj-Prototype](https://github.com/pouyapd/SafeTraj-Prototype) — *Evaluate* neural trajectory predictors for failure detection and risk scoring
-2. **SafeNav-RL** (this repo) — *Train* RL navigation agents with intrinsic safety constraints
+1. [SafeTraj-Experiments](https://github.com/pouyapd/SafeTraj-Experiments) — 
+   *MSc thesis*: trajectory-level evaluation of pretrained DNN-LNA neural models 
+   for autonomous wheelchair navigation (University of Genoa / CNR-IEIIT / REXASI-PRO)
+2. [SafeTraj-Prototype](https://github.com/pouyapd/SafeTraj-Prototype) — 
+   *Toolkit*: modular Python framework for trajectory behaviour analysis and risk scoring
+3. **SafeNav-RL** (this repo) — 
+   *Extension*: RL navigation agent with intrinsic safety constraints, 
+   building on the failure analysis findings
+
 
 Together they form a pipeline from failure analysis → safety-aware policy learning.
 
