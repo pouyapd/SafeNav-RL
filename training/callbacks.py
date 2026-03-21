@@ -14,6 +14,17 @@ from collections import deque
 from typing import Dict, Any, Optional
 
 
+def _json_convert(obj):
+    """Convert numpy and bool types for JSON serialization."""
+    if isinstance(obj, (bool, np.bool_)):
+        return int(obj)
+    if isinstance(obj, np.integer):
+        return int(obj)
+    if isinstance(obj, np.floating):
+        return float(obj)
+    raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
+
+
 class TrainingLogger:
     """
     Logs episode metrics and training stats to console and JSON.
@@ -48,10 +59,10 @@ class TrainingLogger:
         entry = {
             "episode": self.total_episodes,
             "timestep": self.total_timesteps,
-            "reward": reward,
-            "length": length,
-            "goal_reached": info.get("goal_reached", False),
-            "collision": info.get("collision", False),
+            "reward": float(reward),
+            "length": int(length),
+            "goal_reached": int(info.get("goal_reached", False)),
+            "collision": int(info.get("collision", False)),
         }
         self._history.append(entry)
 
@@ -83,7 +94,7 @@ class TrainingLogger:
     def save_history(self):
         path = os.path.join(self.log_dir, "training_history.json")
         with open(path, "w") as f:
-            json.dump(self._history, f, indent=2)
+            json.dump(self._history, f, indent=2, default=_json_convert)
 
     def close(self):
         if self._tb_writer:

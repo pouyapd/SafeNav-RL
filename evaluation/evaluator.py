@@ -149,7 +149,7 @@ class PolicyEvaluator:
         results: List[EpisodeResult] = []
 
         for ep in range(n_episodes):
-            obs, _ = self.env.reset(seed=ep)  # Fixed seeds for reproducibility
+            obs, _ = self.env.reset()  # Fixed seeds for reproducibility
             done = False
             ep_reward = 0.0
             risk_scores = []

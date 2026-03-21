@@ -13,7 +13,6 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
-import yaml
 
 from env.navigation_env import NavigationEnv
 from models.actor_critic import ActorCritic
@@ -25,7 +24,6 @@ from evaluation.visualizer import plot_trajectory, animate_episode
 def parse_args():
     parser = argparse.ArgumentParser(description="Visualize a single evaluation episode.")
     parser.add_argument("--checkpoint", type=str, required=True)
-    parser.add_argument("--seed", type=int, default=0, help="Environment seed")
     parser.add_argument("--animate", action="store_true", help="Create animation")
     parser.add_argument("--save", type=str, default=None, help="Save path (.png / .gif / .mp4)")
     return parser.parse_args()
@@ -48,7 +46,7 @@ def main():
     env = NavigationEnv(config)
     evaluator = PolicyEvaluator(env, model, safety_layer, device)
 
-    # Run a single episode
+    # Run a single episode with random environment
     summary = evaluator.evaluate(n_episodes=1)
     result = summary.results[0]
 
