@@ -18,7 +18,6 @@ logs/
 *.pth
 
 # Plots and animations
-*.png
 *.gif
 *.mp4
 
