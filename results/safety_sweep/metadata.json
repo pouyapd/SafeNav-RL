@@ -1,0 +1,119 @@
+{
+  "margins": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    0.8
+  ],
+  "episodes_per_stage": 100,
+  "test_seed_base": 2000000,
+  "config": {
+    "env": {
+      "workspace_size": 10.0,
+      "dt": 0.1,
+      "robot_radius": 0.3,
+      "goal_radius": 0.5,
+      "max_steps": 200,
+      "sensor_noise_std": 0.02,
+      "risk_distance": 0.8
+    },
+    "sensor": {
+      "num_beams": 16,
+      "max_range": 3.0,
+      "range_noise_std": 0.02
+    },
+    "reward": {
+      "step_penalty": -0.01,
+      "distance_shaping_alpha": 1.0,
+      "risk_penalty_beta": 0.5,
+      "goal_reward": 10.0,
+      "collision_penalty": -5.0
+    },
+    "safety": {
+      "enabled": true,
+      "safe_distance": 0.3,
+      "wall_margin": 0.1,
+      "cbf_gamma": 0.5
+    },
+    "curriculum": {
+      "enabled": true,
+      "advance_threshold": 0.7,
+      "window_size": 100,
+      "stages": [
+        {
+          "name": "beginner",
+          "min_obstacles": 2,
+          "max_obstacles": 4,
+          "min_goal_dist": 3.0,
+          "max_goal_dist": 5.0,
+          "max_steps": 200
+        },
+        {
+          "name": "intermediate",
+          "min_obstacles": 4,
+          "max_obstacles": 8,
+          "min_goal_dist": 5.0,
+          "max_goal_dist": 8.0,
+          "max_steps": 300
+        },
+        {
+          "name": "expert",
+          "min_obstacles": 8,
+          "max_obstacles": 15,
+          "min_goal_dist": 5.0,
+          "max_goal_dist": 12.0,
+          "max_steps": 400
+        }
+      ]
+    },
+    "ppo": {
+      "total_timesteps": 1000000,
+      "rollout_steps": 2048,
+      "n_epochs": 10,
+      "batch_size": 64,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "clip_epsilon": 0.2,
+      "value_loss_coef": 0.5,
+      "entropy_coef": 0.01,
+      "max_grad_norm": 0.5,
+      "learning_rate": 0.0003,
+      "lr_schedule": "linear",
+      "target_kl": null
+    },
+    "network": {
+      "action_dim": 2,
+      "hidden_dims": [
+        256,
+        256
+      ],
+      "activation": "tanh",
+      "log_std_init": -0.5,
+      "log_std_min": -3.0,
+      "log_std_max": 1.0
+    },
+    "training": {
+      "seed": 42,
+      "log_dir": "runs/default",
+      "eval_every": 50000,
+      "eval_episodes": 60,
+      "validation_seed": 1000000,
+      "resume_every": 50000,
+      "device": "auto"
+    },
+    "evaluation": {
+      "test_seed": 2000000,
+      "episodes_per_stage": 100
+    }
+  },
+  "environment": {
+    "python": "3.12.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.4.1",
+    "torch": "2.10.0+cpu",
+    "gymnasium": "1.2.3",
+    "git_commit": "cc1a95207527d69efc00553416e9a919e730e5d4"
+  }
+}

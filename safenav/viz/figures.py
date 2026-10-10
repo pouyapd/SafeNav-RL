@@ -33,7 +33,7 @@ from safenav.viz.style import INK, INK_2, MUTED, OUTCOME_COLORS, apply_style, fi
 PPO_F = "PPO (filter in training)"
 PPO_U = "PPO (no filter in training)"
 STAGE_TITLES = {"beginner": "Beginner (2-4 obstacles)", "intermediate": "Intermediate (4-8 obstacles)",
-                "expert": "Expert (8-15 obstacles)"}
+                "expert": "Expert (8-12 obstacles)"}
 
 
 # ── Scenario drawing ──────────────────────────────────────────────────────────
@@ -90,29 +90,32 @@ HERO_CONDITIONS = [
 ]
 
 
-def fig_hero(benchmark_dir: Path, config: Dict[str, Any], out: Path) -> Optional[Path]:
+def fig_hero(benchmark_dir: Path, config: Dict[str, Any], out: Path, n_scenarios: int = 3) -> Optional[Path]:
+    """Grid: the first n expert test scenarios (no selection) x the four conditions in HERO_CONDITIONS."""
     trajs = load_trajectories(benchmark_dir / "trajectories.npz")
     by_key = {(t["method"], bool(t["safety_filter"]), t["stage"], int(t["episode_seed"])): t for t in trajs}
-    seeds = sorted({int(t["episode_seed"]) for t in trajs if t["stage"] == "expert"})
-    chosen = None
-    for seed in seeds:
-        items = [by_key.get((m, f, "expert", seed)) for m, f, _ in HERO_CONDITIONS]
-        if all(items) and len({i["outcome"] for i in items}) >= 2:
-            chosen = (seed, items)
-            break
-    if chosen is None:
+    seeds = sorted({int(t["episode_seed"]) for t in trajs if t["stage"] == "expert"})[:n_scenarios]
+    if not seeds or not all(by_key.get((m, f, "expert", s)) for s in seeds for m, f, _ in HERO_CONDITIONS):
         return None
-    seed, items = chosen
-    train_seed = next((t["train_seed"] for t in items if t["train_seed"] not in (None, "None")), "-")
     margin = float(config["safety"]["safe_distance"])
-    fig, axes = plt.subplots(1, 4, figsize=(13, 3.7))
-    for ax, (method, filt, title), t in zip(axes, HERO_CONDITIONS, items):
-        draw_scenario(ax, t["obstacles"], t["goal"], t["trajectory"][0],
-                      margin=margin if filt else None)
-        draw_path(ax, t["trajectory"], method_color(method), t["outcome"],
-                  interventions=t["interventions"] if filt else None)
-        ax.set_title(f"{title}\n{_outcome_text(t['outcome'])}, {len(t['trajectory']) - 1} steps",
-                     fontsize=9.5)
+    train_seed = next((t["train_seed"] for t in trajs if t["train_seed"] not in (None, "None")), "-")
+    fig, axes = plt.subplots(len(seeds), 4, figsize=(12.5, 3.25 * len(seeds)))
+    for r, seed in enumerate(seeds):
+        for c, (method, filt, title) in enumerate(HERO_CONDITIONS):
+            ax = axes[r, c]
+            t = by_key[(method, filt, "expert", seed)]
+            draw_scenario(ax, t["obstacles"], t["goal"], t["trajectory"][0], margin=margin if filt else None)
+            draw_path(ax, t["trajectory"], method_color(method), t["outcome"],
+                      interventions=t["interventions"] if filt else None)
+            ax.text(0.03, 0.97, f"{_outcome_text(t['outcome'])}, {len(t['trajectory']) - 1} steps",
+                    transform=ax.transAxes, fontsize=8.5, va="top", color=INK_2,
+                    bbox=dict(facecolor=style.SURFACE, edgecolor="none", alpha=0.85, pad=1.5))
+            ax.set_xticks([])
+            ax.set_yticks([])
+            if r == 0:
+                ax.set_title(title, fontsize=9.5)
+            if c == 0:
+                ax.set_ylabel(f"scenario {seed}", fontsize=9)
     handles = [
         Line2D([], [], marker="o", color=INK, linestyle="", markersize=6, label="start"),
         Line2D([], [], marker="*", color=OUTCOME_COLORS["success"], linestyle="", markersize=10, label="goal"),
@@ -121,12 +124,12 @@ def fig_hero(benchmark_dir: Path, config: Dict[str, Any], out: Path) -> Optional
         Line2D([], [], marker="X", color=OUTCOME_COLORS["collision"], linestyle="", markersize=7, label="collision"),
         Line2D([], [], marker="s", color=OUTCOME_COLORS["timeout"], linestyle="", markersize=6, label="timeout"),
     ]
-    fig.tight_layout()
+    fig.tight_layout(h_pad=0.6, w_pad=0.4)
     fig.legend(handles=handles, loc="upper center", ncol=6, bbox_to_anchor=(0.5, 0.0))
     path = out / "hero_same_scenario.png"
-    finish(fig, path, note=f"Expert test scenario (episode seed {seed}): the first expert test scenario in seed order "
-                           f"on which these four conditions do not all have the same outcome. PPO agents: training "
-                           f"seed {train_seed}.", note_y=-0.09)
+    finish(fig, path, note=f"The first {len(seeds)} expert-stage test scenarios (8-12 obstacles), no selection; each row is "
+                           f"one scenario, identical for every controller. PPO agents: training seed {train_seed}.",
+           note_y=-0.035)
     return path
 
 
@@ -351,7 +354,10 @@ def fig_failures(benchmark_dir: Path, config: Dict[str, Any], out: Path, max_cas
                      & (episodes.stage == "expert") & (~episodes.success)].head(max_cases)
     if fails.empty:
         return None
-    policy = PPOPolicy.from_checkpoint(run["checkpoint"])
+    ckpt = Path(run["checkpoint"])
+    if not ckpt.is_file():   # benchmark run elsewhere: use the copies committed under results/checkpoints
+        ckpt = benchmark_dir.parent / "checkpoints" / run["variant"] / f"seed_{run['seed']}.pt"
+    policy = PPOPolicy.from_checkpoint(ckpt)
     env = make_env(config, task=get_stage(config, "expert"), safety_filter=True)
     margin = float(config["safety"]["safe_distance"])
     n = len(fails)

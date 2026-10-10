@@ -1,0 +1,11 @@
+{
+  "timesteps": 1001472,
+  "episodes": 15291,
+  "wall_time_s": 13202.200335264206,
+  "best_validation": [
+    1.0,
+    -0.0,
+    12.267917330109707
+  ],
+  "final_checkpoint": "runs\\benchmark\\unfiltered\\seed_3\\checkpoints\\final.pt"
+}

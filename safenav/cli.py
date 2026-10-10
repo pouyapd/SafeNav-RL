@@ -147,7 +147,7 @@ def cmd_benchmark(args) -> int:
     summary = run_benchmark(
         config, Path(args.runs) if args.runs else None, Path(args.out),
         n_episodes=args.episodes, seed_base=args.seed_base, jobs=args.jobs,
-        include_baselines=not args.no_baselines, command=" ".join(sys.argv),
+        include_baselines=not args.no_baselines, command="python -m safenav " + " ".join(sys.argv[1:]),
     )
     cols = ["method", "safety_filter", "stage", "success_rate", "collision_rate", "timeout_rate", "spl_oracle"]
     print(summary[cols].to_string(index=False, float_format=lambda v: f"{v:.3f}"))
