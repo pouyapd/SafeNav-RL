@@ -67,12 +67,26 @@ class ActorCritic(nn.Module):
     This is the standard approach for PPO, providing stable training.
     """
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(
+        self,
+        config: Dict[str, Any],
+        obs_dim: Optional[int] = None,
+        action_dim: Optional[int] = None,
+    ):
+        """
+        Args:
+            config: Configuration dictionary (uses the 'network' section).
+            obs_dim: Observation size. Pass env.observation_space.shape[0];
+                falls back to network.obs_dim in the config (default 7).
+            action_dim: Action size (default: network.action_dim or 2).
+        """
         super().__init__()
 
         net_cfg = config.get("network", {})
-        obs_dim = net_cfg.get("obs_dim", 7)
-        action_dim = net_cfg.get("action_dim", 2)
+        obs_dim = int(obs_dim if obs_dim is not None else net_cfg.get("obs_dim", 7))
+        action_dim = int(action_dim if action_dim is not None else net_cfg.get("action_dim", 2))
+        self.obs_dim = obs_dim
+        self.action_dim = action_dim
         hidden_dims = net_cfg.get("hidden_dims", [256, 256])
         activation = net_cfg.get("activation", "tanh")
         log_std_init = net_cfg.get("log_std_init", -0.5)

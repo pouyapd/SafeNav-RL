@@ -5,17 +5,20 @@ __pycache__/
 dist/
 build/
 .eggs/
+.pytest_cache/
 
 # Virtual environments
 venv/
-.env/
-env/
+.venv/
+/.env/
 
-# Training outputs
+# Training outputs (selected results are copied to results/)
+runs/
 checkpoints/
 logs/
 *.pt
 *.pth
+!results/**/*.pt
 
 # Plots and animations
 *.gif

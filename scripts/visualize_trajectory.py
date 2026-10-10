@@ -1,80 +1,57 @@
 """
-visualize_trajectory.py — Visualize and animate a single episode.
+visualize_trajectory.py — plot or animate one seeded test episode.
 
 Usage:
-    python scripts/visualize_trajectory.py --checkpoint checkpoints/best_model.pt
-    python scripts/visualize_trajectory.py --checkpoint checkpoints/best_model.pt --animate --save trajectory.gif
+    python scripts/visualize_trajectory.py --checkpoint runs/default/checkpoints/best.pt
+    python scripts/visualize_trajectory.py --baseline potential_field --stage expert --seed 2200003
+    python scripts/visualize_trajectory.py --checkpoint ... --animate --save episode.gif
 """
 
 import argparse
-import sys
 import os
+import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import torch
-
-from env.navigation_env import NavigationEnv
-from models.actor_critic import ActorCritic
-from models.safety_layer import SafetyLayer
-from evaluation.evaluator import PolicyEvaluator
-from evaluation.visualizer import plot_trajectory, animate_episode
+from safenav.agents.baselines import GoToGoalPolicy, PotentialFieldPolicy  # noqa: E402
+from safenav.agents.policy import PPOPolicy, load_checkpoint  # noqa: E402
+from safenav.config import get_stage, load_config  # noqa: E402
+from safenav.evaluation.runner import run_episode  # noqa: E402
+from safenav.factory import make_env  # noqa: E402
+from safenav.viz.plots import animate_episode, plot_trajectory  # noqa: E402
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Visualize a single evaluation episode.")
-    parser.add_argument("--checkpoint", type=str, required=True)
-    parser.add_argument("--animate", action="store_true", help="Create animation")
-    parser.add_argument("--save", type=str, default=None, help="Save path (.png / .gif / .mp4)")
-    return parser.parse_args()
+    p = argparse.ArgumentParser(description="Visualize a single seeded evaluation episode.")
+    src = p.add_mutually_exclusive_group(required=True)
+    src.add_argument("--checkpoint")
+    src.add_argument("--baseline", choices=["gotogoal", "potential_field"])
+    p.add_argument("--config", default=None)
+    p.add_argument("--stage", default="expert")
+    p.add_argument("--seed", type=int, default=2_200_000, help="episode seed (default: first expert test seed)")
+    p.add_argument("--safety-filter", choices=["on", "off"], default="on")
+    p.add_argument("--animate", action="store_true")
+    p.add_argument("--save", default=None, help=".png for a still image; .gif/.mp4 with --animate")
+    return p.parse_args()
 
 
 def main():
     args = parse_args()
-
-    checkpoint = torch.load(args.checkpoint, map_location="cpu")
-    config = checkpoint.get("config", {})
-    if "curriculum" in config:
-        config["curriculum"]["enabled"] = False
-
-    device = torch.device("cpu")
-    model = ActorCritic(config).to(device)
-    model.load_state_dict(checkpoint["model_state"])
-    model.eval()
-
-    safety_layer = SafetyLayer(config)
-    env = NavigationEnv(config)
-    evaluator = PolicyEvaluator(env, model, safety_layer, device)
-
-    # Run a single episode with random environment
-    summary = evaluator.evaluate(n_episodes=1)
-    result = summary.results[0]
-
-    outcome = "SUCCESS" if result.success else ("COLLISION" if result.collision else "TIMEOUT")
-    print(f"\nEpisode: {outcome}")
-    print(f"  Steps: {result.steps}")
-    print(f"  Reward: {result.total_reward:.3f}")
-    print(f"  Path length: {result.path_length:.2f} m")
-    print(f"  Mean risk: {result.mean_risk:.4f}")
-
-    if args.animate:
-        save_path = args.save if args.save else None
-        anim = animate_episode(
-            result,
-            workspace_size=config["env"]["workspace_size"],
-            save_path=save_path,
-        )
-        import matplotlib.pyplot as plt
-        plt.show()
+    if args.checkpoint:
+        config = load_config(args.config) if args.config else load_checkpoint(args.checkpoint)["config"]
+        policy = PPOPolicy.from_checkpoint(args.checkpoint)
     else:
-        save_path = args.save if args.save and args.save.endswith(".png") else None
-        plot_trajectory(
-            result,
-            title=f"Navigation Trajectory — {outcome}",
-            workspace_size=config["env"]["workspace_size"],
-            save_path=save_path,
-            show=True,
-        )
+        config = load_config(args.config)
+        policy = GoToGoalPolicy() if args.baseline == "gotogoal" else PotentialFieldPolicy.from_config(config)
+    env = make_env(config, task=get_stage(config, args.stage), safety_filter=args.safety_filter == "on")
+    result = run_episode(env, policy, args.seed, stage=args.stage, keep_trajectory=True)
+    print(f"{result.method}: {result.outcome} after {result.steps} steps, path {result.path_length:.2f} m, "
+          f"min clearance {result.min_clearance:.2f} m, filter interventions {result.interventions}")
+    margin = config["safety"]["safe_distance"]
+    if args.animate:
+        animate_episode(result, margin=margin, save_path=args.save or "episode.gif")
+    else:
+        plot_trajectory(result, margin=margin, save_path=args.save or "episode.png")
 
 
 if __name__ == "__main__":

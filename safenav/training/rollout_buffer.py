@@ -13,7 +13,7 @@ GAE Reference:
 
 import numpy as np
 import torch
-from typing import Generator, Tuple
+from typing import Generator, Optional, Tuple
 
 
 class RolloutBuffer:
@@ -32,6 +32,7 @@ class RolloutBuffer:
         gamma: float = 0.99,
         gae_lambda: float = 0.95,
         device: torch.device = torch.device("cpu"),
+        seed: Optional[int] = None,
     ):
         self.buffer_size = buffer_size
         self.obs_dim = obs_dim
@@ -39,6 +40,7 @@ class RolloutBuffer:
         self.gamma = gamma
         self.gae_lambda = gae_lambda
         self.device = device
+        self._rng = np.random.default_rng(seed)
 
         # Pre-allocate numpy arrays for speed
         self.observations = np.zeros((buffer_size, obs_dim), dtype=np.float32)
@@ -77,28 +79,34 @@ class RolloutBuffer:
             self.full = True
             self.pos = 0
 
-    def compute_advantages(self, last_value: float, last_done: bool):
+    def compute_advantages(self, last_value: float):
         """
         Compute Generalized Advantage Estimation (GAE).
-        
+
         GAE(λ) trades off bias vs variance:
           - λ=0: low variance, high bias (TD error)
           - λ=1: high variance, low bias (Monte Carlo)
           - λ=0.95: standard choice for PPO
-        
+
         Also computes returns = advantages + values (target for critic).
-        
+
+        Convention: dones[t] = 1 means the episode ended with transition t, so
+        observation t+1 in the buffer already belongs to a new episode. Then
+        transition t must not bootstrap from V(s_{t+1}) and the GAE recursion is
+        cut there. (Time-limit truncations are handled by the trainer, which
+        adds γ·V(final observation) to the last reward before storing it.)
+
         Args:
-            last_value: V(s_T) — value of the final state in the rollout
-            last_done: Whether the final step was terminal
+            last_value: V(s_T) — value of the observation that follows the
+                last stored transition (ignored if that transition ended an episode)
         """
+        size = self.buffer_size if self.full else self.pos
         last_gae = 0.0
-        for step in reversed(range(self.buffer_size)):
-            if step == self.buffer_size - 1:
-                next_non_terminal = 1.0 - float(last_done)
+        for step in reversed(range(size)):
+            next_non_terminal = 1.0 - self.dones[step]
+            if step == size - 1:
                 next_value = last_value
             else:
-                next_non_terminal = 1.0 - self.dones[step + 1]
                 next_value = self.values[step + 1]
 
             # TD error: δ = r + γ·V(s') - V(s)
@@ -129,7 +137,7 @@ class RolloutBuffer:
         adv_mean, adv_std = adv.mean(), adv.std() + 1e-8
         normalized_adv = (adv - adv_mean) / adv_std
 
-        indices = np.random.permutation(size)
+        indices = self._rng.permutation(size)
         start = 0
         while start < size:
             batch_idx = indices[start: start + batch_size]
