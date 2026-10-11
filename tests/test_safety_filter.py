@@ -103,6 +103,47 @@ def test_forward_invariance_under_adversarial_policy(config):
     assert worst >= -1e-9
 
 
+def test_gap_between_samples_is_bounded(config):
+    """
+    The guarantee is for the sampled states. Between two samples the simulated robot
+    moves on a straight segment of length L <= v_max * dt; if both ends keep distance
+    rho = R + r + d_safe from an obstacle centre, every point of the segment keeps at
+    least sqrt(rho^2 - (L/2)^2) (worst case: the segment is a chord). Check this along
+    every step of the adversarial policy, and that the gap stays below 1.4 mm.
+    """
+    flt = CBFSafetyFilter.from_config(config)
+    rng = np.random.default_rng(2)
+    env = NavigationEnv(config, task=get_stage(config, "expert"))
+    worst_gap = 0.0
+    for seed in range(20):
+        env.reset(seed=seed)
+        obstacles = env.obstacle_map.obstacles
+        for _ in range(250):
+            near = env.obstacle_map.nearest_obstacle(*env.robot_pos)
+            target = np.arctan2(near.y - env.robot_pos[1], near.x - env.robot_pos[0])
+            omega = np.clip(2.0 * ((target - env.robot_theta + np.pi) % (2 * np.pi) - np.pi), -1, 1)
+            omega = omega if rng.random() < 0.8 else rng.uniform(-1, 1)
+            p0 = env.robot_pos.copy()
+            safe, _ = flt.filter([1.0, omega], env.robot_pos, env.robot_theta, obstacles)
+            _, _, terminated, truncated, _ = env.step(safe)
+            p1, seg = env.robot_pos.copy(), env.robot_pos - p0
+            length = float(np.linalg.norm(seg))
+            assert length <= flt.v_max * flt.dt + 1e-12
+            for o in obstacles:
+                c = np.array([o.x, o.y])
+                s = 0.0 if length == 0 else float(np.clip(np.dot(c - p0, seg) / length**2, 0.0, 1.0))
+                closest = float(np.linalg.norm(p0 + s * seg - c))
+                rho = o.radius + flt.robot_radius + flt.safe_distance
+                assert closest >= np.sqrt(rho**2 - (length / 2) ** 2) - 1e-9
+                worst_gap = max(worst_gap, rho - closest)
+            if terminated or truncated:
+                break
+    rho_min = 0.3 + flt.robot_radius + flt.safe_distance         # smallest generated obstacle radius is 0.3 m
+    bound = rho_min - np.sqrt(rho_min**2 - (flt.v_max * flt.dt / 2) ** 2)
+    assert bound < 1.4e-3
+    assert worst_gap <= bound + 1e-9
+
+
 def test_default_margin_matches_config(config):
     assert CBFSafetyFilter().safe_distance == config["safety"]["safe_distance"]
     assert CBFSafetyFilter.from_config({}).safe_distance == config["safety"]["safe_distance"]
