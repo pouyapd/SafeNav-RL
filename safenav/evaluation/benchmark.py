@@ -58,15 +58,18 @@ class Condition:
 
 def discover_runs(runs_dir: Path) -> List[Dict[str, Any]]:
     """
-    Find trained runs laid out as <runs_dir>/<variant>/seed_<k>/checkpoints/best.pt,
-    where <variant> is "filtered" or "unfiltered".
+    Find trained runs laid out as <runs_dir>/<variant>/seed_<k>/checkpoints/best.pt
+    (written by train-many) or as <runs_dir>/<variant>/seed_<k>.pt (the committed
+    checkpoints in results/checkpoints/), where <variant> is "filtered" or "unfiltered".
     """
     found = []
     for variant in ("filtered", "unfiltered"):
-        for seed_dir in sorted((runs_dir / variant).glob("seed_*")):
-            ckpt = seed_dir / "checkpoints" / "best.pt"
-            m = re.fullmatch(r"seed_(\d+)", seed_dir.name)
-            if ckpt.is_file() and m:
+        for path in sorted((runs_dir / variant).glob("seed_*")):
+            m = re.fullmatch(r"seed_(\d+)(\.pt)?", path.name)
+            if not m:
+                continue
+            ckpt = path if m.group(2) else path / "checkpoints" / "best.pt"
+            if ckpt.is_file():
                 found.append({"variant": variant, "seed": int(m.group(1)), "checkpoint": str(ckpt)})
     return found
 

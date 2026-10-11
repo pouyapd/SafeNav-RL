@@ -20,6 +20,23 @@ def test_evaluate_baseline_writes_outputs(tmp_path):
     assert json.loads((tmp_path / "summary.json").read_text())["episodes"] == 3
 
 
+def test_committed_checkpoints_are_found_and_evaluated(tmp_path):
+    """The README commands use results/checkpoints/; the benchmark accepts that layout too."""
+    from pathlib import Path
+
+    from safenav.evaluation.benchmark import discover_runs
+
+    root = Path(__file__).resolve().parent.parent / "results" / "checkpoints"
+    runs = discover_runs(root)
+    assert sorted((r["variant"], r["seed"]) for r in runs) == [(v, s) for v in ("filtered", "unfiltered")
+                                                               for s in range(5)]
+    code = main(["evaluate", "--checkpoint", str(root / "filtered" / "seed_0.pt"), "--stages", "expert",
+                 "--episodes", "2", "--out", str(tmp_path)])
+    assert code == 0
+    df = pd.read_csv(tmp_path / "episodes.csv")
+    assert len(df) == 2 and not df["collision"].any()          # filter on by default
+
+
 def test_invalid_override_is_a_clean_error(capsys):
     assert main(["evaluate", "--baseline", "gotogoal", "--set", "env.dt=-1"]) == 2
     assert "env.dt" in capsys.readouterr().err
