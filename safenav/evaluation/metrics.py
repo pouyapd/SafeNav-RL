@@ -25,7 +25,7 @@ Definitions (all distances in metres, times in seconds):
 """
 
 from dataclasses import asdict, dataclass, field
-from typing import Any, Dict, Iterable, List, Optional, Sequence
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 import numpy as np
 from scipy import stats
@@ -145,8 +145,17 @@ def wilson_interval(successes: int, n: int, confidence: float = 0.95) -> tuple:
     return (low, high)
 
 
-def t_interval(values: Sequence[float], confidence: float = 0.95) -> tuple:
-    """Mean and two-sided t confidence interval across independent runs (e.g. training seeds)."""
+def t_interval(values: Sequence[float], confidence: float = 0.95,
+               bounds: Optional[Tuple[float, float]] = None) -> tuple:
+    """
+    Mean and two-sided t confidence interval across independent runs (e.g. training seeds).
+
+    The interval is symmetric around the mean, so for a rate near 0 or 1 it can
+    extend past the possible range. `bounds=(0, 1)` intersects it with that
+    range; the true value lies inside the range, so this does not lower the
+    coverage. The interval reflects variation between runs only: when every run
+    gives the same value it has zero width.
+    """
     values = np.asarray([v for v in values if not np.isnan(v)], dtype=float)
     n = len(values)
     if n == 0:
@@ -156,7 +165,10 @@ def t_interval(values: Sequence[float], confidence: float = 0.95) -> tuple:
         return (mean, float("nan"), float("nan"))
     sem = values.std(ddof=1) / np.sqrt(n)
     half = float(stats.t.ppf(0.5 + confidence / 2, df=n - 1) * sem)
-    return (mean, mean - half, mean + half)
+    low, high = mean - half, mean + half
+    if bounds is not None:
+        low, high = max(bounds[0], low), min(bounds[1], high)
+    return (mean, low, high)
 
 
 def summarize(results: Iterable[EpisodeResult]) -> Dict[str, Any]:

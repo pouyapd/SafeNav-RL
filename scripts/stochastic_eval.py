@@ -71,7 +71,7 @@ def main() -> int:
         per_seed = g.groupby("train_seed")
         stats = {}
         for metric in ("success", "collision", "timeout"):
-            mean, low, high = t_interval(per_seed[metric].mean().to_numpy(dtype=float))
+            mean, low, high = t_interval(per_seed[metric].mean().to_numpy(dtype=float), bounds=(0.0, 1.0))
             stats[f"{metric}_rate"], stats[f"{metric}_ci"] = mean, [low, high]
         summary.append({"trained": "with filter" if variant == "filtered" else "without filter", "actions": actions,
                         "stage": stage, "episodes": len(g), **stats})

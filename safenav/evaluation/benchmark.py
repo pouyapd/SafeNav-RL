@@ -166,8 +166,7 @@ def summarize_frame(df: pd.DataFrame) -> pd.DataFrame:
         for metric in ("success", "collision", "obstacle_collision", "out_of_bounds", "timeout"):
             if is_ppo:
                 per_seed = g.groupby("train_seed")[metric].mean().to_numpy(dtype=float)
-                mean, low, high = t_interval(per_seed)
-                low, high = max(0.0, low), min(1.0, high)      # a rate cannot leave [0, 1]
+                mean, low, high = t_interval(per_seed, bounds=(0.0, 1.0))   # a rate cannot leave [0, 1]
                 row[f"{metric}_rate"] = mean
                 row[f"{metric}_std"] = float(per_seed.std(ddof=1)) if len(per_seed) > 1 else float("nan")
             else:

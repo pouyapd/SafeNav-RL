@@ -60,6 +60,16 @@ def test_t_interval():
     assert math.isnan(t_interval([0.5])[1])
 
 
+def test_t_interval_bounds():
+    """A symmetric interval for a rate near 1 is cut at the possible range, the mean is unchanged."""
+    values = [1.0, 1.0, 0.9, 1.0, 1.0]
+    mean, low, high = t_interval(values)
+    assert high > 1.0                                    # the unbounded interval leaves [0, 1]
+    mean_b, low_b, high_b = t_interval(values, bounds=(0.0, 1.0))
+    assert (mean_b, low_b, high_b) == (mean, low, 1.0)
+    assert t_interval([0.99] * 5, bounds=(0.0, 1.0)) == pytest.approx((0.99, 0.99, 0.99))   # no variation between runs
+
+
 def test_summarize_rates():
     results = [_result(), _result(success=False, timeout=True),
                _result(success=False, obstacle_collision=True), _result()]
