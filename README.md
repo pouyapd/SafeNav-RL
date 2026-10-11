@@ -139,8 +139,8 @@ python -m safenav plot --benchmark results/benchmark --runs results/training_log
 Without training, the evaluation steps run on the committed checkpoints and reproduce the published per-episode results (the benchmark takes a few minutes with 8 jobs):
 
 ```bash
-python -m safenav benchmark --runs results/checkpoints --out my_benchmark --jobs 8
-python scripts/stochastic_eval.py --out my_stochastic_eval        # falls back to results/checkpoints/
+python -m safenav benchmark --runs results/checkpoints --out runs/check/benchmark --jobs 8
+python scripts/stochastic_eval.py --out runs/check/stochastic_eval     # falls back to results/checkpoints/
 ```
 
 On a 10-core laptop CPU the ten training runs ran in parallel and took 2.6–3.7 hours each; the benchmark took about 3 minutes. Training is deterministic for a given seed on CPU, and resumption is exact; both are covered by tests. The checkpoints used for the tables are in [`results/checkpoints/`](results/checkpoints/) (selected by validation success on seeds disjoint from the test seeds), with their training logs in [`results/training_logs/`](results/training_logs/).

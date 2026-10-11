@@ -28,6 +28,7 @@ logs/
 # Plots and animations
 *.gif
 *.mp4
+/episode.png
 
 # Jupyter
 .ipynb_checkpoints/
