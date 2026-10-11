@@ -18,20 +18,21 @@ Five training seeds per PPO variant, 1M steps each; 100 seeded test scenarios pe
 
 - **The filter removed every collision.** Across all 3,600 test episodes with the filter on (every controller and stage) there was no collision, and the closest approach was exactly the 0.30 m margin. Without it, the go-to-goal controller collided in 43 % of expert episodes and the PPO agent trained without the filter in 1.0 %.
 - **The price is deadlock.** With the filter, robots can stop at a keep-out boundary and time out. On the expert stage the PPO agent trained without the filter falls from 94.6 % success to 65.0 % when the filter is added at test time.
-- **Training with the filter in the loop did not help** under the standard deterministic evaluation (61.0 % expert success vs. 65.0 % for training without it), and its validation success plateaued early (about 80 %). Sampling actions from the policy instead of taking its mean breaks many deadlocks and raises it to 76.4 %, above the potential-field controller with the filter (72 %).
+- **Training with the filter in the loop did not clearly help.** With the policy mean (the standard deterministic evaluation) the agent trained with the filter reached 61.0 % expert success, against 65.0 % for the agent trained without it and given the filter at test time; its validation success plateaued early (about 80 %). Sampling actions from the policy instead of taking its mean breaks many deadlocks for both agents: 76.4 % [68.2, 84.6] when trained with the filter, 70.0 % [66.3, 73.7] when trained without it. These two are the like-for-like comparison (same test scenarios, filter on, sampled actions); the intervals overlap, so they do not show that either training setup is better. The potential-field controller with the filter (72.0 % [62.5, 79.9]) is comparable: it is deterministic, its interval is computed differently, and the intervals overlap.
 
-| Expert stage (8–12 obstacles) | success | collision | timeout |
+| Expert stage (100 test scenarios, 8–12 obstacles) | success | collision | timeout |
 |---|:---:|:---:|:---:|
-| PPO trained without filter · no filter | 94.6 % [91.7, 97.5] | 1.0 % | 4.4 % |
-| PPO trained without filter · filter at test time | 65.0 % [61.5, 68.5] | **0 %** | 35.0 % |
+| PPO trained without filter · filter off | 94.6 % [91.7, 97.5] | 1.0 % | 4.4 % |
+| PPO trained without filter · filter on | 65.0 % [61.5, 68.5] | **0 %** | 35.0 % |
+| PPO trained without filter · filter on, sampled actions | 70.0 % [66.3, 73.7] | **0 %** | 30.0 % |
 | PPO trained with filter · filter on | 61.0 % [55.4, 66.6] | **0 %** | 39.0 % |
 | PPO trained with filter · filter on, sampled actions | 76.4 % [68.2, 84.6] | **0 %** | 23.6 % |
 | Potential field · filter on | 72.0 % [62.5, 79.9] | **0 %** | 28.0 % |
-| Potential field · no filter | 73.0 % [63.6, 80.7] | 0 % | 27.0 % |
+| Potential field · filter off | 73.0 % [63.6, 80.7] | 0 % | 27.0 % |
 | Go-to-goal · filter on | 46.0 % [36.6, 55.7] | **0 %** | 54.0 % |
-| Go-to-goal · no filter | 57.0 % [47.2, 66.3] | 43.0 % | 0 % |
+| Go-to-goal · filter off | 57.0 % [47.2, 66.3] | 43.0 % | 0 % |
 
-*Brackets: 95 % intervals (t-interval over 5 training seeds for PPO, Wilson interval over 100 episodes for the deterministic baselines). Source: [`results/benchmark/summary.csv`](results/benchmark/summary.csv), [`results/stochastic_eval/summary.json`](results/stochastic_eval/summary.json).*
+*Each row: controller (for PPO, whether the filter was used during training) · whether the filter is on at test time. PPO rows without "sampled actions" use the policy mean; the two baselines are deterministic controllers. Brackets: 95 % intervals; for PPO a t-interval over the 5 training seeds (it reflects variation between seeds only), for the deterministic baselines a Wilson interval over the 100 episodes. Source: [`results/benchmark/summary.csv`](results/benchmark/summary.csv), [`results/stochastic_eval/summary.json`](results/stochastic_eval/summary.json).*
 
 These are results in a 2D simulator with static circular obstacles and exact kinematics. Nothing here was tested on a robot.
 
@@ -97,7 +98,7 @@ For every obstacle and wall, a barrier `h` measures the clearance left beyond th
 | Dynamics | forward-Euler unicycle, `dt = 0.1 s` |
 | Reward | −0.01 per step + (distance gained) − 0.5 × risk + 10 on reaching the goal − 5 on collision or leaving the workspace |
 | Episode end | goal within 0.5 m; collision; leaving the workspace; step limit (200 / 300 / 400 by stage) |
-| Curriculum | beginner (2–4 obstacles, goal 3–5 m) → intermediate (4–8, 5–8 m) → expert (8–15 requested, at most 12 placed, 5–12 m); advance at 70 % success over 100 episodes |
+| Curriculum | beginner (2–4 obstacles, goal 3–5 m) → intermediate (4–8, 5–8 m) → expert (8–15 requested, 5–12 m; obstacles that do not fit are skipped, so 7–14 were placed in 3,000 generated scenarios and 8–12 in the 100 test scenarios); advance at 70 % success over 100 episodes |
 
 ## Installation
 
@@ -120,7 +121,7 @@ python -m safenav evaluate --baseline potential_field --episodes 20 --safety-fil
 python scripts/visualize_trajectory.py --checkpoint results/checkpoints/unfiltered/seed_0.pt --stage expert --seed 2200001 --safety-filter off
 python scripts/visualize_trajectory.py --baseline potential_field --animate --save episode.gif
 
-# train one agent (1M steps take about 20 minutes on one free laptop CPU core; this example uses 200k)
+# train one agent (the 1M-step benchmark runs took 2.6–3.7 h each, ten in parallel on a laptop CPU; this example uses 200k)
 python -m safenav train --run-dir runs/demo --seed 0 --set ppo.total_timesteps=200000
 python -m safenav train --run-dir runs/demo --resume          # continue after an interruption
 ```
@@ -135,12 +136,19 @@ python scripts/stochastic_eval.py --runs runs/benchmark --out results/stochastic
 python -m safenav plot --benchmark results/benchmark --runs results/training_logs --sweep results/safety_sweep
 ```
 
+Without training, the evaluation steps run on the committed checkpoints and reproduce the published per-episode results (the benchmark takes a few minutes with 8 jobs):
+
+```bash
+python -m safenav benchmark --runs results/checkpoints --out my_benchmark --jobs 8
+python scripts/stochastic_eval.py --out my_stochastic_eval        # falls back to results/checkpoints/
+```
+
 On a 10-core laptop CPU the ten training runs ran in parallel and took 2.6–3.7 hours each; the benchmark took about 3 minutes. Training is deterministic for a given seed on CPU, and resumption is exact; both are covered by tests. The checkpoints used for the tables are in [`results/checkpoints/`](results/checkpoints/) (selected by validation success on seeds disjoint from the test seeds), with their training logs in [`results/training_logs/`](results/training_logs/).
 
 ## Tests
 
 ```bash
-pytest            # 86 tests, about a minute
+pytest            # 90 tests, about two minutes
 ```
 
 The tests cover the unicycle update, termination and reward terms, the range sensor against analytic geometry, seeding, the filter's closed-form limits and its invariance under an adversarial policy, GAE against hand-computed values, the consistency of stored actions and log-probabilities, bit-for-bit reproducibility and exact resumption of training, metric and interval calculations, the feasibility oracle, config validation, the baselines, the ROS 2 scan conversion, and an end-to-end train → benchmark → plot run. A GitHub Actions workflow (`.github/workflows/tests.yml`) is set up to run them on Python 3.10 and 3.12.
@@ -172,7 +180,7 @@ SafeNav-RL/
 - **Fixed (GAE):** advantages used `dones[t+1]` for transition `t`, although the buffer stores each transition's own done flag, so bootstrapping leaked across episode boundaries. Time-limit truncations now bootstrap from the value of the final observation.
 - **Replaced (safety layer):** version 0.1 only reacted after the robot was inside the margin and had no wall constraint; see [`docs/SAFETY.md`](docs/SAFETY.md) for the measured behaviour and the new filter.
 - **Fixed:** `step()` returned NumPy booleans; evaluation episodes were not seeded; the observation size was hard-coded.
-- **Added:** range sensor, baselines, evaluation metrics and intervals, feasibility oracle, benchmark, safety-margin sweep, CLI, config validation, exact resumption, 86 tests, CI workflow and this benchmark. The demo images of version 0.1 (`assets/`) came from a checkpoint that is not available and were produced by the old code.
+- **Added:** range sensor, baselines, evaluation metrics and intervals, feasibility oracle, benchmark, safety-margin sweep, CLI, config validation, exact resumption, 90 tests, CI workflow and this benchmark. The demo images of version 0.1 (`assets/`) came from a checkpoint that is not available and were produced by the old code.
 
 ## Limitations
 
