@@ -75,7 +75,7 @@ class CBFSafetyFilter:
 
     dt: float = 0.1
     robot_radius: float = 0.3
-    safe_distance: float = 0.8
+    safe_distance: float = 0.3          # same as configs/default_config.yaml
     gamma: float = 0.5
     workspace_size: Optional[float] = 10.0
     wall_margin: float = 0.1
@@ -98,7 +98,7 @@ class CBFSafetyFilter:
         return cls(
             dt=float(env_cfg.get("dt", 0.1)),
             robot_radius=float(env_cfg.get("robot_radius", 0.3)),
-            safe_distance=float(safety_cfg.get("safe_distance", 0.8)),
+            safe_distance=float(safety_cfg.get("safe_distance", 0.3)),
             gamma=float(safety_cfg.get("cbf_gamma", 0.5)),
             workspace_size=float(env_cfg.get("workspace_size", 10.0)),
             wall_margin=float(safety_cfg.get("wall_margin", 0.1)),

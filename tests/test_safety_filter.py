@@ -103,6 +103,11 @@ def test_forward_invariance_under_adversarial_policy(config):
     assert worst >= -1e-9
 
 
+def test_default_margin_matches_config(config):
+    assert CBFSafetyFilter().safe_distance == config["safety"]["safe_distance"]
+    assert CBFSafetyFilter.from_config({}).safe_distance == config["safety"]["safe_distance"]
+
+
 def test_wrapper_filters_and_reports(config):
     env = make_env(config, task=get_stage(config, "beginner"), safety_filter=True)
     assert isinstance(env, SafetyFilterWrapper)
