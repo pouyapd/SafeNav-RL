@@ -18,7 +18,12 @@ checkpoints/
 logs/
 *.pt
 *.pth
-!results/**/*.pt
+# ...except the ten checkpoints used for the published tables. A directory
+# excluded by a pattern cannot have files re-included, so the directory itself
+# is re-included first.
+!results/checkpoints/
+!results/checkpoints/*/
+!results/checkpoints/*/seed_*.pt
 
 # Plots and animations
 *.gif
