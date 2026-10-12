@@ -131,7 +131,7 @@ def _pack_trajectory(r: EpisodeResult, cond: Condition) -> Dict[str, Any]:
 
 def scenario_table(config: Dict[str, Any], n_episodes: int, seed_base: int) -> pd.DataFrame:
     """Method-independent properties of every test scenario (incl. oracle feasibility)."""
-    env_cfg, safety = config["env"], config["safety"]
+    safety = config["safety"]
     rows = []
     for stage_idx, stage in enumerate(STAGES):
         env = NavigationEnv(config, task=get_stage(config, stage))

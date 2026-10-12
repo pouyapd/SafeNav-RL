@@ -126,7 +126,7 @@ def test_gap_between_samples_is_bounded(config):
             p0 = env.robot_pos.copy()
             safe, _ = flt.filter([1.0, omega], env.robot_pos, env.robot_theta, obstacles)
             _, _, terminated, truncated, _ = env.step(safe)
-            p1, seg = env.robot_pos.copy(), env.robot_pos - p0
+            seg = env.robot_pos - p0
             length = float(np.linalg.norm(seg))
             assert length <= flt.v_max * flt.dt + 1e-12
             for o in obstacles:

@@ -13,7 +13,7 @@ GAE Reference:
 
 import numpy as np
 import torch
-from typing import Generator, Optional, Tuple
+from typing import Generator, Optional
 
 
 class RolloutBuffer:

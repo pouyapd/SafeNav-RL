@@ -15,7 +15,6 @@ natural entropy bonus via the log-probability.
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.distributions import Normal
 import numpy as np
 from typing import Tuple, List, Dict, Any, Optional
