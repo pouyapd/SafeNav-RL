@@ -1,0 +1,254 @@
+[
+  {
+    "trained": "with filter",
+    "actions": "mean (deterministic)",
+    "stage": "beginner",
+    "episodes": 500,
+    "success_rate": 0.966,
+    "success_ci": [
+      0.9291662933401603,
+      1.0
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.034,
+    "timeout_ci": [
+      0.0,
+      0.07083370665983962
+    ]
+  },
+  {
+    "trained": "with filter",
+    "actions": "mean (deterministic)",
+    "stage": "intermediate",
+    "episodes": 500,
+    "success_rate": 0.8,
+    "success_ci": [
+      0.7751667200359248,
+      0.8248332799640753
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.2,
+    "timeout_ci": [
+      0.17516672003592473,
+      0.2248332799640753
+    ]
+  },
+  {
+    "trained": "with filter",
+    "actions": "mean (deterministic)",
+    "stage": "expert",
+    "episodes": 500,
+    "success_rate": 0.6100000000000001,
+    "success_ci": [
+      0.5544710978960442,
+      0.665528902103956
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.39,
+    "timeout_ci": [
+      0.3344710978960441,
+      0.4455289021039559
+    ]
+  },
+  {
+    "trained": "with filter",
+    "actions": "sampled",
+    "stage": "beginner",
+    "episodes": 500,
+    "success_rate": 0.9620000000000001,
+    "success_ci": [
+      0.9204459746526574,
+      1.0
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.038,
+    "timeout_ci": [
+      0.0,
+      0.0795540253473427
+    ]
+  },
+  {
+    "trained": "with filter",
+    "actions": "sampled",
+    "stage": "intermediate",
+    "episodes": 500,
+    "success_rate": 0.8799999999999999,
+    "success_ci": [
+      0.8335411872922961,
+      0.9264588127077037
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.12,
+    "timeout_ci": [
+      0.0735411872922962,
+      0.1664588127077038
+    ]
+  },
+  {
+    "trained": "with filter",
+    "actions": "sampled",
+    "stage": "expert",
+    "episodes": 500,
+    "success_rate": 0.7639999999999999,
+    "success_ci": [
+      0.68229511233956,
+      0.8457048876604398
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.236,
+    "timeout_ci": [
+      0.15429511233956017,
+      0.3177048876604398
+    ]
+  },
+  {
+    "trained": "without filter",
+    "actions": "mean (deterministic)",
+    "stage": "beginner",
+    "episodes": 500,
+    "success_rate": 0.99,
+    "success_ci": [
+      0.99,
+      0.99
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.01,
+    "timeout_ci": [
+      0.01,
+      0.01
+    ]
+  },
+  {
+    "trained": "without filter",
+    "actions": "mean (deterministic)",
+    "stage": "intermediate",
+    "episodes": 500,
+    "success_rate": 0.8379999999999999,
+    "success_ci": [
+      0.8125534602850828,
+      0.8634465397149169
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.162,
+    "timeout_ci": [
+      0.13655346028508297,
+      0.18744653971491704
+    ]
+  },
+  {
+    "trained": "without filter",
+    "actions": "mean (deterministic)",
+    "stage": "expert",
+    "episodes": 500,
+    "success_rate": 0.6500000000000001,
+    "success_ci": [
+      0.6148804386765968,
+      0.6851195613234035
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.35,
+    "timeout_ci": [
+      0.31488043867659665,
+      0.3851195613234033
+    ]
+  },
+  {
+    "trained": "without filter",
+    "actions": "sampled",
+    "stage": "beginner",
+    "episodes": 500,
+    "success_rate": 0.99,
+    "success_ci": [
+      0.99,
+      0.99
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.01,
+    "timeout_ci": [
+      0.01,
+      0.01
+    ]
+  },
+  {
+    "trained": "without filter",
+    "actions": "sampled",
+    "stage": "intermediate",
+    "episodes": 500,
+    "success_rate": 0.86,
+    "success_ci": [
+      0.8475833600179623,
+      0.8724166399820377
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.14,
+    "timeout_ci": [
+      0.1275833600179624,
+      0.15241663998203764
+    ]
+  },
+  {
+    "trained": "without filter",
+    "actions": "sampled",
+    "stage": "expert",
+    "episodes": 500,
+    "success_rate": 0.7,
+    "success_ci": [
+      0.662750080053887,
+      0.7372499199461129
+    ],
+    "collision_rate": 0.0,
+    "collision_ci": [
+      0.0,
+      0.0
+    ],
+    "timeout_rate": 0.30000000000000004,
+    "timeout_ci": [
+      0.2627500800538871,
+      0.337249919946113
+    ]
+  }
+]

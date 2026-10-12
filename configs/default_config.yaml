@@ -1,17 +1,29 @@
 # SafeNav-RL Configuration
-# All hyperparameters are centralized here.
-# Pass this file to train.py: python scripts/train.py --config configs/default_config.yaml
+# All hyperparameters are centralized here. Values are validated on load
+# (safenav/config.py), so typos and out-of-range values fail early.
+#
+#   python -m safenav train --config configs/default_config.yaml
+#   python -m safenav train --set ppo.total_timesteps=200000 --set safety.enabled=false
 
 # ─────────────────────────────────────────────
 # Environment
 # ─────────────────────────────────────────────
 env:
-  workspace_size: 10.0          # Workspace is a square [0, workspace_size]^2
+  workspace_size: 10.0          # Workspace is a square [0, workspace_size]^2 (metres)
   dt: 0.1                       # Simulation timestep (seconds)
-  robot_radius: 0.3             # Robot collision radius (meters)
-  goal_radius: 0.5              # Goal reached threshold (meters)
-  max_steps: 200                # Max steps per episode (overridden by curriculum)
-  sensor_noise_std: 0.02        # Gaussian noise on observations (sim-to-real)
+  robot_radius: 0.3             # Robot collision radius (metres)
+  goal_radius: 0.5              # Goal reached threshold (metres)
+  max_steps: 200                # Max steps per episode (overridden by curriculum stages)
+  sensor_noise_std: 0.02        # Gaussian noise on observed position (metres)
+  risk_distance: 0.8            # Risk score falls from 1 at an obstacle surface to 0 at this distance
+
+# ─────────────────────────────────────────────
+# Range sensor (simulated 360° scanner; part of the observation)
+# ─────────────────────────────────────────────
+sensor:
+  num_beams: 16                 # 0 = original 7-D observation without range readings
+  max_range: 3.0                # metres
+  range_noise_std: 0.02         # Gaussian noise on each reading (metres)
 
 # ─────────────────────────────────────────────
 # Reward
@@ -24,13 +36,15 @@ reward:
   collision_penalty: -5.0
 
 # ─────────────────────────────────────────────
-# Safety Layer
+# Safety filter (discrete-time control barrier function on the speed)
 # ─────────────────────────────────────────────
 safety:
-  enabled: true
-  safe_distance: 0.8            # Minimum allowed distance to obstacles (meters)
-  cbf_gamma: 0.5                # CBF decay rate
-  qp_solver: "analytical"       # "analytical" (fast) or "cvxpy" (exact)
+  enabled: true                 # wrap the environment with the filter during training
+  safe_distance: 0.3            # margin kept between robot body and obstacle surfaces (metres);
+                                # at 0.8 m about half of the expert scenarios have no path that keeps
+                                # the margin (see docs/SAFETY.md), so the filter would block them
+  wall_margin: 0.1              # extra margin kept from the workspace walls (metres)
+  cbf_gamma: 0.5                # barrier decay rate (1/s); gamma * dt must be <= 1
 
 # ─────────────────────────────────────────────
 # Curriculum Learning
@@ -75,12 +89,12 @@ ppo:
   max_grad_norm: 0.5
   learning_rate: 3.0e-4
   lr_schedule: "linear"         # "constant" or "linear" decay
+  target_kl: null               # optional early stop of an update when approx. KL > 1.5 * target_kl
 
 # ─────────────────────────────────────────────
-# Network Architecture
+# Network Architecture (input size is taken from the environment)
 # ─────────────────────────────────────────────
 network:
-  obs_dim: 7
   action_dim: 2
   hidden_dims: [256, 256]
   activation: "tanh"
@@ -93,9 +107,16 @@ network:
 # ─────────────────────────────────────────────
 training:
   seed: 42
-  checkpoint_dir: "checkpoints"
-  log_dir: "logs"
-  save_every: 50_000            # Timesteps between checkpoints
-  eval_every: 10_000            # Timesteps between evaluations
-  eval_episodes: 20
+  log_dir: "runs/default"       # run directory: logs, run_info.json and checkpoints/
+  eval_every: 50_000            # timesteps between validation runs
+  eval_episodes: 60             # validation episodes (split evenly over the curriculum stages)
+  validation_seed: 1_000_000    # validation episode seeds (used for checkpoint selection)
+  resume_every: 50_000          # timesteps between resume checkpoints (0 = off), see "train --resume"
   device: "auto"                # "auto", "cpu", or "cuda"
+
+# ─────────────────────────────────────────────
+# Evaluation / benchmark
+# ─────────────────────────────────────────────
+evaluation:
+  test_seed: 2_000_000          # test episode seeds (disjoint from training and validation)
+  episodes_per_stage: 100

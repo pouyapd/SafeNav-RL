@@ -5,21 +5,30 @@ __pycache__/
 dist/
 build/
 .eggs/
+.pytest_cache/
 
 # Virtual environments
 venv/
-.env/
-env/
+.venv/
+/.env/
 
-# Training outputs
+# Training outputs (selected results are copied to results/)
+runs/
 checkpoints/
 logs/
 *.pt
 *.pth
+# ...except the ten checkpoints used for the published tables. A directory
+# excluded by a pattern cannot have files re-included, so the directory itself
+# is re-included first.
+!results/checkpoints/
+!results/checkpoints/*/
+!results/checkpoints/*/seed_*.pt
 
 # Plots and animations
 *.gif
 *.mp4
+/episode.png
 
 # Jupyter
 .ipynb_checkpoints/

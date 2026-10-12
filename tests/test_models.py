@@ -4,34 +4,25 @@ test_models.py — Unit tests for neural network models.
 Run with: python -m pytest tests/ -v
 """
 
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import numpy as np
 import torch
 import pytest
-import yaml
 
-from models.actor_critic import ActorCritic
-from models.safety_layer import SafetyLayer
-from env.obstacle_map import Obstacle
+from safenav.agents.actor_critic import ActorCritic
+from safenav.safety.cbf_filter import SafetyLayer
+from safenav.env.obstacle_map import Obstacle
 
-
-@pytest.fixture
-def config():
-    with open("configs/default_config.yaml") as f:
-        return yaml.safe_load(f)
+OBS_DIM = 7
 
 
 @pytest.fixture
 def model(config):
-    return ActorCritic(config)
+    return ActorCritic(config, obs_dim=OBS_DIM)
 
 
 class TestActorCritic:
     def test_forward_shape(self, model, config):
-        obs_dim = config["network"]["obs_dim"]
+        obs_dim = OBS_DIM
         action_dim = config["network"]["action_dim"]
         obs = torch.randn(4, obs_dim)  # batch of 4
 
@@ -42,14 +33,13 @@ class TestActorCritic:
         assert value.shape == (4,)
 
     def test_single_obs_forward(self, model, config):
-        obs_dim = config["network"]["obs_dim"]
-        obs = torch.randn(1, obs_dim)
+        obs = torch.randn(1, OBS_DIM)
         action, log_prob, value = model(obs)
         assert not torch.isnan(action).any()
         assert not torch.isnan(value).any()
 
     def test_evaluate_actions(self, model, config):
-        obs_dim = config["network"]["obs_dim"]
+        obs_dim = OBS_DIM
         action_dim = config["network"]["action_dim"]
         batch = 8
         obs = torch.randn(batch, obs_dim)
@@ -63,8 +53,7 @@ class TestActorCritic:
         assert (entropy >= 0).all(), "Entropy should be non-negative"
 
     def test_deterministic_action(self, model, config):
-        obs_dim = config["network"]["obs_dim"]
-        obs = torch.randn(1, obs_dim)
+        obs = torch.randn(1, OBS_DIM)
 
         # Deterministic action should be the same every time
         a1 = model.get_deterministic_action(obs)
@@ -111,5 +100,6 @@ class TestSafetyLayer:
 
             safe_action = sl.project_action(action, robot_pos, 0.0, obstacles)
             assert 0.0 <= safe_action[0] <= 1.0
-            # Angular velocity unchanged
-            assert safe_action[1] == action[1]
+            assert -1.0 <= safe_action[1] <= 1.0
+            # Angular velocity is only clipped to the action bounds, never otherwise changed
+            assert safe_action[1] == np.clip(action[1], -1.0, 1.0)

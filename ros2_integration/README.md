@@ -1,65 +1,56 @@
-# ROS2 Integration Guide
+# ROS 2 integration (untested scaffold)
 
-This directory contains the ROS2 deployment scaffold for the trained SafeNav-RL policy.
+This folder contains a ROS 2 node that wraps a trained SafeNav-RL policy. **It has
+not been run on a robot or in a simulator such as Gazebo.** It is a starting point
+for a deployment, not evidence that the policy works on hardware.
 
-## Prerequisites
+## What is in the folder
 
-1. **ROS2 Humble** installed: https://docs.ros.org/en/humble/Installation.html
-2. Source your ROS2 installation:
-   ```bash
-   source /opt/ros/humble/setup.bash
-   ```
-3. Install Python dependencies:
-   ```bash
-   pip install rclpy torch pyyaml
-   ```
+| File | Content | Tested |
+|---|---|---|
+| `nav_agent_node.py` | ROS 2 node: `/odom`, `/goal_pose`, `/scan` in, `/cmd_vel` out | imports without ROS; never run with ROS |
+| `scan_utils.py` | converts a LaserScan into the policy's 16 range beams and into point obstacles for the safety filter | yes, unit tests in `tests/test_ros2_scan_utils.py` |
+| `topic_definitions.py` | topic names, frames and velocity limits | — |
 
-## Running the Agent
+## Running (after installing ROS 2 Humble and sourcing it)
 
 ```bash
-# Deploy with default settings
-ros2 run safenav_rl nav_agent_node \
-  --ros-args \
-  -p model_path:=checkpoints/best_model.pt \
-  -p config_path:=configs/default_config.yaml \
+# from the repository root, with the package installed (pip install -e .)
+python ros2_integration/nav_agent_node.py --ros-args \
+  -p model_path:=runs/default/checkpoints/best.pt \
   -p control_rate_hz:=10.0
 
-# Remap topics for a specific robot (e.g., TurtleBot3)
-ros2 run safenav_rl nav_agent_node \
-  --ros-args \
-  -p model_path:=checkpoints/best_model.pt \
-  --remap /odom:=/tb3/odom \
-  --remap /cmd_vel:=/tb3/cmd_vel
+# send a goal
+ros2 topic pub --once /goal_pose geometry_msgs/msg/PoseStamped \
+  "{header: {frame_id: 'odom'}, pose: {position: {x: 5.0, y: 5.0, z: 0.0}}}"
 ```
 
-## Sending a Goal
+The node reads the training configuration from the checkpoint, so the beam count,
+range limit and safety margin match the trained agent.
 
-```bash
-ros2 topic pub /goal_pose geometry_msgs/msg/PoseStamped \
-  "{header: {frame_id: 'map'}, pose: {position: {x: 5.0, y: 5.0, z: 0.0}}}"
-```
+## Topics
 
-## Topic Overview
+| Topic | Type | Direction |
+|---|---|---|
+| `/odom` | nav_msgs/Odometry | subscribe |
+| `/goal_pose` | geometry_msgs/PoseStamped | subscribe |
+| `/scan` | sensor_msgs/LaserScan | subscribe |
+| `/cmd_vel` | geometry_msgs/Twist | publish |
 
-| Topic | Type | Direction | Description |
-|---|---|---|---|
-| `/odom` | nav_msgs/Odometry | Subscribe | Robot pose from wheel odometry |
-| `/goal_pose` | geometry_msgs/PoseStamped | Subscribe | Navigation goal |
-| `/scan` | sensor_msgs/LaserScan | Subscribe | (TODO) Obstacle detection |
-| `/cmd_vel` | geometry_msgs/Twist | Publish | Velocity commands |
+## Known gaps before any real use
 
-## Sim-to-Real Notes
+1. **No safety guarantee on a robot.** The simulator's guarantee (see
+   [`docs/SAFETY.md`](../docs/SAFETY.md)) needs exact, complete obstacle geometry
+   and the exact unicycle model. The node uses scan returns as point obstacles,
+   which miss anything between rays and ignore delay, slip and odometry drift.
+2. **Frames.** The observation uses odometry coordinates normalised by the
+   training workspace size (10 m). There is no map frame, TF lookup or
+   relocalisation.
+3. **Sim-to-real gap.** The policy was trained only in the 2D simulator with
+   circular static obstacles and idealised kinematics; real sensor noise, moving
+   people and robot dynamics were never modelled.
+4. **Velocity limits.** Training used v in [0, 1] m/s and omega in [-1, 1] rad/s;
+   adjust `topic_definitions.py` and retrain for another platform.
 
-When deploying from simulation to a real robot, consider:
-
-1. **Observation normalization**: The workspace size in `default_config.yaml` must match your real environment dimensions.
-2. **Velocity limits**: Adjust `MAX_LINEAR_VEL` and `MAX_ANGULAR_VEL` in `topic_definitions.py` to your robot's physical limits.
-3. **Control rate**: Start with 5–10 Hz for safety; increase after validation.
-4. **LaserScan integration**: The current scaffold does not yet feed laser scan data into the safety layer. This is the recommended next step for real deployment.
-
-## TODO for Full Real-Robot Deployment
-
-- [ ] Integrate `/scan` LaserScan into safety layer obstacle detection
-- [ ] Add TF2 transform listener for accurate localization
-- [ ] Test in Gazebo simulation before real hardware
-- [ ] Add ROS2 action server interface for waypoint following
+Suggested next steps: test in Gazebo with a TurtleBot3 model, add obstacle
+extraction (circle fitting) from scans, and measure the closed-loop clearance.
