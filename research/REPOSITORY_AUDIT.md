@@ -2,6 +2,8 @@
 
 Branch `research/q1-feasibility-audit` · audited commit `d257eca` (= `origin/main` on 2026-10-25) · audit date 2026-10-25
 
+**Correction (2026-10-25, branch `docs/correct-failure-mechanism-and-goal-distances`).** The first version of this audit gave the self-stop distance as "0.35 m". That value is the median over the filter-trained agent's self-stops with mean *and* sampled actions pooled (135 episodes). For the 122 self-stops with mean actions, which the counts refer to, the median is 0.41 m (interquartile range 0.16–0.72 m). The text below uses 0.41 m.
+
 **Purpose.** To find out whether the code, results and documentation are a sound base for a journal paper, and what must change first. This audit changes nothing in `safenav/`, `results/`, `docs/` or `README.md`. The only new code is a read-only analysis script, [`research/scripts/audit_diagnostics.py`](scripts/audit_diagnostics.py). It writes only to [`research/audit_outputs/`](audit_outputs/).
 
 **How to read the labels.**
@@ -19,7 +21,7 @@ Branch `research/q1-feasibility-audit` · audited commit `d257eca` (= `origin/ma
 | **Mathematical claim** | The one-step discrete-time CBF invariance proof is **correct** under its stated assumptions, and the between-sample bound is correct for the simulator. It is a standard result (Agrawal & Sreenath 2017), not a contribution. |
 | **Stored results** | All headline numbers in the README match the stored files. **Two documentation statements are contradicted by the data**: the goal-distance ranges (§3.1) and the failure mechanism of the filter-trained agent (§5.1). |
 | **Main methodological weaknesses** | (1) The intervals reflect training-seed variation only. In a seed × scenario decomposition, the scenario term accounts for 25–86 % of the sum of squares and the seed term for under 2 % (§6.1). (2) The safety margin and the sampled-action evaluation were chosen after looking at the test scenarios (§6.3). (3) The scenario generator does not produce the documented goal distances; 3 of 300 test episodes are solved at step 1 (§3.1). (4) Weak baselines: no published safe-navigation or safe-RL baseline (§7). |
-| **New finding with research value** | Timeouts with the filter come from **two different mechanisms**, depending on how the agent was trained (§5.1). An agent trained *without* the filter and run with it pushes into the keep-out boundary at full commanded speed while its turn rate chatters. An agent trained *with* the filter mostly **stops by itself** (commanded `v ≤ 0`), at a median of 0.35 m before the boundary. The second mechanism is a learned equilibrium of the policy, not of the filter. |
+| **New finding with research value** | Timeouts with the filter come from **two different mechanisms**, depending on how the agent was trained (§5.1). An agent trained *without* the filter and run with it pushes into the keep-out boundary at full commanded speed while its turn rate chatters. An agent trained *with* the filter mostly **stops by itself** (commanded `v ≤ 0`), at a median of 0.41 m before the boundary. The second mechanism is a learned equilibrium of the policy, not of the filter. |
 | **Publishability as is** | Not publishable in a Q1 journal as a methods paper. The benchmark and the deadlock finding are a sound starting point; see [`NOVELTY_ASSESSMENT.md`](NOVELTY_ASSESSMENT.md). |
 
 ---
@@ -131,14 +133,14 @@ Medians over the last 100 steps:
 | | trained with filter (mean actions) | trained without filter (mean actions) |
 |---|---|---|
 | commanded speed | 0.00 m/s | 1.00 m/s |
-| barrier `h` at the end | 0.135 m (self-stop class only: 0.35 m) | 0.000 m |
+| barrier `h` at the end | 0.135 m (self-stop class only: 0.41 m, IQR 0.16–0.72 m) | 0.000 m |
 | turn-rate sign changes per 100 steps | 54 | 65 |
 | cos(angle between goal direction and nearest-obstacle direction) | 0.79 | 0.61 |
 
 Interpretation:
 
 - **Agent trained without the filter.** The description "keeps steering into the boundary" fits *this* agent. It commands full speed, sits exactly on the boundary (`h = 0`), and its turn rate chatters. This is the behaviour §2.2(2) predicts, and it matches the undesired boundary equilibria of CBF-QPs (Reis et al. 2021).
-- **Agent trained with the filter.** It mostly does something different. In 122 of its 195 deterministic timeouts, the policy itself commands zero speed, typically 0.35 m *before* the keep-out boundary, facing the obstacle with the goal behind it. This self-stop occurs in every seed (10–32 episodes each). The filter does not cause it; it is a **learned undesired equilibrium of the policy**. Sampling actions removes most of these stalls (122 → 13). That is why sampling helps the filter-trained agent much more than the unfiltered one (+15.4 vs +5.0 points, §6.2).
+- **Agent trained with the filter.** It mostly does something different. In 122 of its 195 deterministic timeouts, the policy itself commands zero speed, a median 0.41 m *before* the keep-out boundary (interquartile range 0.16–0.72 m). In 89 of the 122, the goal lies within 45° of the direction of the nearest obstacle. This self-stop occurs in every seed (10–32 episodes each). The filter does not cause it; it is a **learned undesired equilibrium of the policy**. Sampling actions removes most of these stalls (122 → 13). That is why sampling helps the filter-trained agent much more than the unfiltered one (+15.4 vs +5.0 points, §6.2).
 
 The README sentence should be corrected; this needs the author's approval and is roadmap task A3. The finding is also the strongest research lead in the repository; see the novelty assessment.
 

@@ -123,7 +123,7 @@ Each direction is a research question with a falsifiable prediction. Directions 
 
 1. **Research question.** Why does PPO trained with the filter learn to stop *before* obstacles (Type II), and which change to the training removes these stops without losing safety: correction penalty, bounded action distribution, filter-state observation, or reward change?
 
-2. **Gap.** Pizarro Bejarano et al. and Krasowski et al. show that penalties help on stabilisation and tracking tasks. Oh et al. show that permissive filters lose nothing asymptotically. None of these explains a *learned* stopping equilibrium in navigation (hypothesis). Verified motivation: 122 of 195 deterministic expert timeouts of the filter-trained agents are self-stops at a median of 0.35 m before the boundary, in all 5 seeds; sampling removes most of them (audit §5.1).
+2. **Gap.** Pizarro Bejarano et al. and Krasowski et al. show that penalties help on stabilisation and tracking tasks. Oh et al. show that permissive filters lose nothing asymptotically. None of these explains a *learned* stopping equilibrium in navigation (hypothesis). Verified motivation: 122 of 195 deterministic expert timeouts of the filter-trained agents are self-stops at a median of 0.41 m before the boundary, in all 5 seeds; sampling removes most of them (audit §5.1).
 
 3. **Proposed technical contribution.**
    - An analysis of **action aliasing** in the filtered MDP: many nominal actions map to the same executed action (environment clipping of `v ≤ 0`, filter clipping of `v ≥ v_lim`), so their advantages are equal.

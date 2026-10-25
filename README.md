@@ -27,7 +27,7 @@ A learned navigation policy can be made collision-free by a **safety filter** th
 *Simulation: 2D workspace, static circular obstacles, exact kinematics. Nothing here was tested on a robot.*
 
 - **The filter removed every collision.** Across all 3,600 benchmark episodes with the filter on (every controller and stage) there was no collision, and the closest approach was exactly the 0.30 m margin. Without it, the go-to-goal controller collided in 43 % of expert episodes and the PPO agent trained without the filter in 1.0 %.
-- **The price is deadlock.** With the filter, robots can stop at a keep-out boundary and time out. On the expert stage the PPO agent trained without the filter falls from 94.6 % success to 65.0 % when the filter is added at test time.
+- **The price is deadlock.** With the filter, robots can stall in front of an obstacle and time out. Depending on how the agent was trained, the filter blocks the robot at the keep-out boundary, or the policy stops the robot itself before it gets there ([details](#results-in-detail)). On the expert stage the PPO agent trained without the filter falls from 94.6 % success to 65.0 % when the filter is added at test time.
 - **Training with the filter in the loop did not clearly help.** With the policy mean (the standard deterministic evaluation) the agent trained with the filter reached 61.0 % expert success, against 65.0 % for the agent trained without it and given the filter at test time. Sampling actions from the policy instead of taking its mean breaks many deadlocks for both agents: **76.4 % [68.2, 84.6]** when trained with the filter, **70.0 % [66.3, 73.7]** when trained without it. These two are the like-for-like comparison (same scenarios, filter on, sampled actions). The intervals overlap, so they do not show that either training setup is better. The potential-field controller with the filter (72.0 % [62.5, 79.9]) is comparable: it is deterministic, its interval is computed differently, and the intervals overlap.
 
 | Expert stage (100 test scenarios, 8–12 obstacles) | success | collision | timeout |
@@ -97,11 +97,18 @@ flowchart LR
 
 <p align="center"><img src="docs/figures/training_curves.png" alt="Validation success over training for both PPO variants (mean and range over five seeds), and the training collision rate of the unfiltered variant" width="880"></p>
 
-**Where the policies struggle.** Timeouts grow with the number of obstacles for every controller with the filter on. Replaying the failed expert episodes of the filter-trained agent shows the mechanism: in most of them the robot reaches a keep-out boundary early and stops there for the rest of the episode, although a path that keeps the margin exists (geometric oracle). The deterministic policy keeps steering into the boundary; sampled actions often escape (table above).
+**Where the policies struggle.** Timeouts grow with the number of obstacles for every controller with the filter on. In every expert test scenario a path that keeps the margin exists (geometric oracle), so none of these timeouts is caused by a blocked path. Replaying every expert timeout of the PPO agents with the filter on (5 training seeds × 100 scenarios per agent type, policy mean) shows that the two agent types stall in different ways:
+
+- **Blocked by the filter (agent trained without the filter): 141 of its 175 timeouts.** The robot sits on the keep-out boundary while the policy keeps commanding full speed (median 1.0 m/s). The filter sets the speed to zero, and the turn rate keeps changing sign (median 70 sign changes in the last 100 steps) without turning the robot away. In all 141 cases the robot's heading is less than 90° from the direction of the nearest obstacle (median 68°): at the boundary, the filter allows no forward motion with any such heading.
+- **Stopped by the policy itself (agent trained with the filter): 122 of its 195 timeouts.** The policy commands zero speed *before* the robot reaches the boundary (median 0.41 m before it; interquartile range 0.16–0.72 m). The filter does not cause these stops. In 89 of the 122, the goal lies within 45° of the direction of the nearest obstacle (median 26°), so the obstacle is between robot and goal. The robot hardly turns (median |ω| 0.04 rad/s). Another 67 timeouts of this agent are blocked by the filter, and 6 are not stalls.
+
+Sampling actions from the policy removes most self-stops (122 → 13 for the agent trained with the filter, 34 → 1 for the agent trained without it), but not the stalls blocked by the filter (67 → 71 and 141 → 147). This is why sampling raises the success rate of the filter-trained agent more (table above).
+
+<sub>A timeout counts as a stall if the robot moves less than 0.10 m in its last 100 steps. It counts as blocked by the filter if the filter reduced the speed in at least half of those steps, and as stopped by the policy if the policy commanded a speed of at most 0.001 m/s in at least half of them. This is a post-hoc analysis of the test episodes, made after the benchmark. Script: <a href="research/scripts/audit_diagnostics.py"><code>research/scripts/audit_diagnostics.py</code></a>; per-episode output: <a href="research/audit_outputs/timeout_attribution_expert.csv"><code>research/audit_outputs/timeout_attribution_expert.csv</code></a>; discussion: <a href="research/REPOSITORY_AUDIT.md"><code>research/REPOSITORY_AUDIT.md</code></a> §5.1.</sub>
 
 <p align="center">
   <img src="docs/figures/difficulty_obstacles.png" alt="Success and timeout rate with the filter on, by number of obstacles, for the four controllers" width="880">
-  <img src="docs/figures/failure_cases_expert.png" alt="Six failed expert episodes of the filter-trained PPO agent: in most, the robot stops near a dashed keep-out boundary soon after the start" width="900">
+  <img src="docs/figures/failure_cases_expert.png" alt="The first six failed expert episodes of the filter-trained PPO agent (training seed 0). In four, the policy stops the robot 0.01 to 0.23 m before a dashed keep-out boundary; in one, the filter blocks the robot at the boundary; in one, the robot is still moving when time runs out" width="900">
 </p>
 
 **Safety margin.** With an exactly enforced 0.8 m margin (the value in version 0.1) only 54 % of the expert scenarios have any path that keeps the margin, so the default is 0.3 m ([`docs/SAFETY.md`](docs/SAFETY.md)).
@@ -118,7 +125,7 @@ flowchart LR
 | Dynamics | forward-Euler unicycle, `dt = 0.1 s` |
 | Reward | −0.01 per step + (distance gained) − 0.5 × risk + 10 on reaching the goal − 5 on collision or leaving the workspace |
 | Episode end | goal within 0.5 m; collision; leaving the workspace; step limit (200 / 300 / 400 by stage) |
-| Curriculum | beginner (2–4 obstacles, goal 3–5 m) → intermediate (4–8, 5–8 m) → expert (8–15 requested, 5–12 m; obstacles that do not fit are skipped, so 7–14 were placed in 3,000 generated scenarios and 8–12 in the 100 test scenarios); advance at 70 % success over 100 episodes |
+| Curriculum | beginner (2–4 obstacles, goal distance 3–5 m) → intermediate (4–8, 5–8 m) → expert (8–15, 5–12 m); advance at 70 % success over 100 episodes. **These are the requested values, not the generated ones.** Obstacles that do not fit are skipped (7–14 were placed in 3,000 generated expert scenarios and 8–12 in the 100 test scenarios). The start is drawn from the lower-left square [1.5, 5]², and `reset()` clips the goal to [1.5, 8.5]², which shortens many goal distances. In the test scenarios, 42 of 100 beginner goals are closer than 3 m, and 66 of 100 intermediate and 53 of 100 expert goals are closer than 5 m. The longest expert distance is 8.9 m ([`research/audit_outputs/goal_distances.csv`](research/audit_outputs/goal_distances.csv)) |
 
 </details>
 
@@ -209,6 +216,9 @@ The tests cover the unicycle update, termination and reward terms, the range sen
 - Simulation only: 2D, static circular obstacles, exact kinematics, perfect obstacle knowledge for the filter.
 - Five training seeds per variant and 100 test scenarios per stage; PPO hyperparameters were not tuned for the filtered setting.
 - The potential-field baseline was tuned briefly by hand; it is a reference point, not a state-of-the-art planner.
+- Scenario generator: the goal distances are often shorter than the configured stage ranges (see *Environment details*).
+- Three of the 300 test scenarios start inside the goal region: beginner 2000091 and 2000093, expert 2200023, with start-to-goal distances of 0.46, 0.38 and 0.16 m against a goal radius of 0.5 m. Every controller reaches the goal there at step 1 and these count as successes. This adds 2 (beginner) and 1 (expert) percentage points to every success rate in those stages, the same for all controllers. The stored results were not regenerated.
+- The safety margin (0.3 m) was chosen with the geometric oracle on the expert test scenarios, and the sampled-action evaluation was added after inspecting failed test episodes. The test scenarios are therefore not a clean held-out set for these two choices.
 
 ## Repository map
 
@@ -239,6 +249,16 @@ SafeNav-RL/
 - **Replaced (safety layer):** version 0.1 only reacted after the robot was inside the margin and had no wall constraint; see [`docs/SAFETY.md`](docs/SAFETY.md) for the measured behaviour and the new filter.
 - **Fixed:** `step()` returned NumPy booleans; evaluation episodes were not seeded; the observation size was hard-coded.
 - **Added:** range sensor, baselines, evaluation metrics and intervals, feasibility oracle, benchmark, safety-margin sweep, CLI, config validation, exact resumption, committed checkpoints, 90 tests and a CI workflow. The demo images of version 0.1 (`assets/`) came from a checkpoint that is not available and were produced by the old code.
+
+</details>
+
+<details>
+<summary><b>Documentation corrections after version 0.2.0</b></summary>
+
+An audit of version 0.2.0 ([`research/REPOSITORY_AUDIT.md`](research/REPOSITORY_AUDIT.md)) found two statements that the stored data contradict. Both are corrected above. No code, checkpoint or result file was changed.
+
+- **Failure mechanism.** The README said that the filter-trained agent "reaches a keep-out boundary early and stops there", and that the deterministic policy "keeps steering into the boundary". Steering into the boundary describes the agent trained *without* the filter. The filter-trained agent mostly stops by itself before the boundary.
+- **Goal distances.** The curriculum table gave the requested goal-distance ranges as if they were the generated ones. Goal clipping in `reset()` makes many distances shorter, and three test scenarios start inside the goal region.
 
 </details>
 
