@@ -175,6 +175,30 @@ def fig_paired(stall_df, stats):
     plt.close(fig)
 
 
+def ci_width_fit(stats, reps=3000, seed=0):
+    """Approximate scaling of the paired hierarchical-bootstrap interval with seeds and scenarios
+    (expert, filter-trained vs unfiltered-trained, sampled actions), fitted on subsamples of the
+    stored episodes: var = A/n_seeds + B/n_scen + C/(n_seeds n_scen). Rough: only 5 seeds exist."""
+    s = pd.read_csv(ROOT / "results" / "stochastic_eval" / "episodes.csv")
+    s = s[(s.stage == "expert") & (s.actions == "sampled")]
+    mats = [s[s.variant == v].pivot_table(index="train_seed", columns="episode_seed", values="success",
+                                          aggfunc="mean").to_numpy(float) for v in ("filtered", "unfiltered")]
+    rng = np.random.default_rng(seed)
+    rows = []
+    for ns in (2, 3, 5):
+        for nc in (25, 50, 100):
+            d = []
+            for _ in range(reps):
+                sc = rng.choice(100, nc, replace=True)
+                d.append(mats[0][np.ix_(rng.choice(5, ns), sc)].mean() - mats[1][np.ix_(rng.choice(5, ns), sc)].mean())
+            rows.append((ns, nc, float(np.std(d))))
+    X = np.array([[1 / ns, 1 / nc, 1 / (ns * nc)] for ns, nc, _ in rows])
+    coef = np.clip(np.linalg.lstsq(X, np.array([r[2] ** 2 for r in rows]), rcond=None)[0], 0, None)
+    pred = {f"{ns}x{nc}": float(1.96 * np.sqrt(coef @ [1 / ns, 1 / nc, 1 / (ns * nc)]))
+            for ns, nc in [(5, 100), (10, 300), (10, 1000), (20, 1000), (10, 3000)]}
+    stats["ci_halfwidth_fit"] = {"coef_A_B_C": coef.tolist(), "predicted_95_halfwidth_seeds_x_scenarios": pred}
+
+
 def main() -> int:
     FIG.mkdir(parents=True, exist_ok=True)
     GEN.mkdir(parents=True, exist_ok=True)
@@ -199,6 +223,7 @@ def main() -> int:
     fig_geometry(tax, stats)
     stall_df = stall_contrasts(tax, stats)
     fig_paired(stall_df, stats)
+    ci_width_fit(stats)
     (GEN / "stats.json").write_text(json.dumps(stats, indent=2), encoding="utf-8")
     print(json.dumps({k: stats[k] for k in ("consistency_with_benchmark", "type1_heading_deg", "type2_barrier_m")}, indent=2))
     print(stall_df.round(3).to_string(index=False))
