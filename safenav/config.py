@@ -175,6 +175,7 @@ def validate_config(cfg: Mapping[str, Any]) -> None:
     check("safety", "safe_distance", non_negative, "must be >= 0 (metres)")
     check("safety", "cbf_gamma", positive, "must be a positive number (1/s)")
     check("safety", "wall_margin", non_negative, "must be >= 0 (metres)", required=False)
+    check("safety", "correction_penalty", non_negative, "must be >= 0", required=False)
     check("safety", "qp_solver", lambda v: v == "analytical",
           "only the closed-form 'analytical' solution is implemented", required=False)
     env_dt = cfg["env"].get("dt")

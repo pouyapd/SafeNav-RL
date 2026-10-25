@@ -170,3 +170,53 @@ def test_legacy_safety_layer_interface(config):
     safe = sl.project_action(action, np.array([5.0, 5.0]), 0.0, [Obstacle(5.5, 5.0, 0.3)])
     assert safe[0] < action[0]
     assert 0.0 <= safe[0] <= 1.0
+
+
+def _rollout_rewards(env, seed, actions):
+    env.reset(seed=seed)
+    out = []
+    for a in actions:
+        _, r, term, trunc, info = env.step(a)
+        out.append((r, info.get("correction_penalty", 0.0)))
+        if term or trunc:
+            break
+    return out
+
+
+def test_correction_penalty_off_by_default_leaves_rewards_unchanged(config):
+    rng = np.random.default_rng(3)
+    actions = [rng.normal([0.6, 0.0], 0.8) for _ in range(150)]
+    task = get_stage(config, "expert")
+    trained = _rollout_rewards(make_env(config, task=task, safety_filter=True, training=True), 7, actions)
+    evaluated = _rollout_rewards(make_env(config, task=task, safety_filter=True), 7, actions)
+    assert trained == evaluated
+    assert all(p == 0.0 for _, p in trained)
+
+
+def test_correction_penalty_value_and_training_only(config):
+    from safenav.config import apply_overrides
+    cfg = apply_overrides(config, {"safety.correction_penalty": 2.0})
+    task = get_stage(cfg, "beginner")
+    train_env = make_env(cfg, task=task, safety_filter=True, training=True)
+    eval_env = make_env(cfg, task=task, safety_filter=True)
+    for env in (train_env, eval_env):
+        env.reset(seed=0)
+        base = env.unwrapped
+        base.robot_pos = np.array([5.0, 5.0])
+        base.robot_theta = 0.0
+        base.obstacle_map.set_obstacles([Obstacle(7.0, 5.0, 0.5)])
+    raw = np.array([1.3, 0.25])            # v above the bound and above the filter limit (0.45)
+    _, r_train, _, _, info_train = train_env.step(raw)
+    _, r_eval, _, _, info_eval = eval_env.step(raw)
+    expected = 2.0 * ((1.3 - 0.45) ** 2 + 0.0 ** 2)
+    assert info_train["correction_penalty"] == pytest.approx(expected)
+    assert r_eval - r_train == pytest.approx(expected)
+    assert info_eval["correction_penalty"] == 0.0
+
+
+def test_negative_correction_penalty_rejected(config):
+    from safenav.config import ConfigError, apply_overrides, validate_config
+    with pytest.raises(ConfigError):
+        validate_config(apply_overrides(config, {"safety.correction_penalty": -1.0}))
+    with pytest.raises(ValueError):
+        SafetyFilterWrapper(NavigationEnv(config), CBFSafetyFilter(), correction_penalty=-0.5)

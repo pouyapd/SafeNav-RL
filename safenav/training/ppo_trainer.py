@@ -128,7 +128,8 @@ class PPOTrainer:
         task = None
         if self.curriculum is None and cur_cfg.get("stages"):
             task = cur_cfg["stages"][-1]  # no curriculum: train on the hardest stage
-        self.env = make_env(config, task=task, curriculum=self.curriculum, safety_filter=safety_filter)
+        self.env = make_env(config, task=task, curriculum=self.curriculum, safety_filter=safety_filter,
+                            training=True)
 
         obs_dim = self.env.observation_space.shape[0]
         action_dim = self.env.action_space.shape[0]
