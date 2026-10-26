@@ -1,0 +1,24 @@
+{
+  "timeout_classes": {
+    "filtered|mean": {
+      "moving (no stall)": 6,
+      "stall: filter blocks the commanded speed": 67,
+      "stall: policy commands v = 0 itself": 122
+    },
+    "filtered|sampled": {
+      "moving (no stall)": 34,
+      "stall: filter blocks the commanded speed": 71,
+      "stall: policy commands v = 0 itself": 13
+    },
+    "unfiltered|mean": {
+      "moving (no stall)": 0,
+      "stall: filter blocks the commanded speed": 141,
+      "stall: policy commands v = 0 itself": 34
+    },
+    "unfiltered|sampled": {
+      "moving (no stall)": 2,
+      "stall: filter blocks the commanded speed": 147,
+      "stall: policy commands v = 0 itself": 1
+    }
+  }
+}

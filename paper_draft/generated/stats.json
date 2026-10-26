@@ -1,0 +1,365 @@
+{
+  "source": "research/audit_outputs/stall_taxonomy_all.csv; research/audit_outputs/paired_comparisons_expert.csv",
+  "consistency_with_benchmark": {
+    "episodes_compared": 3600,
+    "outcome_mismatches": 0
+  },
+  "taxonomy_per_100_episodes": {
+    "intermediate": {
+      "PPO trained w/o filter, mean": {
+        "episodes": 500,
+        "filter-blocked": {
+          "count": 68,
+          "per_100": 13.6
+        },
+        "self-stop": {
+          "count": 13,
+          "per_100": 2.6
+        },
+        "moving": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "PPO trained w/o filter, sampled": {
+        "episodes": 500,
+        "filter-blocked": {
+          "count": 66,
+          "per_100": 13.2
+        },
+        "self-stop": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "moving": {
+          "count": 4,
+          "per_100": 0.8
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "PPO trained with filter, mean": {
+        "episodes": 500,
+        "filter-blocked": {
+          "count": 28,
+          "per_100": 5.6
+        },
+        "self-stop": {
+          "count": 68,
+          "per_100": 13.6
+        },
+        "moving": {
+          "count": 4,
+          "per_100": 0.8
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "PPO trained with filter, sampled": {
+        "episodes": 500,
+        "filter-blocked": {
+          "count": 20,
+          "per_100": 4.0
+        },
+        "self-stop": {
+          "count": 8,
+          "per_100": 1.6
+        },
+        "moving": {
+          "count": 32,
+          "per_100": 6.4
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "Go-to-goal": {
+        "episodes": 100,
+        "filter-blocked": {
+          "count": 39,
+          "per_100": 39.0
+        },
+        "self-stop": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "moving": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "Potential field": {
+        "episodes": 100,
+        "filter-blocked": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "self-stop": {
+          "count": 4,
+          "per_100": 4.0
+        },
+        "moving": {
+          "count": 7,
+          "per_100": 7.0
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      }
+    },
+    "expert": {
+      "PPO trained w/o filter, mean": {
+        "episodes": 500,
+        "filter-blocked": {
+          "count": 141,
+          "per_100": 28.2
+        },
+        "self-stop": {
+          "count": 34,
+          "per_100": 6.8
+        },
+        "moving": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "PPO trained w/o filter, sampled": {
+        "episodes": 500,
+        "filter-blocked": {
+          "count": 147,
+          "per_100": 29.4
+        },
+        "self-stop": {
+          "count": 1,
+          "per_100": 0.2
+        },
+        "moving": {
+          "count": 2,
+          "per_100": 0.4
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "PPO trained with filter, mean": {
+        "episodes": 500,
+        "filter-blocked": {
+          "count": 67,
+          "per_100": 13.4
+        },
+        "self-stop": {
+          "count": 122,
+          "per_100": 24.4
+        },
+        "moving": {
+          "count": 6,
+          "per_100": 1.2
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "PPO trained with filter, sampled": {
+        "episodes": 500,
+        "filter-blocked": {
+          "count": 71,
+          "per_100": 14.2
+        },
+        "self-stop": {
+          "count": 13,
+          "per_100": 2.6
+        },
+        "moving": {
+          "count": 34,
+          "per_100": 6.8
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "Go-to-goal": {
+        "episodes": 100,
+        "filter-blocked": {
+          "count": 54,
+          "per_100": 54.0
+        },
+        "self-stop": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "moving": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      },
+      "Potential field": {
+        "episodes": 100,
+        "filter-blocked": {
+          "count": 0,
+          "per_100": 0.0
+        },
+        "self-stop": {
+          "count": 6,
+          "per_100": 6.0
+        },
+        "moving": {
+          "count": 22,
+          "per_100": 22.0
+        },
+        "other stall": {
+          "count": 0,
+          "per_100": 0.0
+        }
+      }
+    }
+  },
+  "type1_heading_deg": {
+    "n": 618,
+    "max": 91.33026700726488,
+    "median": 66.83606004276507,
+    "share_below_90": 0.9983818770226537,
+    "obstacle_barrier_max_m": 0.0042246728920141
+  },
+  "type2_barrier_m": {
+    "n": 242,
+    "median": 0.4363240580071506,
+    "q25": 0.18774621457997503,
+    "q75": 0.7243959899492027,
+    "min": 1.532387954139569e-05
+  },
+  "stall_contrasts": [
+    {
+      "stage": "intermediate",
+      "comparison": "Type I rate: trained with filter - trained without (mean)",
+      "difference": -0.08000000000000002,
+      "ci95_low": -0.14800000000000002,
+      "ci95_high": -0.017999999999999995
+    },
+    {
+      "stage": "intermediate",
+      "comparison": "Type II rate: trained with filter - trained without (mean)",
+      "difference": 0.11000000000000001,
+      "ci95_low": 0.056,
+      "ci95_high": 0.172
+    },
+    {
+      "stage": "intermediate",
+      "comparison": "Type II rate, trained with filter: sampled - mean",
+      "difference": -0.12000000000000001,
+      "ci95_low": -0.18200000000000002,
+      "ci95_high": -0.066
+    },
+    {
+      "stage": "intermediate",
+      "comparison": "Type I rate, trained with filter: sampled - mean",
+      "difference": -0.016,
+      "ci95_low": -0.064,
+      "ci95_high": 0.030000000000000002
+    },
+    {
+      "stage": "expert",
+      "comparison": "Type I rate: trained with filter - trained without (mean)",
+      "difference": -0.14799999999999996,
+      "ci95_low": -0.24400000000000002,
+      "ci95_high": -0.055999999999999994
+    },
+    {
+      "stage": "expert",
+      "comparison": "Type II rate: trained with filter - trained without (mean)",
+      "difference": 0.176,
+      "ci95_low": 0.082,
+      "ci95_high": 0.27
+    },
+    {
+      "stage": "expert",
+      "comparison": "Type II rate, trained with filter: sampled - mean",
+      "difference": -0.218,
+      "ci95_low": -0.316,
+      "ci95_high": -0.124
+    },
+    {
+      "stage": "expert",
+      "comparison": "Type I rate, trained with filter: sampled - mean",
+      "difference": 0.00799999999999998,
+      "ci95_low": -0.076,
+      "ci95_high": 0.09999999999999999
+    }
+  ],
+  "success_contrasts_expert": [
+    {
+      "comparison (expert, success rate)": "cost of adding the filter at test time (unfiltered agent): off - on",
+      "difference": 0.2959999999999999,
+      "ci95_low": 0.2159999999999999,
+      "ci95_high": 0.384
+    },
+    {
+      "comparison (expert, success rate)": "filter-trained vs unfiltered-trained, filter on, mean actions",
+      "difference": -0.04,
+      "ci95_low": -0.1079999999999999,
+      "ci95_high": 0.032
+    },
+    {
+      "comparison (expert, success rate)": "filter-trained vs unfiltered-trained, filter on, sampled actions",
+      "difference": 0.064,
+      "ci95_low": -0.016,
+      "ci95_high": 0.1520499999999993
+    },
+    {
+      "comparison (expert, success rate)": "sampled - mean actions, filter-trained agent",
+      "difference": 0.154,
+      "ci95_low": 0.0779999999999999,
+      "ci95_high": 0.24
+    },
+    {
+      "comparison (expert, success rate)": "sampled - mean actions, unfiltered-trained agent",
+      "difference": 0.0499999999999999,
+      "ci95_low": 0.004,
+      "ci95_high": 0.1039999999999999
+    },
+    {
+      "comparison (expert, success rate)": "filter-trained (sampled) vs potential field, filter on",
+      "difference": 0.044,
+      "ci95_low": -0.0400499999999999,
+      "ci95_high": 0.13
+    }
+  ],
+  "ci_halfwidth_fit": {
+    "coef_A_B_C": [
+      0.004077455383097361,
+      0.08863742243978964,
+      0.10304665787926212
+    ],
+    "predicted_95_halfwidth_seeds_x_scenarios": {
+      "5x100": 0.08561316383714757,
+      "10x300": 0.05322951888212648,
+      "10x1000": 0.044119056949421254,
+      "20x1000": 0.03381568207319625,
+      "10x3000": 0.04114722228797322
+    }
+  }
+}
