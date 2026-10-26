@@ -42,7 +42,10 @@ This is a narrower claim. It is only competitive for a Q1 journal if E1 and E2 t
 
 | # | Gap | Why a reviewer will care | Closes it | Severity |
 |---|---|---|---|---|
-| G1 | **Correction-penalty baseline** (Pizarro Bejarano et al. 2025) | It is the closest published remedy; if it removes the deadlocks, the paper's conclusions change | E1 (prepared, not run) | critical |
+| G1 | **Correction-penalty baseline** (Pizarro Bejarano et al. 2025) | It is the closest published remedy; if it removes the deadlocks, the paper's conclusions change | E1a (not run). **Pilot done (2026-10-26)**, one seed per arm:
+- The configuration was verified, and the design is feasible: 0 collisions, and the control shows the stalls.
+- No large effect: deadlock −1.2 [−5.2, 2.8] points, scenario-only interval. This is **inconclusive**, not evidence against the penalty.
+- The gap stays open until E1a. | critical |
 | G2 | **Remedy for filter-blocked stalls** | Without it, the analysis ends at "here is a problem" | **partly closed (2026-10-26)**: the test-time heading escape lowers Type I by 7.4 [4.8, 10.2] points and raises success by 7.2 [5.0, 9.7] points (agents trained without the filter). This is below the pre-registered 10-point threshold, and 523/611 timeouts are still Type I. A stronger (multi-step) remedy is still missing | major |
 | G3 | **Fresh, held-out scenarios** | All analyses used the 300 test scenarios on which the margin and the sampled-action evaluation were chosen | **partly closed (2026-10-26)**: the taxonomy and both training contrasts replicate on 500 unused scenarios of the *same* generator (pre-registered). Still open: corrected generator, other stages, sampled actions | major |
 | G4 | **Systematic literature search** for prior analyses of learned-policy deadlock behind filters | The novelty claim rests on a targeted search | protocol in `research/IMPLEMENTATION_ROADMAP.md` B0; no compute | critical |
@@ -67,7 +70,7 @@ This is a narrower claim. It is only competitive for a Q1 journal if E1 and E2 t
 - the absence of a measurable benefit of training with the filter on success (on the fresh scenarios the filter-trained agents were 4.4 [0.2, 8.5] points *lower*; exploratory).
 
 **Not supported now:**
-- any claim about whether the published correction penalty fixes either mechanism (E1 not run);
+- any claim about whether the published correction penalty fixes either mechanism. Only a single-seed pilot exists: it showed no large effect, which is inconclusive. E1a has not been run;
 - generalisation to other scenario generators, stages or sampled actions in the fresh evaluation;
 - the causal explanation of self-stops;
 - anything about real robots or other simulators.

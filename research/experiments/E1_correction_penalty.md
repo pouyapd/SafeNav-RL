@@ -1,6 +1,11 @@
 # Experiment E1: does the published correction penalty alone remove the deadlocks?
 
-Status: **prepared, not run** (needs the author's approval). Branch `exp/e1-correction-penalty`.
+Status (2026-10-26):
+- **E1 pilot: done.** One seed, 2 arms × 150k steps, on branch `exp/e1-pilot`; see [`e1_pilot/README.md`](e1_pilot/README.md).
+  - The configuration was verified: the penalty reaches the PPO reward, and the control is bit-identical to `main`.
+  - Result: no collisions; the control shows the stalls; **no large effect in this seed (deadlock −1.2 points): inconclusive.**
+- **E1a: not run** (needs the author's approval). E1b: not run.
+- The code was first written on branch `exp/e1-correction-penalty` (`0b05aa3`); `exp/e1-pilot` carries it as cherry-pick `d8ccdca`.
 
 ## Question and hypothesis
 
@@ -23,6 +28,24 @@ Two stages. Run E1a first, and E1b only if E1a is inconclusive or positive.
 ### E1a: screening at a reduced budget (cheapest valid test)
 
 Same code, same seeds, same 300k-step budget for both arms. The control is needed because the committed checkpoints were trained for 1M steps.
+
+Run E1a only from a branch that contains the penalty code (`exp/e1-pilot` or `exp/e1-correction-penalty`). On any other branch `safety.correction_penalty` is silently ignored. On `exp/e1-pilot`, check that `correction_penalty_mean > 0` in the penalty runs' `progress.csv`.
+
+**Revised after the pilot (2026-10-26): one process at a time.** Use the pilot's driver: chunked, below-normal priority, with memory and throughput stops. Repeating the loop resumes interrupted runs and skips finished ones.
+
+```bash
+for s in 0 1 2 3 4; do
+  python research/experiments/e1_pilot/train_pilot.py --arm control --seed $s --timesteps 300000 \
+      --runs-root runs/e1a --deadline-s 1500
+  python research/experiments/e1_pilot/train_pilot.py --arm penalty --seed $s --timesteps 300000 \
+      --runs-root runs/e1a --deadline-s 1500
+done
+python research/experiments/e1_evaluate.py --arm penalty=runs/e1a/penalty/filtered \
+    --arm control=runs/e1a/control/filtered --arm committed=results/checkpoints/filtered \
+    --out runs/e1a_eval --jobs 1
+```
+
+The original commands are kept for reference. They run processes in parallel and need more free memory than this laptop usually has:
 
 ```bash
 # penalty arm (alpha = 1), 5 seeds, 3 runs in parallel (keeps 9 of 12 logical cores free)
@@ -47,6 +70,15 @@ python research/experiments/e1_evaluate.py --arm penalty=runs/e1_penalty/filtere
 As E1a with `--timesteps 1000000` and **only the penalty arm**. The control is then the committed filtered checkpoints (same code path, seeds 0–4, 1M steps).
 
 ## Cost (measured where possible; laptop on mains power)
+
+**Measured in the pilot (2026-10-26, one process).** 150k steps took 203 s of wall time (185 s CPU) with the machine idle, and peak memory was 324 MB. When another program used all cores, speed fell to about 30 steps/s; when it also used most of the RAM, the process was paged out.
+
+**E1a estimate (10 runs × 300k steps, one at a time).**
+- Training: about 7–8 min per run when idle, so **about 1.3–1.5 h** in total.
+- Evaluation: 15 agents × (500 fresh + 300 committed scenarios) × 2 action modes, about 30–60 min in one process.
+- Under load it takes much longer; the driver then stops and resumes.
+
+The original estimates follow:
 
 | Part | Runs | Measured basis | Estimated CPU | Estimated wall time |
 |---|---:|---|---|---|

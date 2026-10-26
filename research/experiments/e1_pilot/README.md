@@ -82,4 +82,88 @@ python research/experiments/e1_pilot/analyze_pilot.py
 
 ## Results
 
-*(added after the runs)*
+Run on 2026-10-26 from commit `3fcc5c5`. The training code (`safenav/`, `configs/`) was unmodified in every invocation (`code_modified_since_commit: false`). All numbers below come from `results/summary.json` (`python research/experiments/e1_pilot/analyze_pilot.py`).
+
+### Runs and resources
+
+| Run | Invocations | Wall time of the processes | CPU | Peak memory |
+|---|---|---|---|---|
+| Training, control (α = 0) | 3 (see deviations) | ≈ 630 s + 130 s + 126 s. In the first invocation, ≈ 320 s after its last resume point were discarded. The trainer's own elapsed time is 505 s | ≥ 150 s recorded (invocation 1 not recorded) | 322 MB |
+| Training, penalty (α = 1) | 1 | 203 s | 185 s | 324 MB |
+| Evaluation: control best / final, penalty best / final (500 episodes each) | 1 each | 42 / 29 / 34 / 35 s | 38 / 27 / 31 / 33 s | 204 MB |
+
+- **One process at a time** throughout, one torch thread, below-normal priority.
+- **No collisions in training or in evaluation.**
+- Mains power except where not recorded (invocation 1).
+
+### Deviations from the protocol
+
+1. **Chunk size.** Chunks were 5 updates (invocation 1), then 2, not 10, so that stops happen sooner. Resumption is exact (`tests/test_ppo.py`; also checked bit-identically in the smoke run), so this does not change the trained weights.
+2. **Memory incident in control invocation 1.** Another application (Blender, ≈ 3.4 GB of RAM and 90–100 % CPU) reduced free system memory to 830 MB.
+   - My process was paged out (working set 28 MB) and slowed to 9–238 steps/s.
+   - The process had ended by 18:05, after its last resume point at update 50, but it **did not write its record**. Its 10 completed chunks are reconstructed from the console output (`train_control_seed0.json`, marked `reconstructed_from_console_output`).
+3. **Driver changes after the protocol commit.** These affect stopping only, not training:
+   - the record is written after every chunk;
+   - the default free-memory floor was raised from 600 MB to 1,000 MB;
+   - a new stop rule ends the run when a chunk is slower than 60 steps/s.
+4. **Pause.** Invocation 2 stopped itself after one chunk at 32 steps/s (the throughput rule) while Blender kept all cores busy. Training then **waited until Blender had closed**: about 70 min of clock time in total for the control arm, of which about 15 min were training. The 75-min limit in the protocol refers to training time; it was not exceeded.
+5. **Missing hard limit.** The outer `timeout 570` of Git Bash did not reliably stop the native Windows Python process. The stops relied on the driver's own checks between chunks.
+
+### Training (seed 0, 150k steps per arm)
+
+| | Control | Penalty |
+|---|---:|---:|
+| First step at the intermediate / expert stage | 47,104 / 61,440 | 63,488 / 79,872 |
+| Validation success at 51k / 100k / 152k steps (60 episodes over the 3 stages) | 0.73 / 0.82 / 0.80 | 0.58 / 0.75 / 0.70 |
+| `best.pt` taken at | 100,352 | 100,352 |
+| Correction penalty per step (mean over training; first 10 / last 10 updates) | 0 | 0.066 (0.134 / 0.048) |
+| Filter gap ‖clip(u) − u_exec‖² per step, last 10 updates | 0.130 | 0.026 |
+| Expert stage, last 10 updates: intervention rate / policy entropy | 0.45 / 1.75 | 0.29 / 0.68 |
+
+The penalty did what it is designed to do at the level of actions. By the end of training:
+- the policy asked for actions that the filter changed **about 5× less** (in squared size);
+- the filter intervened in 29 % instead of 45 % of steps;
+- the policy's entropy was much lower, consistent with the push to keep samples inside the action bounds.
+
+The penalty arm also advanced through the curriculum later (about 18k more steps to reach expert).
+
+### Evaluation: 500 fresh expert scenarios (seeds 9,000,000–9,000,499), mean actions, plain filter
+
+Rates are per 100 episodes. Penalty − control is paired over the same 500 scenarios; the intervals resample **scenarios only**, so they do not include training-seed variability (see Purpose).
+
+| Checkpoint | Arm | Success | Deadlock | Type I (filter-blocked) | Type II (self-stop) | Collisions |
+|---|---|---:|---:|---:|---:|---:|
+| best | control | 58.6 | 39.8 | 24.2 | 15.6 | 0 |
+| best | penalty | 55.4 | 38.6 | 17.2 | 21.0 | 0 |
+| best | **penalty − control** | −3.2 [−7.0, 0.6] | **−1.2 [−5.2, 2.8]** | −7.0 [−11.6, −2.4] | +5.4 [1.2, 9.6] | — |
+| final | control | 61.2 | 37.6 | 12.6 | 25.0 | 0 |
+| final | penalty | 58.6 | 34.2 | 12.6 | 21.6 | 0 |
+| final | penalty − control | −2.6 [−6.2, 1.0] | −3.4 [−7.4, 0.6] | 0.0 [−4.0, 4.0] | −3.4 [−7.8, 1.2] | — |
+| reference | committed filtered seed 0 (1M-step run, best at 100k) | 60.2 | 39.0 | 11.2 | 27.8 | 0 |
+
+The other timeouts were still moving at the end (control 8 / 6; penalty 30 / 36), plus 2 "other stall" episodes in the penalty arm. The minimum clearance was 0.300 m in every condition.
+
+### Decisions (pre-registered rules, `best` checkpoints)
+
+| Rule | Result |
+|---|---|
+| Collisions | 0 in both arms: **pass** |
+| G1, both arms reach the expert stage | **pass** (the penalty arm 18k steps later) |
+| G2, the control shows the stalls | **pass**: control deadlock rate 39.8 %, similar to the committed seed-0 agent (39.0 %) |
+| G3, effect screen | **−1.2 points: no large effect in this seed; inconclusive** |
+
+### What the pilot shows, and what it does not
+
+- **Shown.**
+  - The penalty is applied and changes training. The control is the unchanged original training code.
+  - The two-arm design runs safely on this laptop: about 3.5 min of training per arm when the machine is idle, about 320 MB of memory, and no collisions.
+  - At 150k steps the control already reaches the stall level of the committed agents. A reduced-budget E1a can therefore test the penalty against the stalls.
+- **Suggested, single seed only (not evidence).**
+  - The penalty sharply reduced how often and how much the filter had to correct the policy, but this did **not** show up as a large drop in deadlocks: −1.2 points at the best checkpoint, −3.4 at the final one.
+  - At the best checkpoint, deadlocks shifted from Type I to Type II. At the final checkpoint they did not. This inconsistency is what one seed and one checkpoint can produce by chance.
+- **Not shown.**
+  - Whether the penalty reduces deadlocks by a smaller amount, or not at all.
+  - Any effect on success.
+  - Anything about other seeds, α values or budgets.
+  - The rule allows only "large effect" or "inconclusive", and the result is inconclusive.
+- **Interpretation caveat.** Most of the early penalty came from samples outside the action bounds, not from the filter (see the audit). A reduced filter gap together with unchanged deadlocks is compatible with a penalty that mainly shapes the action distribution. E1a cannot separate these parts. A filter-only penalty, ‖clip(u) − u_exec‖², would be a separate, non-published variant.
