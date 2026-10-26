@@ -2,6 +2,26 @@
 
 Nothing in this file has been run, except where it says **done**. Expensive runs wait for the author's approval.
 
+## Status on 2026-10-26
+
+| Experiment | Status | Where |
+|---|---|---|
+| E5 window-length sensitivity | **done** (2026-10-25) | below |
+| E2 heading escape, test time, mean actions, expert, fresh scenarios | **done**: pre-registered (commit `9ced888`) as L2 + L3. H1 partly supported (−7.4 [−10.2, −4.8] points, below the 10-point threshold); H2, H3, H4 supported | `research/experiments/lightweight/` |
+| E3-lite: replication on 500 fresh scenarios of the **unchanged** generator | **done** (R1 supported) | same |
+| Checkpoint-selection check (final vs. best, filter-trained agents) | **done**, new: C1 supported; self-stops +11.7 [+3.0, +20.8] points at the final checkpoints | same |
+| E2 with sampled actions (L4) | **deferred**: battery and background load; secondary | — |
+| Final checkpoints of the agents trained without the filter | **deferred** (load) | — |
+| E3 with a *corrected* generator | **not done**: needs an opt-in generator change (≈ 2–3 h of code) | — |
+| E1a correction penalty (10 runs × 300k steps) | **not run**: needs approval (≈ 2.5–3 h in one process) | `exp/e1-correction-penalty` |
+| E1-pilot (1 seed × 2 arms × 150k steps) | **proposed, not run**: ≈ 15–20 min in one process | `research/experiments/lightweight/README.md` |
+| E4, E6, E7, E8 | not done | below |
+
+**Resource lessons from 2026-10-26.**
+- Evaluation needs about 206 MB of RAM in one process.
+- Speed: ≈ 0.055 s per episode at κ = 0 on mains power, and ≈ 0.1–0.26 s per episode at κ = 0.5 or under background load or on battery.
+- With only ≈ 2 GB of RAM free on this laptop, run one process at a time. The earlier `--jobs 3/4` suggestions in this file are withdrawn.
+
 ## How costs were estimated (measured on this laptop, 2026-10-25, on mains power)
 
 - **Training speed.** 20,480 PPO steps with the correction penalty took **65 s** in one process, about 330 steps/s including start-up. A 300k-step run therefore takes roughly 15–20 min alone, or about 25–30 min with 3 runs in parallel. The README's 2.6–3.7 h per 1M steps was measured with 10 runs competing for 10 cores.
@@ -31,12 +51,12 @@ Nothing in this file has been run, except where it says **done**. Expensive runs
 | Seeds / scenarios / episodes | E1a: 2 arms × 5 seeds = 10 runs. Evaluation per agent: 500 fresh expert scenarios (seed base 5,000,000; primary) + 300 committed test scenarios (secondary), each with mean and sampled actions. |
 | CPU | E1a ≈ 3–5 core-h training + ≈ 1 core-h evaluation; E1b ≈ 5–9 core-h. |
 | Wall-clock | E1a ≈ 2–3 h in total with 3 parallel runs; E1b ≈ 2–4 h. |
-| On the laptop? | Yes, with `--jobs 3`, on mains power, overnight if preferred. |
+| On the laptop? | Yes, but **one run at a time** (`--jobs 1`), on mains power: ≈ 2.5–3 h for E1a. Training memory per process is not yet measured; measure it in the E1-pilot first. |
 | Success / failure | Decision table in `E1_correction_penalty.md`. Success = deadlock reduction ≥ 10 points with the paired 95 % interval excluding 0 (Holm-adjusted over the two primary tests). |
 | Effect on the paper | If the penalty removes both stall types, the paper's main message becomes "the published penalty fixes the deadlocks; here is why (both aliasing regions are penalised)". The heading-escape result (E2) then becomes secondary. If it removes only one type, the taxonomy is the key insight. If it removes neither, it is a strong negative result that motivates E2. |
 | Safeguards | Implementation is opt-in (default 0). Weights are bit-identical to `main` with the default config (checked). 93 tests pass on the branch. |
 
-### E2: Does a heading-level escape remove filter-blocked stalls without retraining?
+### E2: Does a heading-level escape remove filter-blocked stalls without retraining? (**done** for mean actions; see the status table)
 
 | | |
 |---|---|
@@ -51,7 +71,7 @@ Nothing in this file has been run, except where it says **done**. Expensive runs
 | Success / failure | Success: paired 95 % interval for the Type I reduction excludes 0 and success does not fall. Failure: no reduction, or new stalls appear (e.g. oscillation between two obstacles), reported as such. |
 | Effect on the paper | Success turns the analysis into an actionable result: filter-level fixes for Type I, policy-level fixes for Type II. Failure keeps the paper as an analysis and strengthens the case that Type I needs a multi-step or planning-level fix. Close prior art to discuss: Thumm et al. 2023; Jankovic et al. 2024. |
 
-### E3: Do the findings hold on fresh scenarios from a corrected generator?
+### E3: Do the findings hold on fresh scenarios from a corrected generator? (fresh scenarios of the *unchanged* generator: **done**; corrected generator: not done)
 
 | | |
 |---|---|

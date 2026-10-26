@@ -69,3 +69,96 @@ Branch `research/lightweight-experiments`. Written and committed **before** runn
 - **Smaller preliminary test (proposed, not run).** **E1-pilot**: seed 0, penalty vs. control, 150k steps each (the curriculum reaches the expert stage by about 50–65k steps), run one after the other in a single process. Expected ≈ 8–10 min per run, ≈ 15–20 min in total, then 2 min of evaluation on the fresh set.
   - What it could show: whether the penalty produces a *large* change in Type I/II counts for one seed, which would justify the full E1a.
   - What it could not show: any general effect. One seed, a shorter budget than the committed agents, and no interval estimate across seeds.
+
+---
+
+## Results (added after running; the protocol above is unchanged since commit 9ced888)
+
+All numbers come from `results/summary.json` (`python research/experiments/lightweight/analyze.py`). Rates are per 100 episodes; intervals are 95 % paired hierarchical bootstrap intervals (10,000 replicates, 5 seeds, so approximate).
+
+### Runs actually executed
+
+| Tag | Episodes | Wall time (s) | CPU time (s) | Peak memory | Power / notes |
+|---|---:|---:|---:|---:|---|
+| smoke | 15 | 1.7 | 1.5 | 206 MB | mains; 15/15 identical to the benchmark |
+| L1_repro_committed_expert | 1,000 | 54.6 | 50.3 | 207 MB | mains; 1,000/1,000 outcomes and step counts identical |
+| L2_val_k0 / k0.5 / k1.0 | 3 × 1,000 | 61 / 105 / 93 | 56 / 91 / 82 | 207 MB | mains |
+| L3_fresh_mean_k0 | 5,000 | 290 | 269 | 206 MB | mains |
+| L3_fresh_mean_k0.5 | 5,000 | 600.8 + 301.2 + 146.9 | (n.r.) + 275 + 144 | 207 MB | first invocation stopped at its 600 s deadline when the previous session ended; resumed on **battery** with 27–44 % background CPU load |
+| L5_fresh_final_k0 | 2,500 (filtered only) | 301.5 + 302.5 + 199.3 | 203 + 82 + 67 | 206 MB | battery, then mains; heavy background load. The low CPU time shows the below-normal priority yielding to other work |
+
+Every invocation ran one process with one torch thread at below-normal priority. No training was run.
+
+### Deviations from the protocol (decided during the session, before analysis)
+
+- **L4 (sampled actions × escape): not run.** The laptop was on battery (32 %) with 20–60 % background CPU load, and L4 was secondary and descriptive. Deferred.
+- **L5 narrowed to the filter-trained agents.** The run slowed to about 1.5 episodes/s under background load. C1 concerns only the filter-trained agents, so the unfiltered final checkpoints (2,500 episodes) were deferred. The runner evaluates the filter-trained agents first, so no unfiltered episode had been run; the CSV contains 5 × 500 filter-trained episodes only.
+
+### L2: κ selection (validation seeds 1,200,000–1,200,099)
+
+Success over all 10 agents:
+
+| κ | Success | Collisions |
+|---|---:|---:|
+| 0 | 64.7 % | 0 |
+| 0.5 | 68.5 % | 0 |
+| 1.0 | 65.6 % | 0 |
+
+By the rule, **κ* = 0.5**.
+
+### L3: fresh expert scenarios 9,000,000–9,000,499, policy mean, 10 committed agents
+
+| Agents | κ | Success | Timeouts | Filter-blocked (Type I) | Self-stop (Type II) | Moving |
+|---|---|---:|---:|---:|---:|---:|
+| trained without filter | 0 | 68.3 % | 792 | 709 | 81 | 2 |
+| trained without filter | 0.5 | 75.6 % | 611 | 523 | 85 | 3 |
+| trained with filter | 0 | 63.9 % | 903 | 297 | 577 | 29 |
+| trained with filter | 0.5 | 64.0 % | 901 | 244 | 615 | 42 |
+
+There were 0 collisions in all 10,000 episodes, and the minimum obstacle clearance was 0.3000 m.
+
+| Hypothesis | Estimate (points) | Decision (pre-registered rule) |
+|---|---|---|
+| H1: κ* lowers Type I, agents trained without filter | −7.4 [−10.2, −4.8] | **partly supported**: the interval excludes 0, but the effect is below the 10-point threshold |
+| H2: κ* leaves Type II of filter-trained agents unchanged | +1.5 [−0.8, +3.9] | **supported** |
+| H3: safety with κ* | 0 collisions, minimum clearance 0.3000 m | **supported** |
+| H4: κ* raises success, agents trained without filter | +7.2 [+5.0, +9.7] | **supported** |
+| R1: replication of the taxonomy and of both training contrasts at κ = 0 | Type I −16.5 [−22.8, −10.1]; Type II +19.8 [+12.8, +26.1]; Type I is 709/792 and Type II 577/903 of timeouts | **supported** |
+
+Exploratory, not pre-registered:
+- success of the filter-trained agents with κ*: +0.1 [−2.2, +2.4];
+- their Type I: −2.1 [−4.7, +0.2];
+- success, filter-trained − unfiltered-trained at κ = 0: −4.4 [−8.5, −0.2]. On the committed test set this was −4.0 [−10.8, 3.2].
+
+The Type I reduction holds in every seed (131→91, 133→102, 149→108, 162→110, 134→112).
+
+### L5: final (1M-step) vs. selected checkpoints, filter-trained agents, fresh scenarios, κ = 0
+
+| Checkpoint | Success | Timeouts | Type I | Type II | Moving |
+|---|---:|---:|---:|---:|---:|
+| selected (`best.pt`, committed) | 63.9 % | 903 | 297 | 577 | 29 |
+| final (`final.pt`, local only) | 59.1 % | 1,023 | 123 | 870 | 30 |
+
+Final − best:
+- Type II **+11.7 [+3.0, +20.8]**;
+- Type I −7.0 [−13.0, −1.5];
+- success −4.8 [−8.8, −1.2].
+
+**C1 supported**: self-stops remain the largest class, and they become more frequent with more training.
+
+Per seed, self-stops (best → final) were 139→205 (seed 0), 137→137 (seed 1, whose best checkpoint *is* its final one), 51→174 (seed 2), 105→206 (seed 3) and 145→148 (seed 4).
+
+**Caveat:** the `final.pt` files are local training outputs, not in the repository. Their SHA-256 hashes are in `results/L5_fresh_final_k0/run_record.json`. Committing them (10 × 0.58 MB) would make L5 reproducible by others, and needs the author's approval.
+
+### What these results do and do not justify
+
+**Justified:**
+- the two-mechanism taxonomy and both training contrasts replicate on 5,000 fresh episodes from the same generator;
+- a simple heading escape, safe by construction, lowers filter-blocked stalls and raises success for agents trained without the filter, by about 7 points;
+- it does not touch self-stops. This is expected, because it is triggered only by speed reductions, which never occur while the policy commands zero speed. A heading change triggered during a stop was not tested;
+- self-stops are not an artefact of early checkpoint selection.
+
+**Not justified:**
+- that the escape "solves" Type I: 523 of 611 timeouts are still filter-blocked;
+- anything about a corrected generator, other stages, sampled actions, the correction penalty, or real robots;
+- a causal explanation of self-stops (more training increases them, but why is untested).

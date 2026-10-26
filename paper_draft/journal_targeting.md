@@ -62,8 +62,8 @@ Date: 2026-10-25.
 |---|---|
 | Core findings (taxonomy, contrasts, geometry) | ready, verified, reproducible from committed files |
 | Theory (Props. 1–3, Cor. 1) | written; needs a second reader |
-| Remedy evidence (E1, E2) | **missing**: decisive for the paper's message |
-| Fresh-scenario evidence (E3) | **missing** |
+| Remedy evidence | heading escape (E2) **done** (modest: ≈ 7 points, below the pre-set threshold); correction penalty (E1) **missing**: decisive for the paper's message |
+| Fresh-scenario evidence | **partly**: replicated on 500 unused scenarios of the same generator; corrected generator still missing |
 | Classical / safe-RL baselines (E6) | **missing** |
 | Systematic literature search (G4) | **missing** |
 | Archived release with DOI | missing |

@@ -43,11 +43,11 @@ This is a narrower claim. It is only competitive for a Q1 journal if E1 and E2 t
 | # | Gap | Why a reviewer will care | Closes it | Severity |
 |---|---|---|---|---|
 | G1 | **Correction-penalty baseline** (Pizarro Bejarano et al. 2025) | It is the closest published remedy; if it removes the deadlocks, the paper's conclusions change | E1 (prepared, not run) | critical |
-| G2 | **Remedy for filter-blocked stalls** | Without it, the analysis ends at "here is a problem" | E2 (specified; not implemented) | critical |
-| G3 | **Fresh, held-out scenarios** | All analyses used the 300 test scenarios on which the margin and the sampled-action evaluation were chosen | E3 (evaluation only, with a corrected generator) | critical |
+| G2 | **Remedy for filter-blocked stalls** | Without it, the analysis ends at "here is a problem" | **partly closed (2026-10-26)**: the test-time heading escape lowers Type I by 7.4 [4.8, 10.2] points and raises success by 7.2 [5.0, 9.7] points (agents trained without the filter). This is below the pre-registered 10-point threshold, and 523/611 timeouts are still Type I. A stronger (multi-step) remedy is still missing | major |
+| G3 | **Fresh, held-out scenarios** | All analyses used the 300 test scenarios on which the margin and the sampled-action evaluation were chosen | **partly closed (2026-10-26)**: the taxonomy and both training contrasts replicate on 500 unused scenarios of the *same* generator (pre-registered). Still open: corrected generator, other stages, sampled actions | major |
 | G4 | **Systematic literature search** for prior analyses of learned-policy deadlock behind filters | The novelty claim rests on a targeted search | protocol in `research/IMPLEMENTATION_ROADMAP.md` B0; no compute | critical |
 | G5 | Classical / safe-RL baselines (DWA or MPC with DT-CBF; PPO-Lagrangian) | RL navigation papers without classical baselines are routinely criticised (Xiao et al. 2022 survey) | E6 | major |
-| G6 | Mechanism of self-stops (action aliasing vs. reward) | The Discussion offers a hypothesis only | E4 | major |
+| G6 | Mechanism of self-stops (action aliasing vs. reward) | The Discussion offers a hypothesis only | E4. New evidence: self-stops *increase* with longer training (final vs. selected checkpoints, +11.7 [3.0, 20.8] points), so they are learned, not an early-checkpoint artefact. The cause is still untested | major |
 | G7 | ~~Window-length sensitivity of the taxonomy~~ | construct validity | **closed by E5** (counts change by ≤ 4 for K = 50–200) | — |
 | G8 | Formal check of filter permissiveness in the sense of Oh et al. 2026 | links the analysis to theory | analytical; no compute | moderate |
 | G9 | More seeds (10+) for method-level claims | 5 seeds give approximate intervals | E7 (optional) | moderate |
@@ -58,14 +58,16 @@ This is a narrower claim. It is only competitive for a Q1 journal if E1 and E2 t
 ## 4. What the current evidence does and does not support
 
 **Supported now:**
-- the two-mechanism taxonomy on this benchmark;
-- the shift between mechanisms caused by the training setup (paired intervals exclude 0 on two stages);
+- the two-mechanism taxonomy on this benchmark, replicated on 500 unused scenarios (same generator, pre-registered);
+- the shift between mechanisms caused by the training setup (paired intervals exclude 0 on two stages and on the fresh scenarios);
+- a modest, safe, test-time reduction of filter-blocked stalls by a heading escape, with no effect on self-stops;
+- self-stops are not an artefact of early checkpoint selection;
 - the mechanism-specific effect of sampling;
 - the geometry predicted by Prop. 2;
-- the absence of a measurable benefit of training with the filter on success.
+- the absence of a measurable benefit of training with the filter on success (on the fresh scenarios the filter-trained agents were 4.4 [0.2, 8.5] points *lower*; exploratory).
 
 **Not supported now:**
-- any claim about which published remedy fixes which mechanism;
-- generalisation beyond the 300 inspected scenarios;
+- any claim about whether the published correction penalty fixes either mechanism (E1 not run);
+- generalisation to other scenario generators, stages or sampled actions in the fresh evaluation;
 - the causal explanation of self-stops;
 - anything about real robots or other simulators.

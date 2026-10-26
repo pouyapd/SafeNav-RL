@@ -19,7 +19,9 @@ Windows 11, Python 3.12.7, torch 2.10.0+cpu, gymnasium 1.2.3, numpy 2.4.1, CPU o
 | Analysis scripts read stored outputs only | ✅ | `research/scripts/*.py` |
 | Fixed seeds for every evaluation | ✅ | test 2,000,000 + 100,000·stage + i; validation 1,000,000 + …; fresh E1 set 5,000,000 + i |
 | Pre-registered analysis for the new experiments | ⚠️ partly | E1 decision rules fixed in `research/experiments/E1_correction_penalty.md` before running; E2/E3 still to be written down |
-| Held-out test set never used for design choices | ❌ | the 300 test scenarios were inspected; E3 adds fresh scenarios |
+| Held-out test set never used for design choices | ⚠️ partly | the 300 test scenarios were inspected; a pre-registered evaluation on 500 unused scenarios (seeds 9,000,000–9,000,499, same generator) was added on 2026-10-26 |
+| Pre-registration of hypothesis-testing evaluations | ✅ for L2–L5 | protocol committed before running (`9ced888`, `research/experiments/lightweight/README.md`); deviations listed there |
+| All evaluated checkpoints public | ⚠️ | the 10 committed agents yes; the 5 `final.pt` checkpoints used in L5 are local only (hashes in `results/L5_fresh_final_k0/run_record.json`); committing them needs approval |
 | Archived release with a DOI | ❌ | create a Zenodo release when the experiments are complete |
 | Compute reported | ✅ | `minimum_experiments.md` (measured training and evaluation speed) |
 | Statistical methods described with their limits | ✅ | manuscript §5; approximate intervals with 5 seeds stated |
@@ -45,6 +47,14 @@ python research/scripts/taxonomy_window_sensitivity.py
 
 # 4. paper figures and statistics (seconds) -> paper_draft/figures/*.pdf, paper_draft/generated/stats.json
 python research/scripts/paper_figures_stats.py
+
+# 4b. lightweight pre-registered evaluation (one process each; about 1-5 min on mains power)
+python research/experiments/lightweight/run_eval.py --tag L1_repro_committed_expert --agents results/checkpoints --stage expert --seed-base 2200000 --n 100 --kappa 0
+python research/experiments/lightweight/run_eval.py --tag L2_val_k0.5 --agents results/checkpoints --stage expert --seed-base 1200000 --n 100 --kappa 0.5   # also k0, k1.0
+python research/experiments/lightweight/run_eval.py --tag L3_fresh_mean_k0   --agents results/checkpoints --stage expert --seed-base 9000000 --n 500 --kappa 0
+python research/experiments/lightweight/run_eval.py --tag L3_fresh_mean_k0.5 --agents results/checkpoints --stage expert --seed-base 9000000 --n 500 --kappa 0.5
+python research/experiments/lightweight/run_eval.py --tag L5_fresh_final_k0 --agents runs/benchmark --checkpoint-name final --variants filtered --stage expert --seed-base 9000000 --n 500 --kappa 0   # needs the local final.pt files
+python research/experiments/lightweight/analyze.py
 
 # 5. manuscript
 cd paper_draft && latexmk -pdf manuscript.tex

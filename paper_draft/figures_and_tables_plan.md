@@ -18,7 +18,7 @@ Every figure and table below is generated from files in the repository. Status:
 | (candidate) `failure_cases_expert.png` | first six failed expert episodes, filter-trained seed 0 (4 self-stops, 1 filter-blocked, 1 moving) | exists, not yet in the draft | `results/benchmark/` + checkpoints | `python -m safenav plot ...` |
 | (candidate) `safety_margin_sweep.png` | oracle feasibility vs margin | exists | `results/safety_sweep/` | `python -m safenav plot ...` |
 | Fig. R1 | Type I/II rates with the correction penalty (E1) | **required** | E1 outputs | `research/experiments/e1_evaluate.py` (branch `exp/e1-correction-penalty`) |
-| Fig. R2 | Type I rates with the heading-level escape ψ (E2) | **required** | E2 outputs | E2 not implemented yet |
+| Fig. R2 | Type I rates with the heading-level escape ψ (E2) | optional: the numbers are in Table 4 | `research/experiments/lightweight/results/` | a figure could be added; not needed |
 
 ## Tables
 
@@ -27,7 +27,8 @@ Every figure and table below is generated from files in the repository. Status:
 | Table 1 | positioning against related work | new | `research/LITERATURE_REVIEW.md` (reading depth per paper); bibliography verified against Crossref |
 | Table 2 | expert success / collision / timeout / interventions, 9 conditions | exists (numbers) | `results/benchmark/summary.csv`, `results/stochastic_eval/summary.json` |
 | Table 3 | stall-class counts, intermediate and expert | new | `research/audit_outputs/stall_taxonomy_all.csv` |
-| Table R | remedies: success and Type I/II rates for penalty, ψ, stochastic deployment | **required** | E1, E2 |
+| Table 4 | pre-registered fresh-scenario evaluation: κ = 0 / 0.5, final checkpoints | **new (2026-10-26)** | `research/experiments/lightweight/results/summary.json` |
+| Table R | remedies incl. correction penalty | **required** (E1) | E1 |
 
 ## Claim-to-evidence map (manuscript sections)
 
@@ -49,3 +50,7 @@ Every figure and table below is generated from files in the repository. Status:
 | consistency: the taxonomy re-run reproduces the benchmark outcomes for all 3,600 mean-action / baseline filtered episodes | §5 | `stats.json` (`consistency_with_benchmark`: 0 mismatches) | automated check |
 | Lemma 1, Props. 1–3, Cor. 1 | §4 | proofs in the manuscript; Lemma 1 also tested in `tests/test_safety_filter.py` | Props. 1–3 are short derivations; not machine-checked; **a second reader should check them** |
 | all three stages feasible at 0.3 m; 53/100 expert goals < 5 m; 3 trivial scenarios | §5 | `results/benchmark/scenarios.csv`, `research/audit_outputs/goal_distances.csv` | recomputed |
+| replication on 500 unused scenarios: Type I −16.5 [−22.8, −10.1], Type II +19.8 [12.8, 26.1]; 709/792 and 577/903 | §6.6 | `research/experiments/lightweight/results/summary.json` (`L3_tests`, `L3_rates`) | pre-registered (commit `9ced888`) |
+| heading escape κ = 0.5: Type I −7.4 [−10.2, −4.8], success +7.2 [5.0, 9.7] (trained without filter); Type II +1.5 [−0.8, 3.9] (trained with filter); 0 collisions | §6.8, Abstract | same | pre-registered; H1 only partly supported (below threshold) |
+| final vs. selected checkpoints: Type II +11.7 [3.0, 20.8], success −4.8 [−8.8, −1.2] | §6.7, Abstract | same (`L5_tests`) | pre-registered C1; final.pt not public yet |
+| evaluation harness reproduces the committed benchmark (1,000/1,000 episodes) | (reproducibility) | `research/experiments/lightweight/results/L1_repro_committed_expert/` | exact comparison |
