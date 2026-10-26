@@ -113,3 +113,23 @@ def test_training_is_reproducible(small_config, tmp_path):
         states.append({k: v.clone() for k, v in trainer.model.state_dict().items()})
     for key in states[0]:
         assert torch.equal(states[0][key], states[1][key]), key
+
+
+def test_correction_penalty_reaches_training_reward(small_config, tmp_path):
+    """E1 control vs treatment: the --set override must change the rewards PPO trains on."""
+    from safenav.config import apply_overrides
+    torch.set_num_threads(1)
+    runs = {}
+    for arm, alpha in (("control", 0.0), ("penalty", 1.0)):
+        cfg = apply_overrides(small_config, {"safety.correction_penalty": alpha})
+        trainer = PPOTrainer(cfg, run_dir=str(tmp_path / arm), safety_filter=True, verbose=False)
+        trainer.train()
+        runs[arm] = (pd.read_csv(tmp_path / arm / "progress.csv"), trainer.model.state_dict())
+    control, penalty = runs["control"][0], runs["penalty"][0]
+    assert (control["correction_penalty_mean"] == 0).all()
+    assert (penalty["correction_penalty_mean"] > 0).all()
+    assert (control["filter_gap_sq_mean"] >= 0).all()
+    # Same seed and config otherwise: the first rollout is identical, so any weight difference
+    # comes from the penalised rewards.
+    assert control["intervention_rate"].iloc[0] == penalty["intervention_rate"].iloc[0]
+    assert any(not torch.equal(v, runs["penalty"][1][k]) for k, v in runs["control"][1].items())

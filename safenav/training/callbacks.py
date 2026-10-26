@@ -125,7 +125,8 @@ class TrainingLogger:
     PROGRESS_FIELDS = [
         "update", "timestep", "episodes", "stage", "lr", "fps",
         "mean_return_100", "success_rate_100", "collision_rate_100", "timeout_rate_100",
-        "intervention_rate", "policy_loss", "value_loss", "entropy",
+        "intervention_rate", "correction_penalty_mean", "filter_gap_sq_mean",
+        "policy_loss", "value_loss", "entropy",
         "approx_kl", "clip_fraction", "explained_variance",
     ]
     VALIDATION_FIELDS = ["timestep", "episodes", "success_rate", "collision_rate", "timeout_rate", "mean_return"]
