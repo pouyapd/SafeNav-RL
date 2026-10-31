@@ -57,6 +57,14 @@ def rates(df):
             "timeouts": int(len(t)), "classes": t["class"].value_counts().to_dict()}
 
 
+def _relative_paths(summary):
+    # The trainer stores absolute checkpoint paths; keep machine-specific paths out of the summary.
+    p = summary.get("final_checkpoint")
+    if p and Path(p).is_absolute():
+        summary["final_checkpoint"] = Path(p).resolve().relative_to(ROOT).as_posix()
+    return summary
+
+
 def training(arm):
     run = RUNS / arm / "filtered" / "seed_0"
     if not (run / "train_summary.json").is_file():
@@ -68,7 +76,7 @@ def training(arm):
     first = {s: int(prog[prog.stage == s].timestep.min()) for s in ("intermediate", "expert") if (prog.stage == s).any()}
     expert = prog[prog.stage == "expert"]
     return {
-        "train_summary": json.loads((run / "train_summary.json").read_text(encoding="utf-8")),
+        "train_summary": _relative_paths(json.loads((run / "train_summary.json").read_text(encoding="utf-8"))),
         "first_timestep_at_stage": first,
         "best_checkpoint_timestep": int(best),
         "validation": val.to_dict(orient="records"),

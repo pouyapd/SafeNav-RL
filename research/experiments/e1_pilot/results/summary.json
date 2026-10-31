@@ -11,7 +11,7 @@
      -0.0,
      4.412943209802491
     ],
-    "final_checkpoint": "C:\\Users\\user\\Desktop\\GITHUB\\SafeNav-RL\\runs\\e1_pilot\\control\\filtered\\seed_0\\checkpoints\\final.pt"
+    "final_checkpoint": "runs/e1_pilot/control/filtered/seed_0/checkpoints/final.pt"
    },
    "first_timestep_at_stage": {
     "intermediate": 47104,
@@ -69,7 +69,7 @@
      -0.0,
      4.425736269027637
     ],
-    "final_checkpoint": "C:\\Users\\user\\Desktop\\GITHUB\\SafeNav-RL\\runs\\e1_pilot\\penalty\\filtered\\seed_0\\checkpoints\\final.pt"
+    "final_checkpoint": "runs/e1_pilot/penalty/filtered/seed_0/checkpoints/final.pt"
    },
    "first_timestep_at_stage": {
     "intermediate": 63488,
