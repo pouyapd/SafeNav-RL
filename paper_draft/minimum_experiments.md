@@ -54,7 +54,7 @@ Nothing in this file has been run, except where it says **done**. Expensive runs
 |---|---|
 | Research question | Does PPO with the filter in training plus the penalty `α‖u − u_exec‖²` (Pizarro Bejarano et al., RA-L 2025) remove Type I and/or Type II stalls? |
 | Hypothesis | H1: with α = 1, the expert deadlock rate (mean actions, fresh scenarios) falls by ≥ 10 points against an identical control; success rises; 0 collisions. |
-| Procedure | Code and protocol are ready on local branch `exp/e1-correction-penalty`: `research/experiments/E1_correction_penalty.md`, `e1_evaluate.py`. **E1a** (screening): penalty arm vs. identical control, 300k steps each. **E1b** (confirmation, only if needed): penalty arm at 1M steps against the committed filtered checkpoints. |
+| Procedure | Code and protocol are on branch `exp/e1-pilot` (first written on `exp/e1-correction-penalty`): `research/experiments/E1_correction_penalty.md`, `e1_evaluate.py`. **E1a** (screening): penalty arm vs. identical control, 300k steps each. **E1b** (confirmation, only if needed): penalty arm at 1M steps against the committed filtered checkpoints. |
 | Seeds / scenarios / episodes | E1a: 2 arms × 5 seeds = 10 runs. Evaluation per agent: 500 fresh expert scenarios (seed base 5,000,000; primary) + 300 committed test scenarios (secondary), each with mean and sampled actions. |
 | CPU | E1a ≈ 3–5 core-h training + ≈ 1 core-h evaluation; E1b ≈ 5–9 core-h. |
 | Wall-clock | E1a ≈ 2–3 h in total with 3 parallel runs; E1b ≈ 2–4 h. |

@@ -14,7 +14,7 @@ Windows 11, Python 3.12.7, torch 2.10.0+cpu, gymnasium 1.2.3, numpy 2.4.1, CPU o
 | Trained agents committed | ✅ | `results/checkpoints/{filtered,unfiltered}/seed_{0..4}.pt` (hashes below) |
 | Per-episode results committed | ✅ | `results/benchmark/episodes.csv`, `results/stochastic_eval/episodes.csv` |
 | Benchmark regenerates from the checkpoints | ✅ | per-episode files byte-identical (audit §1); `summary.csv` differs by ≤ 1.8e-15 (summation order) |
-| Tests | ✅ | 90 passed (`main`/docs branch); 93 passed on `exp/e1-correction-penalty` |
+| Tests | ✅ | 99 collected on `exp/e1-pilot` (2026-11-01); CI (`tests` workflow, Python 3.10 and 3.12) passed on its head `bad41e9`. 90 on `main` |
 | Training reproducible | ⚠️ partly | deterministic and exactly resumable at small scale (tests); the 10 × 1M-step runs were not repeated |
 | Analysis scripts read stored outputs only | ✅ | `research/scripts/*.py` |
 | Fixed seeds for every evaluation | ✅ | test 2,000,000 + 100,000·stage + i; validation 1,000,000 + …; fresh E1 set 5,000,000 + i |
@@ -32,7 +32,7 @@ Windows 11, Python 3.12.7, torch 2.10.0+cpu, gymnasium 1.2.3, numpy 2.4.1, CPU o
 ```bash
 # 0. environment
 pip install -e ".[dev]"
-python -m pytest -q                                     # 90 tests, about 1-2 min
+python -m pytest -q                                     # 99 tests on exp/e1-pilot, about 1-4 min
 
 # 1. benchmark and sampled-action evaluation from the committed checkpoints (minutes)
 python -m safenav benchmark --runs results/checkpoints --out runs/check/benchmark --jobs 8

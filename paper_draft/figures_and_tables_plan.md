@@ -17,7 +17,7 @@ Every figure and table below is generated from files in the repository. Status:
 | (candidate) `cbf_speed_limit.png` | speed limit field around obstacles; illustrates Prop. 2 | exists, not yet in the draft | `docs/figures/` | `python -m safenav plot ...` |
 | (candidate) `failure_cases_expert.png` | first six failed expert episodes, filter-trained seed 0 (4 self-stops, 1 filter-blocked, 1 moving) | exists, not yet in the draft | `results/benchmark/` + checkpoints | `python -m safenav plot ...` |
 | (candidate) `safety_margin_sweep.png` | oracle feasibility vs margin | exists | `results/safety_sweep/` | `python -m safenav plot ...` |
-| Fig. R1 | Type I/II rates with the correction penalty (E1) | **required** | E1 outputs | `research/experiments/e1_evaluate.py` (branch `exp/e1-correction-penalty`) |
+| Fig. R1 | Type I/II rates with the correction penalty (E1) | **required** | E1 outputs | `research/experiments/e1_evaluate.py` (on `exp/e1-pilot`; E1a not run; the one-seed pilot is not a source for this figure) |
 | Fig. R2 | Type I rates with the heading-level escape ψ (E2) | optional: the numbers are in Table 4 | `research/experiments/lightweight/results/` | a figure could be added; not needed |
 
 ## Tables
