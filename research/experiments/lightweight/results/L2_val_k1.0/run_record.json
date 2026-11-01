@@ -1,0 +1,63 @@
+{
+  "invocations": [
+    {
+      "tag": "L2_val_k1.0",
+      "command": "research/experiments/lightweight/run_eval.py --tag L2_val_k1.0 --agents results/checkpoints --stage expert --seed-base 1200000 --n 100 --kappa 1.0 --deadline-s 240",
+      "git_commit": "9ced8885622b91593e77dd4ebd7f620506b574cd",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 1000,
+      "episodes_completed": 1000,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 93.1,
+      "cpu_s_this_invocation": 82.4,
+      "peak_memory_mb": 207.1,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "checkpoints": {
+        "filtered_seed0": {
+          "path": "results/checkpoints/filtered/seed_0.pt",
+          "sha256": "af4130f4f99d37875a701f79fb69e9b942a7ced97f45f6d991a4ca7ec7611f6d"
+        },
+        "filtered_seed1": {
+          "path": "results/checkpoints/filtered/seed_1.pt",
+          "sha256": "66f287855a2442286eeb98a2c3494f4778bb467de2e4593323cd67883a9cbb47"
+        },
+        "filtered_seed2": {
+          "path": "results/checkpoints/filtered/seed_2.pt",
+          "sha256": "4eaf3e30049a5e4c09475997c34ffb6bf437f70043d72dd2deb2f514c9e1d77e"
+        },
+        "filtered_seed3": {
+          "path": "results/checkpoints/filtered/seed_3.pt",
+          "sha256": "093a2c13a2ec7485833b845ccf7d15724f6e60b5dfa6c42aaea77d226fd7259c"
+        },
+        "filtered_seed4": {
+          "path": "results/checkpoints/filtered/seed_4.pt",
+          "sha256": "f65089f6d3a0071c9a0fe4222b31ebeaa55906c73432a9ff6f6005d11372af57"
+        },
+        "unfiltered_seed0": {
+          "path": "results/checkpoints/unfiltered/seed_0.pt",
+          "sha256": "fbe1bdd783fb9b8ee2f99ae0f2343f992ccdfe5727745d45204149a84359ae56"
+        },
+        "unfiltered_seed1": {
+          "path": "results/checkpoints/unfiltered/seed_1.pt",
+          "sha256": "e1acbf27b2701e7b233d7824ce954ccc3b0ff3697b2597b78597fd528ee537a4"
+        },
+        "unfiltered_seed2": {
+          "path": "results/checkpoints/unfiltered/seed_2.pt",
+          "sha256": "9b8612d5c6753416085056c9f68853387065aed074c176c5ca9af0518f3ca8a7"
+        },
+        "unfiltered_seed3": {
+          "path": "results/checkpoints/unfiltered/seed_3.pt",
+          "sha256": "0c54d3c9e5cf2cbf60fff36eda83cea970b89d8be17d5bb3e298593fd34ea3db"
+        },
+        "unfiltered_seed4": {
+          "path": "results/checkpoints/unfiltered/seed_4.pt",
+          "sha256": "26282eec7dd99b72c6ed33648884712e4b81f349ae03a7cac231ad714e1ddd6d"
+        }
+      }
+    }
+  ]
+}

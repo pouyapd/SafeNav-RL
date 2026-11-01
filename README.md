@@ -13,6 +13,7 @@
 
 <p align="center">
   <a href="#key-results">Key results</a> ·
+  <a href="#follow-up-experiments-evaluation-only">Follow-up experiments</a> ·
   <a href="#how-the-safety-filter-works">Safety filter</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#reproduce-the-benchmark">Reproduce</a> ·
@@ -20,15 +21,36 @@
   <a href="docs/SAFETY.md">Proof and assumptions</a>
 </p>
 
-A learned navigation policy can be made collision-free by a **safety filter** that overrides unsafe commands. The filter's price is less visible: a robot that is never allowed to approach an obstacle can also get stuck in front of it. SafeNav-RL measures both sides. It contains a 2D simulator with a range sensor, PPO agents, a discrete-time control-barrier-function (CBF) speed filter with a proof of what it guarantees, two classical baselines, and a seeded benchmark over five training seeds and 100 fixed test scenarios per difficulty stage.
+A learned navigation policy can be made collision-free by a **safety filter** that overrides unsafe commands. The filter's price is less visible: a robot that is never allowed to approach an obstacle can also get stuck in front of it. SafeNav-RL measures both sides. It contains:
+
+- a 2D simulator with a range sensor;
+- PPO agents;
+- a discrete-time control-barrier-function (CBF) speed filter, with a proof of what it guarantees;
+- two classical baselines;
+- a seeded benchmark over five training seeds and 100 fixed test scenarios per difficulty stage.
+
+**Research question.** *Why* do filtered robots get stuck, and does it depend on how the policy was trained? The supported answer so far, in simulation only:
+
+- Agents trained without the filter are **blocked by the filter** at the keep-out boundary.
+- Agents trained with the filter mostly **stop by themselves** before the boundary.
+
+The two mechanisms respond differently to remedies. Work in progress:
+
+- research audit and plans: [`research/`](research/);
+- follow-up experiments: [`research/experiments/lightweight/`](research/experiments/lightweight/);
+- a manuscript **draft** that has not been submitted or peer-reviewed: [`paper_draft/`](paper_draft/).
 
 ## Key results
 
 *Simulation: 2D workspace, static circular obstacles, exact kinematics. Nothing here was tested on a robot.*
 
 - **The filter removed every collision.** Across all 3,600 benchmark episodes with the filter on (every controller and stage) there was no collision, and the closest approach was exactly the 0.30 m margin. Without it, the go-to-goal controller collided in 43 % of expert episodes and the PPO agent trained without the filter in 1.0 %.
-- **The price is deadlock.** With the filter, robots can stop at a keep-out boundary and time out. On the expert stage the PPO agent trained without the filter falls from 94.6 % success to 65.0 % when the filter is added at test time.
+- **The price is deadlock.** With the filter, robots can stall in front of an obstacle and time out. Depending on how the agent was trained, the filter blocks the robot at the keep-out boundary, or the policy stops the robot itself before it gets there ([details](#results-in-detail)). On the expert stage the PPO agent trained without the filter falls from 94.6 % success to 65.0 % when the filter is added at test time.
 - **Training with the filter in the loop did not clearly help.** With the policy mean (the standard deterministic evaluation) the agent trained with the filter reached 61.0 % expert success, against 65.0 % for the agent trained without it and given the filter at test time. Sampling actions from the policy instead of taking its mean breaks many deadlocks for both agents: **76.4 % [68.2, 84.6]** when trained with the filter, **70.0 % [66.3, 73.7]** when trained without it. These two are the like-for-like comparison (same scenarios, filter on, sampled actions). The intervals overlap, so they do not show that either training setup is better. The potential-field controller with the filter (72.0 % [62.5, 79.9]) is comparable: it is deterministic, its interval is computed differently, and the intervals overlap.
+- **The stall mechanisms replicate on unused scenarios.** In a pre-registered follow-up evaluation on 500 previously unused expert scenarios ([details](#follow-up-experiments-evaluation-only)):
+  - the two mechanisms and the effect of training on them were confirmed;
+  - a simple, test-time heading change raised the success of the agents trained without the filter by about 7 points, with no collision;
+  - self-stops became *more* frequent with longer training, not less.
 
 | Expert stage (100 test scenarios, 8–12 obstacles) | success | collision | timeout |
 |---|:---:|:---:|:---:|
@@ -45,7 +67,7 @@ A learned navigation policy can be made collision-free by a **safety filter** th
 <sub>Each row: controller (for PPO, whether the filter was used during training) · whether the filter is on at test time. PPO rows without "sampled actions" use the policy mean; the two baselines are deterministic controllers. Brackets: 95 % intervals; for PPO a t-interval over the 5 training seeds (it reflects variation between seeds only), for the baselines a Wilson interval over the 100 episodes. Sources: <a href="results/benchmark/summary.csv"><code>results/benchmark/summary.csv</code></a>, <a href="results/stochastic_eval/summary.json"><code>results/stochastic_eval/summary.json</code></a>.</sub>
 
 <p align="center">
-  <img src="docs/figures/hero_same_scenario.png" alt="Grid of 12 panels: the first three expert test scenarios (rows) for four controllers (columns). PPO with the filter and the potential field with the filter stop at keep-out boundaries in some scenarios; PPO without the filter reaches the goal in two of three; go-to-goal without the filter collides in the first scenario" width="900">
+  <img src="docs/figures/hero_same_scenario.png" alt="Grid of 12 panels: the first three expert test scenarios (rows) for four controllers (columns). PPO trained with the filter (filter on) times out in two of the three scenarios, once blocked at a keep-out boundary and once still moving; the potential field with the filter times out in one; PPO trained without the filter (no filter at test time) reaches the goal in two of three; go-to-goal without the filter collides in the first scenario" width="900">
 </p>
 <p align="center"><sub>The first three expert test scenarios (no selection) for four controllers. Dashed circles: the keep-out boundary the filter enforces; dark dots: steps where the filter reduced the speed.</sub></p>
 
@@ -97,16 +119,43 @@ flowchart LR
 
 <p align="center"><img src="docs/figures/training_curves.png" alt="Validation success over training for both PPO variants (mean and range over five seeds), and the training collision rate of the unfiltered variant" width="880"></p>
 
-**Where the policies struggle.** Timeouts grow with the number of obstacles for every controller with the filter on. Replaying the failed expert episodes of the filter-trained agent shows the mechanism: in most of them the robot reaches a keep-out boundary early and stops there for the rest of the episode, although a path that keeps the margin exists (geometric oracle). The deterministic policy keeps steering into the boundary; sampled actions often escape (table above).
+**Where the policies struggle.** Timeouts grow with the number of obstacles for every controller with the filter on. In every expert test scenario a path that keeps the margin exists (geometric oracle), so none of these timeouts is caused by a blocked path. Replaying every expert timeout of the PPO agents with the filter on (5 training seeds × 100 scenarios per agent type, policy mean) shows that the two agent types stall in different ways:
+
+- **Blocked by the filter (agent trained without the filter): 141 of its 175 timeouts.** The robot sits on the keep-out boundary while the policy keeps commanding full speed (median 1.0 m/s). The filter sets the speed to zero, and the turn rate keeps changing sign (median 70 sign changes in the last 100 steps) without turning the robot away. In all 141 cases the robot's heading is less than 90° from the direction of the nearest obstacle (median 68°): at the boundary, the filter allows no forward motion with any such heading.
+- **Stopped by the policy itself (agent trained with the filter): 122 of its 195 timeouts.** The policy commands zero speed *before* the robot reaches the boundary (median 0.41 m before it; interquartile range 0.16–0.72 m). The filter does not cause these stops. In 89 of the 122, the goal lies within 45° of the direction of the nearest obstacle (median 26°), so the obstacle is between robot and goal. The robot hardly turns (median |ω| 0.04 rad/s). Another 67 timeouts of this agent are blocked by the filter, and 6 are not stalls.
+
+Sampling actions from the policy removes most self-stops (122 → 13 for the agent trained with the filter, 34 → 1 for the agent trained without it), but not the stalls blocked by the filter (67 → 71 and 141 → 147). This is why sampling raises the success rate of the filter-trained agent more (table above).
+
+<sub>A timeout counts as a stall if the robot moves less than 0.10 m in its last 100 steps. It counts as blocked by the filter if the filter reduced the speed in at least half of those steps, and as stopped by the policy if the policy commanded a speed of at most 0.001 m/s in at least half of them. This is a post-hoc analysis of the test episodes, made after the benchmark. Script: <a href="research/scripts/audit_diagnostics.py"><code>research/scripts/audit_diagnostics.py</code></a>; per-episode output: <a href="research/audit_outputs/timeout_attribution_expert.csv"><code>research/audit_outputs/timeout_attribution_expert.csv</code></a>; discussion: <a href="research/REPOSITORY_AUDIT.md"><code>research/REPOSITORY_AUDIT.md</code></a> §5.1.</sub>
 
 <p align="center">
   <img src="docs/figures/difficulty_obstacles.png" alt="Success and timeout rate with the filter on, by number of obstacles, for the four controllers" width="880">
-  <img src="docs/figures/failure_cases_expert.png" alt="Six failed expert episodes of the filter-trained PPO agent: in most, the robot stops near a dashed keep-out boundary soon after the start" width="900">
+  <img src="docs/figures/failure_cases_expert.png" alt="The first six failed expert episodes of the filter-trained PPO agent (training seed 0). In four, the policy stops the robot 0.01 to 0.23 m before a dashed keep-out boundary; in one, the filter blocks the robot at the boundary; in one, the robot is still moving when time runs out" width="900">
 </p>
 
 **Safety margin.** With an exactly enforced 0.8 m margin (the value in version 0.1) only 54 % of the expert scenarios have any path that keeps the margin, so the default is 0.3 m ([`docs/SAFETY.md`](docs/SAFETY.md)).
 
 <p align="center"><img src="docs/figures/safety_margin_sweep.png" alt="Share of test scenarios in which the goal is reachable while keeping the margin, and potential-field success with the filter, for margins from 0 to 0.8 m" width="880"></p>
+
+## Follow-up experiments (evaluation only)
+
+These runs reuse the committed agents and train nothing. The hypotheses, the rule for choosing the one free parameter, and the decision criteria were committed **before** the runs ([protocol and full results](research/experiments/lightweight/README.md)). Each run used one process at below-normal priority: about 0.06–0.26 s per episode and about 210 MB of memory.
+
+| Experiment | Result |
+|---|---|
+| Reproducibility of the evaluation code | all 1,000 committed expert episodes reproduced exactly (outcome and step count) |
+| Replication on 500 **unused** expert scenarios (same generator) | blocked by the filter: 709 of 792 timeouts (agents trained without the filter). Self-stops: 577 of 903 (agents trained with it). Training with the filter: filter-blocked rate −16.5 points [−22.8, −10.1], self-stop rate +19.8 [+12.8, +26.1] |
+| **Heading escape** at test time: when the filter cuts the speed, also turn toward the obstacle's tangent (`safenav/safety/heading_escape.py`, opt-in) | agents trained without the filter: success **+7.2 points [+5.0, +9.7]**, filter-blocked rate −7.4 [−10.2, −4.8]. Filter-trained agents: no change in self-stops (+1.5 [−0.8, +3.9]). 0 collisions in 10,000 episodes; the safety guarantee does not depend on the turn rate. The effect is **below** the pre-registered 10-point threshold, and most filter-blocked stalls remain |
+| Final 1M-step checkpoints vs. the selected checkpoints (filter-trained agents) | self-stops **+11.7 points [+3.0, +20.8]**, success −4.8 [−8.8, −1.2]: self-stops are not caused by picking early checkpoints. The final checkpoints are local training outputs and are **not** in this repository |
+
+<sub>Brackets: 95 % paired hierarchical bootstrap intervals over 5 training seeds × 500 scenarios (approximate with 5 seeds). Fresh scenarios: expert seeds 9,000,000–9,000,499.</sub>
+
+**Not done yet:**
+- the correction-penalty baseline of Pizarro Bejarano et al. (RA-L 2025). It needs training; the opt-in code is on branch `exp/e1-correction-penalty`;
+- the sampled-action version of the escape test;
+- a corrected scenario generator;
+- classical planners (DWA, MPC);
+- any physical robot.
 
 <details>
 <summary><b>Environment details</b></summary>
@@ -118,7 +167,7 @@ flowchart LR
 | Dynamics | forward-Euler unicycle, `dt = 0.1 s` |
 | Reward | −0.01 per step + (distance gained) − 0.5 × risk + 10 on reaching the goal − 5 on collision or leaving the workspace |
 | Episode end | goal within 0.5 m; collision; leaving the workspace; step limit (200 / 300 / 400 by stage) |
-| Curriculum | beginner (2–4 obstacles, goal 3–5 m) → intermediate (4–8, 5–8 m) → expert (8–15 requested, 5–12 m; obstacles that do not fit are skipped, so 7–14 were placed in 3,000 generated scenarios and 8–12 in the 100 test scenarios); advance at 70 % success over 100 episodes |
+| Curriculum | beginner (2–4 obstacles, goal distance 3–5 m) → intermediate (4–8, 5–8 m) → expert (8–15, 5–12 m); advance at 70 % success over 100 episodes. **These are the requested values, not the generated ones.** Obstacles that do not fit are skipped (7–14 were placed in 3,000 generated expert scenarios and 8–12 in the 100 test scenarios). The start is drawn from the lower-left square [1.5, 5]², and `reset()` clips the goal to [1.5, 8.5]², which shortens many goal distances. In the test scenarios, 42 of 100 beginner goals are closer than 3 m, and 66 of 100 intermediate and 53 of 100 expert goals are closer than 5 m. The longest expert distance is 8.9 m ([`research/audit_outputs/goal_distances.csv`](research/audit_outputs/goal_distances.csv)) |
 
 </details>
 
@@ -154,14 +203,22 @@ python -m safenav evaluate --baseline potential_field --episodes 20 --safety-fil
 python scripts/visualize_trajectory.py --checkpoint results/checkpoints/unfiltered/seed_0.pt --stage expert --seed 2200001 --safety-filter off
 python scripts/visualize_trajectory.py --baseline potential_field --animate --save episode.gif
 
-# train one agent (this example uses 200k steps; the 1M-step benchmark runs took 2.6–3.7 h each)
+# train one agent (200k steps; at ~330 steps/s on one laptop core this is roughly 10-15 min,
+# an estimate - the 1M-step benchmark runs took 2.6-3.7 h each with 10 runs in parallel)
 python -m safenav train --run-dir runs/demo --seed 0 --set ppo.total_timesteps=200000
 python -m safenav train --run-dir runs/demo --resume          # continue after an interruption
+
+# low-resource, evaluation-only check (one process, below-normal priority, ~1 min, ~210 MB):
+# reproduces the 1,000 committed expert episodes and classifies every timeout
+python research/experiments/lightweight/run_eval.py --tag my_check --agents results/checkpoints \
+    --stage expert --seed-base 2200000 --n 100 --kappa 0 --deadline-s 300
 ```
+
+<sub>Checked on 2026-10-26 (Windows, Python 3.12, CPU): the evaluate, baseline, plot, animate and low-resource commands ran as shown, and the evaluate output matched the text above exactly. The training command was run with 2,048 steps only; its duration at 200k steps is an estimate.</sub>
 
 ## Reproduce the benchmark
 
-**From the committed checkpoints (no training, a few minutes):** these commands regenerate the benchmark and the sampled-action evaluation. Their per-episode outputs are byte-identical to `results/benchmark/episodes.csv` and `results/stochastic_eval/episodes.csv`.
+**From the committed checkpoints (no training, a few minutes):** these commands regenerate the benchmark and the sampled-action evaluation. Their per-episode outputs are byte-identical to `results/benchmark/episodes.csv` and `results/stochastic_eval/episodes.csv` (verified on 2026-10-25 with `--jobs 8`). Each worker process needs about 200 MB of memory, so on a machine with little free RAM use fewer jobs, e.g. `--jobs 2`.
 
 ```bash
 python -m safenav benchmark --runs results/checkpoints --out runs/check/benchmark --jobs 8
@@ -190,25 +247,30 @@ Training is deterministic for a given seed on CPU, and resumption is exact; both
 ## Tests
 
 ```bash
-pytest            # 90 tests, about two minutes
+pytest            # 95 tests, about one to two minutes
 ```
 
-The tests cover the unicycle update, termination and reward terms, the range sensor against analytic geometry, seeding, the filter's closed-form limits, its invariance under an adversarial policy and the gap between samples, GAE against hand-computed values, the consistency of stored actions and log-probabilities, bit-for-bit reproducibility and exact resumption of training, metric and interval calculations, the feasibility oracle, config validation, the baselines, the committed checkpoints, the ROS 2 scan conversion, and an end-to-end train → benchmark → plot run. GitHub Actions runs them on Python 3.10 and 3.12.
+The tests cover the unicycle update, the opt-in heading escape (identical to the plain filter at κ = 0, safe under an adversarial policy for κ > 0), termination and reward terms, the range sensor against analytic geometry, seeding, the filter's closed-form limits, its invariance under an adversarial policy and the gap between samples, GAE against hand-computed values, the consistency of stored actions and log-probabilities, bit-for-bit reproducibility and exact resumption of training, metric and interval calculations, the feasibility oracle, config validation, the baselines, the committed checkpoints, the ROS 2 scan conversion, and an end-to-end train → benchmark → plot run. GitHub Actions runs them on Python 3.10 and 3.12.
 
 ## What is verified and what is not
 
 | Verified | Not verified |
 |---|---|
-| 90 tests pass locally and in CI (Linux, Python 3.10 and 3.12) | any physical robot, Gazebo or sim-to-real transfer |
+| tests pass locally (95 on this branch, Windows, Python 3.12); CI has run the 90-test version on Linux, Python 3.10 and 3.12 | any physical robot, Gazebo or sim-to-real transfer |
 | the committed checkpoints reproduce the published per-episode benchmark results | the ROS 2 node in `ros2_integration/` (an untested scaffold; only its scan helpers are tested) |
 | the filter's one-step bound under an adversarial policy, and the gap between samples | safety between samples for continuous-time dynamics, moving obstacles or sensing errors |
 | the training pipeline end to end at a tiny scale (test) | the 1M-step training runs were not repeated on another machine |
+| the stall taxonomy is insensitive to its thresholds, and replicates on 500 unused scenarios (pre-registered) | the correction-penalty baseline; a corrected scenario generator; classical planner baselines |
 
 ## Limitations
 
 - Simulation only: 2D, static circular obstacles, exact kinematics, perfect obstacle knowledge for the filter.
 - Five training seeds per variant and 100 test scenarios per stage; PPO hyperparameters were not tuned for the filtered setting.
 - The potential-field baseline was tuned briefly by hand; it is a reference point, not a state-of-the-art planner.
+- Scenario generator: the goal distances are often shorter than the configured stage ranges (see *Environment details*).
+- Three of the 300 test scenarios start inside the goal region: beginner 2000091 and 2000093, expert 2200023, with start-to-goal distances of 0.46, 0.38 and 0.16 m against a goal radius of 0.5 m. Every controller reaches the goal there at step 1 and these count as successes. This adds 2 (beginner) and 1 (expert) percentage points to every success rate in those stages, the same for all controllers. The stored results were not regenerated.
+- The safety margin (0.3 m) was chosen with the geometric oracle on the expert test scenarios, and the sampled-action evaluation was added after inspecting failed test episodes. The test scenarios are therefore not a clean held-out set for these two choices. The follow-up evaluation on 500 unused scenarios reduces this problem but uses the same scenario generator.
+- The stall classification is a post-hoc analysis with heuristic thresholds (it changed by at most 4 episodes when the thresholds and window were varied).
 
 ## Repository map
 
@@ -216,7 +278,8 @@ The tests cover the unicycle update, termination and reward terms, the range sen
 SafeNav-RL/
 ├── safenav/
 │   ├── env/          # navigation_env.py, obstacle_map.py (geometry, ray casting), curriculum.py
-│   ├── safety/       # cbf_filter.py: CBFSafetyFilter, SafetyFilterWrapper, SafetyLayer (v0.1 interface)
+│   ├── safety/       # cbf_filter.py: CBFSafetyFilter, SafetyFilterWrapper, SafetyLayer (v0.1 interface);
+│   │                 # heading_escape.py: opt-in test-time heading escape (not used by default)
 │   ├── agents/       # actor_critic.py, policy.py (PPOPolicy, checkpoints), baselines.py
 │   ├── training/     # ppo_trainer.py, rollout_buffer.py, callbacks.py (logs, checkpoints)
 │   ├── evaluation/   # metrics.py, runner.py, feasibility.py, benchmark.py, sweep.py
@@ -228,6 +291,9 @@ SafeNav-RL/
 ├── docs/             # SAFETY.md, figures/, assets/ (banner)
 ├── scripts/          # visualize, train/evaluate wrappers, stochastic_eval.py, v01_safety_layer_check.py
 ├── ros2_integration/ # untested ROS 2 node scaffold + tested scan helpers
+├── research/         # audit, literature review, plans; scripts/ and audit_outputs/ (read-only analyses);
+│                     # experiments/lightweight/ (pre-registered evaluation-only follow-up)
+├── paper_draft/      # manuscript draft (LaTeX) and planning documents; not submitted
 └── tests/
 ```
 
@@ -239,6 +305,22 @@ SafeNav-RL/
 - **Replaced (safety layer):** version 0.1 only reacted after the robot was inside the margin and had no wall constraint; see [`docs/SAFETY.md`](docs/SAFETY.md) for the measured behaviour and the new filter.
 - **Fixed:** `step()` returned NumPy booleans; evaluation episodes were not seeded; the observation size was hard-coded.
 - **Added:** range sensor, baselines, evaluation metrics and intervals, feasibility oracle, benchmark, safety-margin sweep, CLI, config validation, exact resumption, committed checkpoints, 90 tests and a CI workflow. The demo images of version 0.1 (`assets/`) came from a checkpoint that is not available and were produced by the old code.
+
+</details>
+
+<details>
+<summary><b>Documentation corrections after version 0.2.0</b></summary>
+
+An audit of version 0.2.0 ([`research/REPOSITORY_AUDIT.md`](research/REPOSITORY_AUDIT.md)) found two statements that the stored data contradict. Both are corrected above. No code, checkpoint or result file was changed.
+
+- **Failure mechanism.** The README said that the filter-trained agent "reaches a keep-out boundary early and stops there", and that the deterministic policy "keeps steering into the boundary". Steering into the boundary describes the agent trained *without* the filter. The filter-trained agent mostly stops by itself before the boundary.
+- **Goal distances.** The curriculum table gave the requested goal-distance ranges as if they were the generated ones. Goal clipping in `reset()` makes many distances shorter, and three test scenarios start inside the goal region.
+
+**Later additions.** These are research tools; none changes the default behaviour or any stored result:
+- an opt-in heading escape (`safenav/safety/heading_escape.py`) with tests;
+- a low-resource evaluation runner;
+- the pre-registered follow-up evaluation (`research/experiments/lightweight/`);
+- the manuscript draft (`paper_draft/`).
 
 </details>
 

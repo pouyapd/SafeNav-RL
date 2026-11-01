@@ -1,0 +1,41 @@
+{
+  "invocations": [
+    {
+      "arm": "penalty",
+      "alpha": 1.0,
+      "seed": 0,
+      "timesteps_planned": 4096,
+      "command": "research/experiments/e1_pilot/train_pilot.py --arm penalty --seed 0 --timesteps 4096 --chunk-updates 1 --runs-root runs/e1_smoke --tag smoke_penalty_4096 --deadline-s 500",
+      "git_commit": "d8ccdcae76176a866db4010da6b5805f5d3e6a2f",
+      "code_modified_since_commit": true,
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "on_mains_power": true,
+      "finished": true,
+      "stop_reason": "finished",
+      "wall_s_this_invocation": 22.6,
+      "cpu_s_this_invocation": 14.3,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "chunks": [
+        {
+          "from_update": 0,
+          "timesteps": 2048,
+          "wall_s": 13.7,
+          "peak_memory_mb": 318.6,
+          "free_system_mb": 3561,
+          "cpu_percent_system": 93.2
+        },
+        {
+          "from_update": 1,
+          "timesteps": 4096,
+          "wall_s": 8.7,
+          "peak_memory_mb": 319.9,
+          "free_system_mb": 3431,
+          "cpu_percent_system": 25.5
+        }
+      ]
+    }
+  ]
+}

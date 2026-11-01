@@ -1,0 +1,27 @@
+{
+  "invocations": [
+    {
+      "tag": "eval_penalty_best",
+      "command": "research/experiments/lightweight/run_eval.py --tag eval_penalty_best --agents runs/e1_pilot/penalty --variants filtered --checkpoint-name best --stage expert --seed-base 9000000 --n 500 --kappa 0 --deadline-s 120 --out-root research/experiments/e1_pilot/results",
+      "git_commit": "3fcc5c5fd7d940e8b3d3259f27ad7de9ead7dd87",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 500,
+      "episodes_completed": 500,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 34.1,
+      "cpu_s_this_invocation": 31.2,
+      "peak_memory_mb": 203.6,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "checkpoints": {
+        "filtered_seed0": {
+          "path": "runs/e1_pilot/penalty/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "7f97cbf753591986c02a68de79d867a52bc95d40b22bfe57c7d07960dde547bd"
+        }
+      }
+    }
+  ]
+}

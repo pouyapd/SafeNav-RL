@@ -1,0 +1,249 @@
+{
+  "invocations": [
+    {
+      "arm": "control",
+      "alpha": 0.0,
+      "seed": 0,
+      "timesteps_planned": 150000,
+      "command": "research/experiments/e1_pilot/train_pilot.py --arm control --seed 0 --timesteps 150000 --chunk-updates 5 --deadline-s 420",
+      "git_commit": "3fcc5c5",
+      "started_local": "2026-10-26 17:54:08",
+      "reconstructed_from_console_output": true,
+      "note": "This process ended before writing its record. Its last completed chunk ended at update 50 (102,400 steps, resume point). It then began updates 51-55 while free system memory had fallen to 830 MB (Blender was using ~3.4 GB and ~90-100 % CPU); throughput fell to 9-238 steps/s and the process was paged out. It had ended by 18:05 (cause not recorded: the outer timeout or the deadline). Logs after the resume point are discarded on resume (exact resume). The driver was then changed to write its record after every chunk and to stop on low free memory (1,000 MB) or low throughput.",
+      "priority": "below normal",
+      "torch_threads": 1,
+      "chunks": [
+        {
+          "from_update": 0,
+          "timesteps": 10240,
+          "wall_s": 18.9,
+          "peak_memory_mb": 316.8,
+          "free_system_mb": 3610,
+          "cpu_percent_system": 67.1
+        },
+        {
+          "from_update": 5,
+          "timesteps": 20480,
+          "wall_s": 35.4,
+          "peak_memory_mb": 318.5,
+          "free_system_mb": 3526,
+          "cpu_percent_system": 70.6
+        },
+        {
+          "from_update": 10,
+          "timesteps": 30720,
+          "wall_s": 37.2,
+          "peak_memory_mb": 318.5,
+          "free_system_mb": 3510,
+          "cpu_percent_system": 75.2
+        },
+        {
+          "from_update": 15,
+          "timesteps": 40960,
+          "wall_s": 12.3,
+          "peak_memory_mb": 320.1,
+          "free_system_mb": 3594,
+          "cpu_percent_system": 21.2
+        },
+        {
+          "from_update": 20,
+          "timesteps": 51200,
+          "wall_s": 23.7,
+          "peak_memory_mb": 320.1,
+          "free_system_mb": 3564,
+          "cpu_percent_system": 29.6
+        },
+        {
+          "from_update": 25,
+          "timesteps": 61440,
+          "wall_s": 42.3,
+          "peak_memory_mb": 320.1,
+          "free_system_mb": 3517,
+          "cpu_percent_system": 76.5
+        },
+        {
+          "from_update": 30,
+          "timesteps": 71680,
+          "wall_s": 14.1,
+          "peak_memory_mb": 320.1,
+          "free_system_mb": 3464,
+          "cpu_percent_system": 22.4
+        },
+        {
+          "from_update": 35,
+          "timesteps": 81920,
+          "wall_s": 44.1,
+          "peak_memory_mb": 320.1,
+          "free_system_mb": 3479,
+          "cpu_percent_system": 77.7
+        },
+        {
+          "from_update": 40,
+          "timesteps": 92160,
+          "wall_s": 56.8,
+          "peak_memory_mb": 320.1,
+          "free_system_mb": 2560,
+          "cpu_percent_system": 81.4
+        },
+        {
+          "from_update": 45,
+          "timesteps": 102400,
+          "wall_s": 21.7,
+          "peak_memory_mb": 320.6,
+          "free_system_mb": 830,
+          "cpu_percent_system": 33.5
+        }
+      ]
+    },
+    {
+      "arm": "control",
+      "alpha": 0.0,
+      "seed": 0,
+      "timesteps_planned": 150000,
+      "command": "research/experiments/e1_pilot/train_pilot.py --arm control --seed 0 --timesteps 150000 --deadline-s 400",
+      "git_commit": "3fcc5c5fd7d940e8b3d3259f27ad7de9ead7dd87",
+      "code_modified_since_commit": false,
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "on_mains_power": true,
+      "finished": false,
+      "stop_reason": "throughput below --min-steps-per-s (machine busy or paging)",
+      "wall_s_this_invocation": 129.6,
+      "cpu_s_this_invocation": 37.9,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "chunks": [
+        {
+          "from_update": 50,
+          "timesteps": 106496,
+          "wall_s": 129.1,
+          "steps_per_s": 32,
+          "peak_memory_mb": 317.2,
+          "free_system_mb": 2164,
+          "cpu_percent_system": 100.0
+        }
+      ]
+    },
+    {
+      "arm": "control",
+      "alpha": 0.0,
+      "seed": 0,
+      "timesteps_planned": 150000,
+      "command": "research/experiments/e1_pilot/train_pilot.py --arm control --seed 0 --timesteps 150000 --deadline-s 400",
+      "git_commit": "3fcc5c5fd7d940e8b3d3259f27ad7de9ead7dd87",
+      "code_modified_since_commit": false,
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "on_mains_power": true,
+      "finished": true,
+      "stop_reason": "finished",
+      "wall_s_this_invocation": 125.8,
+      "cpu_s_this_invocation": 111.8,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "chunks": [
+        {
+          "from_update": 52,
+          "timesteps": 110592,
+          "wall_s": 11.0,
+          "steps_per_s": 374,
+          "peak_memory_mb": 320.0,
+          "free_system_mb": 4799,
+          "cpu_percent_system": 41.7
+        },
+        {
+          "from_update": 54,
+          "timesteps": 114688,
+          "wall_s": 9.6,
+          "steps_per_s": 427,
+          "peak_memory_mb": 320.3,
+          "free_system_mb": 5062,
+          "cpu_percent_system": 47.0
+        },
+        {
+          "from_update": 56,
+          "timesteps": 118784,
+          "wall_s": 7.7,
+          "steps_per_s": 534,
+          "peak_memory_mb": 321.1,
+          "free_system_mb": 5001,
+          "cpu_percent_system": 37.6
+        },
+        {
+          "from_update": 58,
+          "timesteps": 122880,
+          "wall_s": 13.6,
+          "steps_per_s": 302,
+          "peak_memory_mb": 321.1,
+          "free_system_mb": 4971,
+          "cpu_percent_system": 54.4
+        },
+        {
+          "from_update": 60,
+          "timesteps": 126976,
+          "wall_s": 12.8,
+          "steps_per_s": 319,
+          "peak_memory_mb": 322.1,
+          "free_system_mb": 5015,
+          "cpu_percent_system": 36.0
+        },
+        {
+          "from_update": 62,
+          "timesteps": 131072,
+          "wall_s": 10.6,
+          "steps_per_s": 385,
+          "peak_memory_mb": 322.1,
+          "free_system_mb": 5010,
+          "cpu_percent_system": 32.5
+        },
+        {
+          "from_update": 64,
+          "timesteps": 135168,
+          "wall_s": 12.1,
+          "steps_per_s": 340,
+          "peak_memory_mb": 322.1,
+          "free_system_mb": 5003,
+          "cpu_percent_system": 33.1
+        },
+        {
+          "from_update": 66,
+          "timesteps": 139264,
+          "wall_s": 12.0,
+          "steps_per_s": 341,
+          "peak_memory_mb": 322.1,
+          "free_system_mb": 4984,
+          "cpu_percent_system": 31.0
+        },
+        {
+          "from_update": 68,
+          "timesteps": 143360,
+          "wall_s": 10.4,
+          "steps_per_s": 395,
+          "peak_memory_mb": 322.1,
+          "free_system_mb": 4979,
+          "cpu_percent_system": 34.2
+        },
+        {
+          "from_update": 70,
+          "timesteps": 147456,
+          "wall_s": 11.3,
+          "steps_per_s": 363,
+          "peak_memory_mb": 322.2,
+          "free_system_mb": 5231,
+          "cpu_percent_system": 36.0
+        },
+        {
+          "from_update": 72,
+          "timesteps": 151552,
+          "wall_s": 14.7,
+          "steps_per_s": 279,
+          "peak_memory_mb": 322.2,
+          "free_system_mb": 5175,
+          "cpu_percent_system": 34.6
+        }
+      ]
+    }
+  ]
+}

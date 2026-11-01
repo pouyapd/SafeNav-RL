@@ -1,0 +1,257 @@
+{
+ "note": "E1 pilot, one training seed per arm; intervals resample scenarios only (README.md).",
+ "training": {
+  "control": {
+   "train_summary": {
+    "timesteps": 151552,
+    "episodes": 814,
+    "wall_time_s": 504.54558658599854,
+    "best_validation": [
+     0.8166666666666667,
+     -0.0,
+     4.412943209802491
+    ],
+    "final_checkpoint": "runs/e1_pilot/control/filtered/seed_0/checkpoints/final.pt"
+   },
+   "first_timestep_at_stage": {
+    "intermediate": 47104,
+    "expert": 61440
+   },
+   "best_checkpoint_timestep": 100352,
+   "validation": [
+    {
+     "timestep": 51200,
+     "episodes": 60,
+     "success_rate": 0.733333,
+     "collision_rate": 0,
+     "timeout_rate": 0.266667,
+     "mean_return": 3.72148
+    },
+    {
+     "timestep": 100352,
+     "episodes": 60,
+     "success_rate": 0.816667,
+     "collision_rate": 0,
+     "timeout_rate": 0.183333,
+     "mean_return": 4.41294
+    },
+    {
+     "timestep": 151552,
+     "episodes": 60,
+     "success_rate": 0.8,
+     "collision_rate": 0,
+     "timeout_rate": 0.2,
+     "mean_return": 5.11295
+    }
+   ],
+   "correction_penalty_mean": {
+    "all": 0.0,
+    "first_10_updates": 0.0,
+    "last_10_updates": 0.0
+   },
+   "filter_gap_sq_mean": {
+    "all": 0.10020195027027028,
+    "last_10_updates": 0.1299156
+   },
+   "expert_stage_last_10_updates": {
+    "success_rate_100": 0.7310000000000001,
+    "intervention_rate": 0.45463869999999995,
+    "entropy": 1.750084
+   }
+  },
+  "penalty": {
+   "train_summary": {
+    "timesteps": 151552,
+    "episodes": 809,
+    "wall_time_s": 197.97761917114258,
+    "best_validation": [
+     0.75,
+     -0.0,
+     4.425736269027637
+    ],
+    "final_checkpoint": "runs/e1_pilot/penalty/filtered/seed_0/checkpoints/final.pt"
+   },
+   "first_timestep_at_stage": {
+    "intermediate": 63488,
+    "expert": 79872
+   },
+   "best_checkpoint_timestep": 100352,
+   "validation": [
+    {
+     "timestep": 51200,
+     "episodes": 60,
+     "success_rate": 0.583333,
+     "collision_rate": 0,
+     "timeout_rate": 0.416667,
+     "mean_return": -2.84266
+    },
+    {
+     "timestep": 100352,
+     "episodes": 60,
+     "success_rate": 0.75,
+     "collision_rate": 0,
+     "timeout_rate": 0.25,
+     "mean_return": 4.42574
+    },
+    {
+     "timestep": 151552,
+     "episodes": 60,
+     "success_rate": 0.7,
+     "collision_rate": 0,
+     "timeout_rate": 0.3,
+     "mean_return": 3.82012
+    }
+   ],
+   "correction_penalty_mean": {
+    "all": 0.06624877837837838,
+    "first_10_updates": 0.13383159,
+    "last_10_updates": 0.0476111
+   },
+   "filter_gap_sq_mean": {
+    "all": 0.029753546891891896,
+    "last_10_updates": 0.025550449999999995
+   },
+   "expert_stage_last_10_updates": {
+    "success_rate_100": 0.6869999999999999,
+    "intervention_rate": 0.2893065,
+    "entropy": 0.6817949999999999
+   }
+  }
+ },
+ "G1_both_reach_expert": true,
+ "best": {
+  "control": {
+   "episodes": 500,
+   "success": 0.586,
+   "collisions": 0,
+   "min_clearance_m": 0.3000000011494033,
+   "deadlock_rate": 0.398,
+   "timeouts": 207,
+   "classes": {
+    "filter-blocked": 121,
+    "self-stop": 78,
+    "moving": 8
+   }
+  },
+  "penalty": {
+   "episodes": 500,
+   "success": 0.554,
+   "collisions": 0,
+   "min_clearance_m": 0.3000000012497566,
+   "deadlock_rate": 0.386,
+   "timeouts": 223,
+   "classes": {
+    "self-stop": 105,
+    "filter-blocked": 86,
+    "moving": 30,
+    "other stall": 2
+   }
+  },
+  "penalty_minus_control": {
+   "deadlock": {
+    "difference": -0.012,
+    "ci95_scenarios_only": [
+     -0.052,
+     0.028
+    ]
+   },
+   "type1": {
+    "difference": -0.07,
+    "ci95_scenarios_only": [
+     -0.116,
+     -0.024
+    ]
+   },
+   "type2": {
+    "difference": 0.054,
+    "ci95_scenarios_only": [
+     0.012,
+     0.096
+    ]
+   },
+   "success": {
+    "difference": -0.032,
+    "ci95_scenarios_only": [
+     -0.07,
+     0.006
+    ]
+   }
+  },
+  "decisions": {
+   "G0_collisions": "pass",
+   "G2_control_has_stalls": "pass",
+   "G3_effect_screen": "no large effect in this seed (|difference| < 10 points): inconclusive"
+  }
+ },
+ "final": {
+  "control": {
+   "episodes": 500,
+   "success": 0.612,
+   "collisions": 0,
+   "min_clearance_m": 0.3000000011530999,
+   "deadlock_rate": 0.376,
+   "timeouts": 194,
+   "classes": {
+    "self-stop": 125,
+    "filter-blocked": 63,
+    "moving": 6
+   }
+  },
+  "penalty": {
+   "episodes": 500,
+   "success": 0.586,
+   "collisions": 0,
+   "min_clearance_m": 0.300000002247552,
+   "deadlock_rate": 0.342,
+   "timeouts": 207,
+   "classes": {
+    "self-stop": 108,
+    "filter-blocked": 63,
+    "moving": 36
+   }
+  },
+  "penalty_minus_control": {
+   "deadlock": {
+    "difference": -0.034,
+    "ci95_scenarios_only": [
+     -0.074,
+     0.006
+    ]
+   },
+   "type1": {
+    "difference": 0.0,
+    "ci95_scenarios_only": [
+     -0.04,
+     0.04
+    ]
+   },
+   "type2": {
+    "difference": -0.034,
+    "ci95_scenarios_only": [
+     -0.078,
+     0.012
+    ]
+   },
+   "success": {
+    "difference": -0.026,
+    "ci95_scenarios_only": [
+     -0.062,
+     0.01
+    ]
+   }
+  }
+ },
+ "reference_committed_filtered_seed0": {
+  "episodes": 500,
+  "success": 0.602,
+  "collisions": 0,
+  "min_clearance_m": 0.3000000013710253,
+  "deadlock_rate": 0.39,
+  "timeouts": 199,
+  "classes": {
+   "self-stop": 139,
+   "filter-blocked": 56,
+   "moving": 4
+  }
+ }
+}

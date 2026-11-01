@@ -54,7 +54,7 @@ Hence `h_i(p_{t+1}) ≥ h_i(p_t) − dt · v · a_i`. If `a_i > 0` the filter en
 
 **Not guaranteed.**
 
-- *Reaching the goal.* The filter can stop the robot in front of an obstacle. If the policy keeps steering into the keep-out boundary, the robot waits there until the episode times out (a deadlock). This is the main failure mode in the benchmark.
+- *Reaching the goal.* The filter can stop the robot in front of an obstacle. If the robot is on the keep-out boundary (`h = 0`) and its heading is less than 90° from the obstacle centre (`a > 0`), the speed limit `γ h / a` is zero: the robot can only turn, and can only drive off again once its heading points along or away from the obstacle (`a ≤ 0`). If the policy keeps commanding speed without turning far enough, the robot waits there until the episode times out (a deadlock). This is the main failure of the PPO agent trained *without* the filter when the filter is added at test time (141 of its 175 expert timeouts). The agent trained *with* the filter mostly fails differently: in 122 of its 195 expert timeouts the policy itself commands zero speed, a median 0.41 m before the boundary, so these stops are not caused by the filter (README, *Where the policies struggle*; [`research/REPOSITORY_AUDIT.md`](../research/REPOSITORY_AUDIT.md) §5.1).
 - *Moving obstacles, sensing errors, a physical robot.* None of these are modelled. The ROS 2 node in `ros2_integration/` uses laser-scan points as obstacles, which breaks assumption 2; it is an untested scaffold.
 - *Infeasible states.* If a barrier were already negative (only possible when an assumption is broken), no speed `v ≥ 0` satisfies the approaching constraint; the filter then returns `v = 0` for that direction (stop, but still allow turning away).
 
@@ -65,6 +65,8 @@ Hence `h_i(p_{t+1}) ≥ h_i(p_t) − dt · v · a_i`. If `a_i > 0` the filter en
 | Unit test: adversarial policy driving at full speed toward the nearest obstacle with random turns, 40 expert scenarios, up to 250 steps each | the per-step bound `h_{t+1} ≥ (1 − γ dt) h_t` holds for every barrier at every step; no collision |
 | Unit tests: closed-form speed limit (head-on, at an angle, moving away, wall), ω unchanged | pass |
 | Unit test: the same adversarial policy, closest point of every straight step to every obstacle | never more than the bound above (≈ 1.4 mm) inside the margin |
+| Unit test (`tests/test_heading_escape.py`): the same adversarial policy with the opt-in heading escape (κ = 0.5 and 1) | the per-step bound holds and there is no collision. This is expected: `p_{t+1}` depends only on `p_t`, `θ_t` and `v_t`, so the guarantee does not depend on the turn rate |
+| Follow-up evaluation with the heading escape (κ = 0.5), 5,000 fresh expert episodes ([`research/experiments/lightweight/`](../research/experiments/lightweight/README.md)) | 0 collisions; minimum clearance 0.300 m |
 | Benchmark: every condition with the filter on (3,600 test episodes over all controllers and stages) | 0 collisions; minimum clearance over all episodes 0.300 m (exactly the margin) |
 
 ## How the version 0.1 layer behaved
