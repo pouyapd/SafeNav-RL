@@ -11,11 +11,19 @@ Architecture:
 
 The Gaussian policy allows continuous action spaces and provides
 natural entropy bonus via the log-probability.
+
+Opt-in alternative (network.distribution: "beta", experiment E4): a Beta policy
+(Chou et al., ICML 2017) whose samples always lie inside the action bounds, so the
+environment never clips them. The actor then outputs two values per action
+dimension, mapped to Beta(alpha, beta) with alpha, beta = 1 + softplus(.), and the
+unit sample is scaled to [action_low, action_high]. The default ("gaussian") path
+is unchanged.
 """
 
 import torch
 import torch.nn as nn
-from torch.distributions import Normal
+import torch.nn.functional as F
+from torch.distributions import Beta, Normal
 import numpy as np
 from typing import Tuple, List, Dict, Any, Optional
 
@@ -91,12 +99,16 @@ class ActorCritic(nn.Module):
         log_std_init = net_cfg.get("log_std_init", -0.5)
         self.log_std_min = net_cfg.get("log_std_min", -3.0)
         self.log_std_max = net_cfg.get("log_std_max", 1.0)
+        self.distribution = str(net_cfg.get("distribution", "gaussian"))
+        if self.distribution not in ("gaussian", "beta"):
+            raise ValueError("network.distribution must be 'gaussian' or 'beta'")
+        is_beta = self.distribution == "beta"
 
-        # Actor: maps observation → action mean
+        # Actor: maps observation → action mean (Gaussian) or Beta parameters (two per dimension)
         self.actor = build_mlp(
             input_dim=obs_dim,
             hidden_dims=hidden_dims,
-            output_dim=action_dim,
+            output_dim=action_dim * (2 if is_beta else 1),
             activation=activation,
         )
 
@@ -108,11 +120,19 @@ class ActorCritic(nn.Module):
             activation=activation,
         )
 
-        # Log std as a learned parameter (not state-dependent)
-        # Shape: (action_dim,)
-        self.log_std = nn.Parameter(
-            torch.full((action_dim,), log_std_init, dtype=torch.float32)
-        )
+        if is_beta:
+            low = torch.tensor(net_cfg.get("action_low", [0.0, -1.0])[:action_dim], dtype=torch.float32)
+            high = torch.tensor(net_cfg.get("action_high", [1.0, 1.0])[:action_dim], dtype=torch.float32)
+            if not torch.all(high > low):
+                raise ValueError("network.action_high must exceed network.action_low")
+            self.register_buffer("action_low", low)
+            self.register_buffer("action_scale", high - low)
+        else:
+            # Log std as a learned parameter (not state-dependent)
+            # Shape: (action_dim,)
+            self.log_std = nn.Parameter(
+                torch.full((action_dim,), log_std_init, dtype=torch.float32)
+            )
 
         # Initialize weights with orthogonal initialization (common for PPO)
         self._init_weights()
@@ -129,17 +149,28 @@ class ActorCritic(nn.Module):
         if isinstance(self.actor[-1], nn.Linear):
             nn.init.orthogonal_(self.actor[-1].weight, gain=0.01)
 
-    def get_distribution(self, obs: torch.Tensor) -> Normal:
+    def get_distribution(self, obs: torch.Tensor):
         """
         Compute the action distribution given an observation.
-        
-        Returns a Normal distribution with state-dependent mean
-        and state-independent (learned) std.
+
+        Gaussian: a Normal distribution with state-dependent mean and
+        state-independent (learned) std, over the action itself.
+        Beta: a Beta distribution over the action rescaled to [0, 1].
         """
+        if self.distribution == "beta":
+            a, b = self.actor(obs).chunk(2, dim=-1)
+            return Beta(F.softplus(a) + 1.0, F.softplus(b) + 1.0)
         mean = self.actor(obs)
         log_std = torch.clamp(self.log_std, self.log_std_min, self.log_std_max)
         std = torch.exp(log_std).expand_as(mean)
         return Normal(mean, std)
+
+    _BETA_EPS = 1e-6
+
+    def _beta_log_prob(self, dist: Beta, actions: torch.Tensor) -> torch.Tensor:
+        """Log-density of actions in action units (includes the constant scale Jacobian)."""
+        unit = ((actions - self.action_low) / self.action_scale).clamp(self._BETA_EPS, 1 - self._BETA_EPS)
+        return (dist.log_prob(unit) - torch.log(self.action_scale)).sum(dim=-1)
 
     def get_value(self, obs: torch.Tensor) -> torch.Tensor:
         """Returns the critic's value estimate V(s)."""
@@ -157,6 +188,9 @@ class ActorCritic(nn.Module):
             value: Critic value estimate
         """
         dist = self.get_distribution(obs)
+        if self.distribution == "beta":
+            action = self.action_low + self.action_scale * dist.sample()
+            return action, self._beta_log_prob(dist, action), self.get_value(obs)
         action = dist.sample()
         log_prob = dist.log_prob(action).sum(dim=-1)  # sum over action dims
         value = self.get_value(obs)
@@ -175,6 +209,9 @@ class ActorCritic(nn.Module):
             values: Critic estimates
         """
         dist = self.get_distribution(obs)
+        if self.distribution == "beta":
+            entropy = (dist.entropy() + torch.log(self.action_scale)).sum(dim=-1)
+            return self._beta_log_prob(dist, actions), entropy, self.get_value(obs)
         log_probs = dist.log_prob(actions).sum(dim=-1)
         entropy = dist.entropy().sum(dim=-1)
         values = self.get_value(obs)
@@ -184,6 +221,8 @@ class ActorCritic(nn.Module):
         """
         Returns the mean action (no sampling) for deterministic evaluation.
         """
+        if self.distribution == "beta":
+            return self.action_low + self.action_scale * self.get_distribution(obs).mean
         return self.actor(obs)
 
     @property
