@@ -1,0 +1,137 @@
+{
+  "rule": "max success, then min timeout, then lowest index (fixed before tuning)",
+  "validation": {
+    "stage": "expert",
+    "seed_base": 1300000,
+    "episodes": 100,
+    "filter": "on"
+  },
+  "selected_index": 2,
+  "selected_params": {
+    "w_heading": 0.2,
+    "w_clearance": 0.5,
+    "clearance_min": 0.05
+  },
+  "table": [
+    {
+      "index": 0,
+      "w_heading": 0.2,
+      "w_clearance": 0.2,
+      "clearance_min": 0.05,
+      "episodes": 100,
+      "success": 0.37,
+      "timeout": 0.63,
+      "collision": 0.0
+    },
+    {
+      "index": 1,
+      "w_heading": 0.2,
+      "w_clearance": 0.2,
+      "clearance_min": 0.15,
+      "episodes": 100,
+      "success": 0.37,
+      "timeout": 0.63,
+      "collision": 0.0
+    },
+    {
+      "index": 2,
+      "w_heading": 0.2,
+      "w_clearance": 0.5,
+      "clearance_min": 0.05,
+      "episodes": 100,
+      "success": 0.39,
+      "timeout": 0.61,
+      "collision": 0.0
+    },
+    {
+      "index": 3,
+      "w_heading": 0.2,
+      "w_clearance": 0.5,
+      "clearance_min": 0.15,
+      "episodes": 100,
+      "success": 0.39,
+      "timeout": 0.61,
+      "collision": 0.0
+    },
+    {
+      "index": 4,
+      "w_heading": 0.5,
+      "w_clearance": 0.2,
+      "clearance_min": 0.05,
+      "episodes": 100,
+      "success": 0.37,
+      "timeout": 0.63,
+      "collision": 0.0
+    },
+    {
+      "index": 5,
+      "w_heading": 0.5,
+      "w_clearance": 0.2,
+      "clearance_min": 0.15,
+      "episodes": 100,
+      "success": 0.37,
+      "timeout": 0.63,
+      "collision": 0.0
+    },
+    {
+      "index": 6,
+      "w_heading": 0.5,
+      "w_clearance": 0.5,
+      "clearance_min": 0.05,
+      "episodes": 100,
+      "success": 0.38,
+      "timeout": 0.62,
+      "collision": 0.0
+    },
+    {
+      "index": 7,
+      "w_heading": 0.5,
+      "w_clearance": 0.5,
+      "clearance_min": 0.15,
+      "episodes": 100,
+      "success": 0.38,
+      "timeout": 0.62,
+      "collision": 0.0
+    },
+    {
+      "index": 8,
+      "w_heading": 1.0,
+      "w_clearance": 0.2,
+      "clearance_min": 0.05,
+      "episodes": 100,
+      "success": 0.37,
+      "timeout": 0.63,
+      "collision": 0.0
+    },
+    {
+      "index": 9,
+      "w_heading": 1.0,
+      "w_clearance": 0.2,
+      "clearance_min": 0.15,
+      "episodes": 100,
+      "success": 0.37,
+      "timeout": 0.63,
+      "collision": 0.0
+    },
+    {
+      "index": 10,
+      "w_heading": 1.0,
+      "w_clearance": 0.5,
+      "clearance_min": 0.05,
+      "episodes": 100,
+      "success": 0.37,
+      "timeout": 0.63,
+      "collision": 0.0
+    },
+    {
+      "index": 11,
+      "w_heading": 1.0,
+      "w_clearance": 0.5,
+      "clearance_min": 0.15,
+      "episodes": 100,
+      "success": 0.37,
+      "timeout": 0.63,
+      "collision": 0.0
+    }
+  ]
+}

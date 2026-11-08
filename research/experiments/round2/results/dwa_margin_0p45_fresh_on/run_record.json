@@ -1,0 +1,20 @@
+{
+  "invocations": [
+    {
+      "tag": "dwa_margin_0p45_fresh_on",
+      "command": "research/experiments/round2/run_eval2.py --tag dwa_margin_0p45_fresh_on --baseline dwa --dwa w_heading=0.2 --dwa w_clearance=0.5 --dwa clearance_min=0.45 --deadline-s 3000 --stages expert --seed-base 9000000 --n 500",
+      "git_commit": "8702fb7c5d7c8cfbe870b350ae70ff7d82b84460",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 500,
+      "episodes_completed": 500,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 80.3,
+      "cpu_s_this_invocation": 71.5,
+      "peak_memory_mb": 199.0,
+      "checkpoints": {}
+    }
+  ]
+}

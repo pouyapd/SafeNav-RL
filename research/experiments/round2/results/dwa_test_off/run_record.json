@@ -1,0 +1,52 @@
+{
+  "invocations": [
+    {
+      "tag": "dwa_test_off",
+      "command": "C:\\Users\\user\\Desktop\\GITHUB\\SafeNav-RL\\research\\experiments\\round2\\run_eval2.py --tag dwa_test_off --deadline-s 1200 --baseline dwa --dwa w_heading=0.2 --dwa w_clearance=0.5 --dwa clearance_min=0.05 --stages beginner --seed-base 2000000 --n 100 --filter off",
+      "git_commit": "3aed35ed62671344c642ded94029fc839d115316",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 100,
+      "episodes_completed": 100,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 5.8,
+      "cpu_s_this_invocation": 4.9,
+      "peak_memory_mb": 198.9,
+      "checkpoints": {}
+    },
+    {
+      "tag": "dwa_test_off",
+      "command": "C:\\Users\\user\\Desktop\\GITHUB\\SafeNav-RL\\research\\experiments\\round2\\run_eval2.py --tag dwa_test_off --deadline-s 1200 --baseline dwa --dwa w_heading=0.2 --dwa w_clearance=0.5 --dwa clearance_min=0.05 --stages intermediate --seed-base 2100000 --n 100 --filter off",
+      "git_commit": "3aed35ed62671344c642ded94029fc839d115316",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 100,
+      "episodes_completed": 200,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 13.3,
+      "cpu_s_this_invocation": 11.5,
+      "peak_memory_mb": 198.6,
+      "checkpoints": {}
+    },
+    {
+      "tag": "dwa_test_off",
+      "command": "C:\\Users\\user\\Desktop\\GITHUB\\SafeNav-RL\\research\\experiments\\round2\\run_eval2.py --tag dwa_test_off --deadline-s 1200 --baseline dwa --dwa w_heading=0.2 --dwa w_clearance=0.5 --dwa clearance_min=0.05 --stages expert --seed-base 2200000 --n 100 --filter off",
+      "git_commit": "3aed35ed62671344c642ded94029fc839d115316",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 100,
+      "episodes_completed": 300,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 17.2,
+      "cpu_s_this_invocation": 14.1,
+      "peak_memory_mb": 198.4,
+      "checkpoints": {}
+    }
+  ]
+}
