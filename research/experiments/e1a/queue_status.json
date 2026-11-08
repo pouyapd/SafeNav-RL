@@ -1,0 +1,78 @@
+{
+  "queue": "research\\experiments\\e1a\\queue.json",
+  "started": "2026-11-08 15:59:48",
+  "jobs": [
+    {
+      "arm": "control",
+      "seed": 0,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 530.9, \"cpu_s_this_invocation\": 302.0}"
+    },
+    {
+      "arm": "penalty",
+      "seed": 0,
+      "invocations": 2,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 126.5, \"cpu_s_this_invocation\": 113.9}"
+    },
+    {
+      "arm": "control",
+      "seed": 1,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 711.9, \"cpu_s_this_invocation\": 665.7}"
+    },
+    {
+      "arm": "penalty",
+      "seed": 1,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 563.2, \"cpu_s_this_invocation\": 535.3}"
+    },
+    {
+      "arm": "control",
+      "seed": 2,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 415.0, \"cpu_s_this_invocation\": 391.4}"
+    },
+    {
+      "arm": "penalty",
+      "seed": 2,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 400.9, \"cpu_s_this_invocation\": 375.5}"
+    },
+    {
+      "arm": "control",
+      "seed": 3,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 492.2, \"cpu_s_this_invocation\": 438.9}"
+    },
+    {
+      "arm": "penalty",
+      "seed": 3,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 382.3, \"cpu_s_this_invocation\": 360.2}"
+    },
+    {
+      "arm": "control",
+      "seed": 4,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 332.7, \"cpu_s_this_invocation\": 318.2}"
+    },
+    {
+      "arm": "penalty",
+      "seed": 4,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 352.4, \"cpu_s_this_invocation\": 336.8}"
+    }
+  ],
+  "state": "finished",
+  "elapsed_h": 1.534
+}

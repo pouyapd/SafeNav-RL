@@ -1,0 +1,46 @@
+      arm actions       set        stage  episodes  success  collision  deadlock  type1  type2
+committed    mean committed     beginner       500    0.966        0.0     0.008  0.000  0.008
+committed    mean committed       expert       500    0.610        0.0     0.378  0.134  0.244
+committed    mean committed intermediate       500    0.800        0.0     0.192  0.056  0.136
+committed    mean     fresh       expert      2500    0.636        0.0     0.354  0.138  0.216
+committed sampled committed     beginner       500    0.962        0.0     0.002  0.002  0.000
+committed sampled committed       expert       500    0.764        0.0     0.168  0.142  0.026
+committed sampled committed intermediate       500    0.880        0.0     0.056  0.040  0.016
+committed sampled     fresh       expert      2500    0.762        0.0     0.180  0.156  0.024
+  control    mean committed     beginner       500    0.902        0.0     0.020  0.004  0.014
+  control    mean committed       expert       500    0.558        0.0     0.432  0.078  0.354
+  control    mean committed intermediate       500    0.768        0.0     0.200  0.036  0.164
+  control    mean     fresh       expert      2500    0.582        0.0     0.406  0.070  0.336
+  control sampled committed     beginner       500    0.930        0.0     0.000  0.000  0.000
+  control sampled committed       expert       500    0.706        0.0     0.154  0.122  0.032
+  control sampled committed intermediate       500    0.870        0.0     0.050  0.040  0.008
+  control sampled     fresh       expert      2500    0.710        0.0     0.168  0.125  0.042
+  penalty    mean committed     beginner       500    0.914        0.0     0.008  0.004  0.004
+  penalty    mean committed       expert       500    0.600        0.0     0.360  0.210  0.136
+  penalty    mean committed intermediate       500    0.704        0.0     0.168  0.114  0.044
+  penalty    mean     fresh       expert      2500    0.587        0.0     0.355  0.210  0.139
+  penalty sampled committed     beginner       500    0.900        0.0     0.004  0.004  0.000
+  penalty sampled committed       expert       500    0.672        0.0     0.184  0.150  0.034
+  penalty sampled committed intermediate       500    0.752        0.0     0.074  0.066  0.008
+  penalty sampled     fresh       expert      2500    0.669        0.0     0.189  0.150  0.039
+           contrast    metric actions  difference  ci95_low  ci95_high  p_boot  primary  p_holm
+  penalty - control  deadlock    mean      -0.051    -0.116      0.017   0.138     True   0.275
+  penalty - control  deadlock sampled       0.021    -0.029      0.072   0.437    False     NaN
+  penalty - control   success    mean       0.005    -0.058      0.063   0.872     True   0.872
+  penalty - control   success sampled      -0.041    -0.091      0.010   0.114    False     NaN
+  penalty - control     type1    mean       0.140     0.024      0.266   0.016    False     NaN
+  penalty - control     type1 sampled       0.025    -0.041      0.093   0.500    False     NaN
+  penalty - control     type2    mean      -0.197    -0.322     -0.069   0.002    False     NaN
+  penalty - control     type2 sampled      -0.004    -0.038      0.033   0.848    False     NaN
+  penalty - control collision    mean       0.000     0.000      0.000   1.000    False     NaN
+  penalty - control collision sampled       0.000     0.000      0.000   1.000    False     NaN
+penalty - committed  deadlock    mean       0.001    -0.046      0.048   0.967    False     NaN
+penalty - committed  deadlock sampled       0.009    -0.040      0.059   0.763    False     NaN
+penalty - committed   success    mean      -0.050    -0.091     -0.008   0.021    False     NaN
+penalty - committed   success sampled      -0.094    -0.141     -0.046   0.000    False     NaN
+penalty - committed     type1    mean       0.072    -0.048      0.202   0.270    False     NaN
+penalty - committed     type1 sampled      -0.006    -0.073      0.063   0.856    False     NaN
+penalty - committed     type2    mean      -0.077    -0.186      0.031   0.166    False     NaN
+penalty - committed     type2 sampled       0.014    -0.022      0.052   0.445    False     NaN
+penalty - committed collision    mean       0.000     0.000      0.000   1.000    False     NaN
+penalty - committed collision sampled       0.000     0.000      0.000   1.000    False     NaN

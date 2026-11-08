@@ -1,0 +1,692 @@
+{
+  "invocations": [
+    {
+      "arm": "control",
+      "alpha": 0.0,
+      "seed": 4,
+      "overrides": {},
+      "timesteps_planned": 300000,
+      "command": "C:\\Users\\user\\Desktop\\GITHUB\\SafeNav-RL\\research\\experiments\\e1_pilot\\train_pilot.py --arm control --seed 4 --deadline-s 900 --min-battery-pct 35.0 --timesteps 300000 --runs-root runs/e1a --record-dir research/experiments/e1a/records --chunk-updates 2 --min-steps-per-s 25",
+      "git_commit": "3aed35ed62671344c642ded94029fc839d115316",
+      "code_modified_since_commit": false,
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "on_mains_power": true,
+      "finished": true,
+      "stop_reason": "finished",
+      "wall_s_this_invocation": 332.7,
+      "cpu_s_this_invocation": 318.2,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "chunks": [
+        {
+          "from_update": 0,
+          "timesteps": 4096,
+          "wall_s": 5.2,
+          "steps_per_s": 786,
+          "peak_memory_mb": 318.4,
+          "free_system_mb": 4878,
+          "cpu_percent_system": 20.2
+        },
+        {
+          "from_update": 2,
+          "timesteps": 8192,
+          "wall_s": 4.0,
+          "steps_per_s": 1019,
+          "peak_memory_mb": 319.6,
+          "free_system_mb": 4888,
+          "cpu_percent_system": 19.6
+        },
+        {
+          "from_update": 4,
+          "timesteps": 12288,
+          "wall_s": 4.0,
+          "steps_per_s": 1017,
+          "peak_memory_mb": 319.9,
+          "free_system_mb": 4912,
+          "cpu_percent_system": 19.8
+        },
+        {
+          "from_update": 6,
+          "timesteps": 16384,
+          "wall_s": 4.0,
+          "steps_per_s": 1029,
+          "peak_memory_mb": 320.9,
+          "free_system_mb": 4892,
+          "cpu_percent_system": 18.6
+        },
+        {
+          "from_update": 8,
+          "timesteps": 20480,
+          "wall_s": 4.0,
+          "steps_per_s": 1030,
+          "peak_memory_mb": 321.0,
+          "free_system_mb": 4900,
+          "cpu_percent_system": 18.3
+        },
+        {
+          "from_update": 10,
+          "timesteps": 24576,
+          "wall_s": 4.0,
+          "steps_per_s": 1012,
+          "peak_memory_mb": 321.0,
+          "free_system_mb": 4910,
+          "cpu_percent_system": 19.7
+        },
+        {
+          "from_update": 12,
+          "timesteps": 28672,
+          "wall_s": 4.0,
+          "steps_per_s": 1014,
+          "peak_memory_mb": 321.0,
+          "free_system_mb": 4921,
+          "cpu_percent_system": 18.8
+        },
+        {
+          "from_update": 14,
+          "timesteps": 32768,
+          "wall_s": 4.1,
+          "steps_per_s": 998,
+          "peak_memory_mb": 321.0,
+          "free_system_mb": 4914,
+          "cpu_percent_system": 19.0
+        },
+        {
+          "from_update": 16,
+          "timesteps": 36864,
+          "wall_s": 5.1,
+          "steps_per_s": 810,
+          "peak_memory_mb": 321.5,
+          "free_system_mb": 4796,
+          "cpu_percent_system": 52.4
+        },
+        {
+          "from_update": 18,
+          "timesteps": 40960,
+          "wall_s": 5.2,
+          "steps_per_s": 785,
+          "peak_memory_mb": 321.5,
+          "free_system_mb": 4835,
+          "cpu_percent_system": 29.9
+        },
+        {
+          "from_update": 20,
+          "timesteps": 45056,
+          "wall_s": 7.1,
+          "steps_per_s": 574,
+          "peak_memory_mb": 321.5,
+          "free_system_mb": 4812,
+          "cpu_percent_system": 33.4
+        },
+        {
+          "from_update": 22,
+          "timesteps": 49152,
+          "wall_s": 7.3,
+          "steps_per_s": 561,
+          "peak_memory_mb": 321.5,
+          "free_system_mb": 4854,
+          "cpu_percent_system": 28.3
+        },
+        {
+          "from_update": 24,
+          "timesteps": 53248,
+          "wall_s": 6.6,
+          "steps_per_s": 621,
+          "peak_memory_mb": 321.5,
+          "free_system_mb": 4867,
+          "cpu_percent_system": 18.6
+        },
+        {
+          "from_update": 26,
+          "timesteps": 57344,
+          "wall_s": 3.9,
+          "steps_per_s": 1053,
+          "peak_memory_mb": 321.8,
+          "free_system_mb": 4855,
+          "cpu_percent_system": 18.2
+        },
+        {
+          "from_update": 28,
+          "timesteps": 61440,
+          "wall_s": 4.0,
+          "steps_per_s": 1019,
+          "peak_memory_mb": 321.8,
+          "free_system_mb": 4880,
+          "cpu_percent_system": 19.3
+        },
+        {
+          "from_update": 30,
+          "timesteps": 65536,
+          "wall_s": 3.9,
+          "steps_per_s": 1054,
+          "peak_memory_mb": 321.8,
+          "free_system_mb": 4880,
+          "cpu_percent_system": 19.9
+        },
+        {
+          "from_update": 32,
+          "timesteps": 69632,
+          "wall_s": 4.0,
+          "steps_per_s": 1016,
+          "peak_memory_mb": 321.8,
+          "free_system_mb": 4878,
+          "cpu_percent_system": 18.6
+        },
+        {
+          "from_update": 34,
+          "timesteps": 73728,
+          "wall_s": 4.0,
+          "steps_per_s": 1012,
+          "peak_memory_mb": 321.8,
+          "free_system_mb": 4874,
+          "cpu_percent_system": 18.2
+        },
+        {
+          "from_update": 36,
+          "timesteps": 77824,
+          "wall_s": 4.1,
+          "steps_per_s": 995,
+          "peak_memory_mb": 321.8,
+          "free_system_mb": 4886,
+          "cpu_percent_system": 19.2
+        },
+        {
+          "from_update": 38,
+          "timesteps": 81920,
+          "wall_s": 4.1,
+          "steps_per_s": 1006,
+          "peak_memory_mb": 321.8,
+          "free_system_mb": 4873,
+          "cpu_percent_system": 18.7
+        },
+        {
+          "from_update": 40,
+          "timesteps": 86016,
+          "wall_s": 4.1,
+          "steps_per_s": 991,
+          "peak_memory_mb": 321.8,
+          "free_system_mb": 4861,
+          "cpu_percent_system": 18.1
+        },
+        {
+          "from_update": 42,
+          "timesteps": 90112,
+          "wall_s": 4.1,
+          "steps_per_s": 989,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4869,
+          "cpu_percent_system": 19.0
+        },
+        {
+          "from_update": 44,
+          "timesteps": 94208,
+          "wall_s": 4.3,
+          "steps_per_s": 961,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4894,
+          "cpu_percent_system": 19.3
+        },
+        {
+          "from_update": 46,
+          "timesteps": 98304,
+          "wall_s": 4.3,
+          "steps_per_s": 945,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4820,
+          "cpu_percent_system": 22.1
+        },
+        {
+          "from_update": 48,
+          "timesteps": 102400,
+          "wall_s": 6.6,
+          "steps_per_s": 617,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5044,
+          "cpu_percent_system": 24.9
+        },
+        {
+          "from_update": 50,
+          "timesteps": 106496,
+          "wall_s": 4.2,
+          "steps_per_s": 972,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5039,
+          "cpu_percent_system": 18.7
+        },
+        {
+          "from_update": 52,
+          "timesteps": 110592,
+          "wall_s": 4.3,
+          "steps_per_s": 947,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5041,
+          "cpu_percent_system": 18.9
+        },
+        {
+          "from_update": 54,
+          "timesteps": 114688,
+          "wall_s": 4.3,
+          "steps_per_s": 958,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5030,
+          "cpu_percent_system": 18.6
+        },
+        {
+          "from_update": 56,
+          "timesteps": 118784,
+          "wall_s": 4.2,
+          "steps_per_s": 968,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5038,
+          "cpu_percent_system": 18.8
+        },
+        {
+          "from_update": 58,
+          "timesteps": 122880,
+          "wall_s": 4.2,
+          "steps_per_s": 969,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5034,
+          "cpu_percent_system": 18.4
+        },
+        {
+          "from_update": 60,
+          "timesteps": 126976,
+          "wall_s": 4.3,
+          "steps_per_s": 950,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5101,
+          "cpu_percent_system": 20.2
+        },
+        {
+          "from_update": 62,
+          "timesteps": 131072,
+          "wall_s": 4.5,
+          "steps_per_s": 912,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5074,
+          "cpu_percent_system": 22.8
+        },
+        {
+          "from_update": 64,
+          "timesteps": 135168,
+          "wall_s": 4.5,
+          "steps_per_s": 907,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5072,
+          "cpu_percent_system": 18.6
+        },
+        {
+          "from_update": 66,
+          "timesteps": 139264,
+          "wall_s": 4.4,
+          "steps_per_s": 928,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5074,
+          "cpu_percent_system": 19.0
+        },
+        {
+          "from_update": 68,
+          "timesteps": 143360,
+          "wall_s": 4.5,
+          "steps_per_s": 906,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5080,
+          "cpu_percent_system": 19.6
+        },
+        {
+          "from_update": 70,
+          "timesteps": 147456,
+          "wall_s": 4.5,
+          "steps_per_s": 916,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5111,
+          "cpu_percent_system": 18.8
+        },
+        {
+          "from_update": 72,
+          "timesteps": 151552,
+          "wall_s": 6.6,
+          "steps_per_s": 621,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5102,
+          "cpu_percent_system": 18.9
+        },
+        {
+          "from_update": 74,
+          "timesteps": 155648,
+          "wall_s": 4.5,
+          "steps_per_s": 917,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5103,
+          "cpu_percent_system": 18.8
+        },
+        {
+          "from_update": 76,
+          "timesteps": 159744,
+          "wall_s": 4.6,
+          "steps_per_s": 885,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5099,
+          "cpu_percent_system": 20.6
+        },
+        {
+          "from_update": 78,
+          "timesteps": 163840,
+          "wall_s": 4.4,
+          "steps_per_s": 925,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5097,
+          "cpu_percent_system": 20.3
+        },
+        {
+          "from_update": 80,
+          "timesteps": 167936,
+          "wall_s": 4.2,
+          "steps_per_s": 984,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 5093,
+          "cpu_percent_system": 18.8
+        },
+        {
+          "from_update": 82,
+          "timesteps": 172032,
+          "wall_s": 5.0,
+          "steps_per_s": 814,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4970,
+          "cpu_percent_system": 27.2
+        },
+        {
+          "from_update": 84,
+          "timesteps": 176128,
+          "wall_s": 4.2,
+          "steps_per_s": 985,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4981,
+          "cpu_percent_system": 19.4
+        },
+        {
+          "from_update": 86,
+          "timesteps": 180224,
+          "wall_s": 4.1,
+          "steps_per_s": 994,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4971,
+          "cpu_percent_system": 18.7
+        },
+        {
+          "from_update": 88,
+          "timesteps": 184320,
+          "wall_s": 4.2,
+          "steps_per_s": 983,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4970,
+          "cpu_percent_system": 19.6
+        },
+        {
+          "from_update": 90,
+          "timesteps": 188416,
+          "wall_s": 4.2,
+          "steps_per_s": 982,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4964,
+          "cpu_percent_system": 19.8
+        },
+        {
+          "from_update": 92,
+          "timesteps": 192512,
+          "wall_s": 4.3,
+          "steps_per_s": 963,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4953,
+          "cpu_percent_system": 18.8
+        },
+        {
+          "from_update": 94,
+          "timesteps": 196608,
+          "wall_s": 4.2,
+          "steps_per_s": 972,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4972,
+          "cpu_percent_system": 18.7
+        },
+        {
+          "from_update": 96,
+          "timesteps": 200704,
+          "wall_s": 6.0,
+          "steps_per_s": 682,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4985,
+          "cpu_percent_system": 18.5
+        },
+        {
+          "from_update": 98,
+          "timesteps": 204800,
+          "wall_s": 4.3,
+          "steps_per_s": 960,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4979,
+          "cpu_percent_system": 18.7
+        },
+        {
+          "from_update": 100,
+          "timesteps": 208896,
+          "wall_s": 4.4,
+          "steps_per_s": 933,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4979,
+          "cpu_percent_system": 19.1
+        },
+        {
+          "from_update": 102,
+          "timesteps": 212992,
+          "wall_s": 4.3,
+          "steps_per_s": 961,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4986,
+          "cpu_percent_system": 18.4
+        },
+        {
+          "from_update": 104,
+          "timesteps": 217088,
+          "wall_s": 4.1,
+          "steps_per_s": 994,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4977,
+          "cpu_percent_system": 18.3
+        },
+        {
+          "from_update": 106,
+          "timesteps": 221184,
+          "wall_s": 4.4,
+          "steps_per_s": 940,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4964,
+          "cpu_percent_system": 20.1
+        },
+        {
+          "from_update": 108,
+          "timesteps": 225280,
+          "wall_s": 4.3,
+          "steps_per_s": 947,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4982,
+          "cpu_percent_system": 20.3
+        },
+        {
+          "from_update": 110,
+          "timesteps": 229376,
+          "wall_s": 4.0,
+          "steps_per_s": 1014,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4984,
+          "cpu_percent_system": 18.4
+        },
+        {
+          "from_update": 112,
+          "timesteps": 233472,
+          "wall_s": 4.1,
+          "steps_per_s": 1010,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4956,
+          "cpu_percent_system": 18.3
+        },
+        {
+          "from_update": 114,
+          "timesteps": 237568,
+          "wall_s": 4.0,
+          "steps_per_s": 1033,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4975,
+          "cpu_percent_system": 19.1
+        },
+        {
+          "from_update": 116,
+          "timesteps": 241664,
+          "wall_s": 4.3,
+          "steps_per_s": 951,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4934,
+          "cpu_percent_system": 21.0
+        },
+        {
+          "from_update": 118,
+          "timesteps": 245760,
+          "wall_s": 4.1,
+          "steps_per_s": 1005,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4945,
+          "cpu_percent_system": 19.2
+        },
+        {
+          "from_update": 120,
+          "timesteps": 249856,
+          "wall_s": 4.3,
+          "steps_per_s": 958,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4983,
+          "cpu_percent_system": 20.2
+        },
+        {
+          "from_update": 122,
+          "timesteps": 253952,
+          "wall_s": 6.1,
+          "steps_per_s": 673,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4970,
+          "cpu_percent_system": 18.9
+        },
+        {
+          "from_update": 124,
+          "timesteps": 258048,
+          "wall_s": 4.2,
+          "steps_per_s": 984,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4989,
+          "cpu_percent_system": 19.1
+        },
+        {
+          "from_update": 126,
+          "timesteps": 262144,
+          "wall_s": 4.2,
+          "steps_per_s": 974,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4988,
+          "cpu_percent_system": 19.9
+        },
+        {
+          "from_update": 128,
+          "timesteps": 266240,
+          "wall_s": 4.2,
+          "steps_per_s": 977,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4957,
+          "cpu_percent_system": 18.5
+        },
+        {
+          "from_update": 130,
+          "timesteps": 270336,
+          "wall_s": 4.3,
+          "steps_per_s": 960,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4954,
+          "cpu_percent_system": 19.5
+        },
+        {
+          "from_update": 132,
+          "timesteps": 274432,
+          "wall_s": 4.3,
+          "steps_per_s": 948,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4938,
+          "cpu_percent_system": 19.3
+        },
+        {
+          "from_update": 134,
+          "timesteps": 278528,
+          "wall_s": 4.4,
+          "steps_per_s": 941,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4963,
+          "cpu_percent_system": 19.1
+        },
+        {
+          "from_update": 136,
+          "timesteps": 282624,
+          "wall_s": 4.3,
+          "steps_per_s": 963,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4970,
+          "cpu_percent_system": 21.1
+        },
+        {
+          "from_update": 138,
+          "timesteps": 286720,
+          "wall_s": 4.3,
+          "steps_per_s": 950,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4971,
+          "cpu_percent_system": 22.7
+        },
+        {
+          "from_update": 140,
+          "timesteps": 290816,
+          "wall_s": 4.2,
+          "steps_per_s": 965,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4971,
+          "cpu_percent_system": 18.8
+        },
+        {
+          "from_update": 142,
+          "timesteps": 294912,
+          "wall_s": 4.3,
+          "steps_per_s": 958,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4979,
+          "cpu_percent_system": 19.4
+        },
+        {
+          "from_update": 144,
+          "timesteps": 299008,
+          "wall_s": 4.2,
+          "steps_per_s": 968,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4977,
+          "cpu_percent_system": 18.8
+        },
+        {
+          "from_update": 146,
+          "timesteps": 301056,
+          "wall_s": 4.5,
+          "steps_per_s": 451,
+          "peak_memory_mb": 322.0,
+          "free_system_mb": 4987,
+          "cpu_percent_system": 19.4
+        }
+      ]
+    }
+  ]
+}
