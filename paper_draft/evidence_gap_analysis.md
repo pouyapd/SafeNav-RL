@@ -60,6 +60,8 @@ This is a narrower claim. It is only competitive for a Q1 journal if E1 and E2 t
 
 ## 4. What the current evidence does and does not support
 
+*Section 4 is the state of 2026-10-26; the update of 2026-11-08 is in Section 5.*
+
 **Supported now:**
 - the two-mechanism taxonomy on this benchmark, replicated on 500 unused scenarios (same generator, pre-registered);
 - the shift between mechanisms caused by the training setup (paired intervals exclude 0 on two stages and on the fresh scenarios);
@@ -74,3 +76,23 @@ This is a narrower claim. It is only competitive for a Q1 journal if E1 and E2 t
 - generalisation to other scenario generators, stages or sampled actions in the fresh evaluation;
 - the causal explanation of self-stops;
 - anything about real robots or other simulators.
+
+## 5. Update 2026-11-08 (after E1a, E3, E4 and the DWA-style planner)
+
+| Gap | New state |
+|---|---|
+| G1 correction penalty | **closed (negative for the primary endpoint).** E1a: deadlock −5.1 [−11.6, +1.7], success +0.5 [−5.8, +6.3]. The penalty shifts stalls from self-stop to filter-blocked (secondary, unadjusted). Open: α other than 1; 1M steps (E1b, now exploratory) |
+| G3 fresh / corrected scenarios | **largely closed.** E3, 1,000 scenarios per stage on a corrected generator: the training contrasts and the effect of sampling on Type II replicate; the earlier null for sampling on Type I does not (+7.3 [+2.5, +14.3]). Expert success roughly halves with honest goal distances. Open: an oracle check of the E3 scenarios |
+| G5 baselines | **partly closed.** DWA-style planner (tuned, frozen) added. It is filter-blocked in every timeout, and a filter-aware margin removes this (exploratory). PPO-Lagrangian and MPC are still missing |
+| G6 cause of self-stops | **answered differently than expected.** Bounded actions (Beta) and a reward without the risk term each remove them (H4a and H4b both hold). In both cases filter-blocked stalls take their place, and total deadlock stays at 34–40 %. The more useful conclusion is therefore that self-stops and filter-blocked stalls are two outcomes of one missing capability (getting around an obstacle that lies between the robot and the goal), not two independent defects |
+| G2 remedy for filter-blocked stalls | still open, and now more important: every remedy for self-stops produced filter-blocked stalls. The next candidate is a multi-step or planning-level escape |
+
+**Supported now (additionally):**
+- the exchange between the two mechanisms under four different interventions (filter in training, penalty, Beta policy, reward), and in reverse for a classical planner;
+- the replication of the training contrasts on a corrected generator.
+
+**Not supported:**
+- any claim that a single training change resolves deadlock;
+- any claim about PPO-Lagrangian or MPC;
+- claims at 1M steps for the new arms;
+- the causal mechanism behind the exchange (the "one missing capability" reading is an interpretation, not a test).
