@@ -68,6 +68,8 @@ def main() -> int:
     ap.add_argument("--filter", default="on", choices=["on", "off"])
     ap.add_argument("--sampled", action="store_true")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="config override")
+    ap.add_argument("--task", action="append", default=[], metavar="KEY=VALUE",
+                    help="override a stage parameter, e.g. min_obstacles=15 (E3-dense)")
     ap.add_argument("--deadline-s", type=float, default=900.0)
     ap.add_argument("--out-root", default=None)
     args = ap.parse_args()
@@ -109,7 +111,8 @@ def main() -> int:
     planned, completed, stopped = len(agents) * len(args.stages) * len(seeds), len(done), False
     probe = CBFSafetyFilter.from_config(config)
     for stage in args.stages:
-        env = make_env(config, task=get_stage(config, stage), safety_filter=(args.filter == "on"))
+        task = dict(get_stage(config, stage), **parse_kv(args.task))
+        env = make_env(config, task=task, safety_filter=(args.filter == "on"))
         for name, kind, tseed, ckpt in agents:
             if kind == "ppo":
                 policy = PPOPolicy.from_checkpoint(ckpt, deterministic=not args.sampled)
