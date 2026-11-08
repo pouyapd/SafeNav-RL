@@ -79,6 +79,14 @@ class NavigationEnv(gym.Env):
         # Distance at which the risk score reaches 0. Older configs used
         # safety.safe_distance for this, so that stays the fallback.
         self.risk_distance = float(env_cfg.get("risk_distance", safety_cfg.get("safe_distance", 0.8)))
+        # "clip" (default): the original generator, which clips the goal into the workspace and
+        # thereby shortens many goal distances. "rejection" (opt-in, experiment E3): redraw the
+        # distance and direction until the goal lies inside the workspace, so every goal distance
+        # is in the requested stage range (up to the largest distance the workspace allows).
+        self.goal_sampling = str(env_cfg.get("goal_sampling", "clip"))
+        if self.goal_sampling not in ("clip", "rejection"):
+            raise ValueError("env.goal_sampling must be 'clip' or 'rejection'")
+        self.goal_sampling_fallback = False
 
         self.num_beams = int(sensor_cfg.get("num_beams", 0))
         self.max_range = float(sensor_cfg.get("max_range", 3.0))
@@ -156,7 +164,23 @@ class NavigationEnv(gym.Env):
         goal_dist = self._rng.uniform(task["min_goal_dist"], task["max_goal_dist"])
         goal_angle = self._rng.uniform(-np.pi, np.pi)
         self.goal_pos = self.robot_pos + goal_dist * np.array([np.cos(goal_angle), np.sin(goal_angle)])
-        # Clip goal inside workspace
+        self.goal_sampling_fallback = False
+        if self.goal_sampling == "rejection":
+            # Redraw start, heading and goal together: from a start near the centre of the start
+            # square, no goal at the requested distance may fit inside the workspace.
+            lo, hi = margin, self.workspace_size - margin
+            for _ in range(1000):
+                if np.all((self.goal_pos >= lo) & (self.goal_pos <= hi)):
+                    break
+                self.robot_pos = self._rng.uniform(margin, self.workspace_size / 2, size=2)
+                self.robot_theta = float(self._rng.uniform(-np.pi, np.pi))
+                goal_dist = self._rng.uniform(task["min_goal_dist"], task["max_goal_dist"])
+                goal_angle = self._rng.uniform(-np.pi, np.pi)
+                self.goal_pos = self.robot_pos + goal_dist * np.array([np.cos(goal_angle), np.sin(goal_angle)])
+            else:
+                self.goal_sampling_fallback = True   # no feasible draw: fall back to clipping
+            self.start_pos = self.robot_pos.copy()
+        # Clip goal inside workspace (a no-op for an accepted rejection-sampled goal)
         self.goal_pos = np.clip(self.goal_pos, margin, self.workspace_size - margin)
 
         # Generate obstacles

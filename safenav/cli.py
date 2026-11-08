@@ -99,7 +99,7 @@ def cmd_evaluate(args) -> int:
     import pandas as pd
     import torch
     torch.set_num_threads(1)
-    from safenav.agents.baselines import GoToGoalPolicy, PotentialFieldPolicy, RandomPolicy
+    from safenav.agents.baselines import DynamicWindowPolicy, GoToGoalPolicy, PotentialFieldPolicy, RandomPolicy
     from safenav.agents.policy import PPOPolicy, load_checkpoint
     from safenav.evaluation.metrics import summarize
     from safenav.evaluation.runner import episode_seeds, evaluate_policy
@@ -112,6 +112,7 @@ def cmd_evaluate(args) -> int:
         config = _load(args)
         policy = {"gotogoal": GoToGoalPolicy(),
                   "potential_field": PotentialFieldPolicy.from_config(config) if args.baseline == "potential_field" else None,
+                  "dwa": DynamicWindowPolicy.from_config(config) if args.baseline == "dwa" else None,
                   "random": RandomPolicy(seed=0)}[args.baseline]
 
     stages = args.stages or [s["name"] for s in config["curriculum"]["stages"]]
@@ -215,7 +216,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_config_args(p)
     src = p.add_mutually_exclusive_group(required=True)
     src.add_argument("--checkpoint", help="trained .pt checkpoint")
-    src.add_argument("--baseline", choices=["gotogoal", "potential_field", "random"])
+    src.add_argument("--baseline", choices=["gotogoal", "potential_field", "dwa", "random"])
     p.add_argument("--stages", nargs="+", default=None, help="difficulty stages (default: all)")
     p.add_argument("--episodes", type=int, default=50, help="episodes per stage")
     p.add_argument("--seed-base", type=int, default=None, help="first episode seed (default: evaluation.test_seed)")
