@@ -13,8 +13,14 @@ script again. Between chunks it stops if the deadline is reached, its own peak m
 --max-rss-mb, the free system memory falls below --min-free-mb, or a chunk ran slower than
 --min-steps-per-s (a sign that the machine is busy or the process is being paged out).
 
-Run directory: runs/e1_pilot/<arm>/filtered/seed_<s> (train-many layout; git-ignored).
-Each invocation appends to research/experiments/e1_pilot/results/train_<arm>_seed<s>.json.
+Run directory: <runs-root>/<arm>/filtered/seed_<s> (train-many layout; git-ignored).
+Each invocation appends to <record-dir>/train_<arm>_seed<s>.json (default: e1_pilot/results/).
+
+Later arms (E4) use any arm name with explicit overrides, e.g.
+    --arm riskfree --set reward.risk_penalty_beta=0.0
+The arm name "penalty" keeps its original meaning (adds safety.correction_penalty=--alpha).
+--min-battery-pct stops the run between chunks (and before starting) when the machine runs on
+battery below that charge; it has no effect on mains power.
 """
 
 import argparse
@@ -32,8 +38,13 @@ OUT_ROOT = Path(__file__).resolve().parent / "results"
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--arm", required=True, choices=["control", "penalty"])
+    ap.add_argument("--arm", required=True, help="control, penalty, or a named arm defined by --set")
     ap.add_argument("--alpha", type=float, default=1.0, help="penalty weight of the penalty arm")
+    ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
+                    help="extra config override (repeatable), e.g. reward.risk_penalty_beta=0.0")
+    ap.add_argument("--record-dir", default=None, help="where the run record is written (default: e1_pilot/results)")
+    ap.add_argument("--min-battery-pct", type=float, default=0,
+                    help="stop between chunks when on battery below this charge (0 = off)")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--timesteps", type=int, default=150_000)
     ap.add_argument("--runs-root", default="runs/e1_pilot")
@@ -52,10 +63,11 @@ def main() -> int:
     proc.nice(psutil.BELOW_NORMAL_PRIORITY_CLASS if platform.system() == "Windows" else 10)
     torch.set_num_threads(1)
 
-    from safenav.config import load_config
+    from safenav.config import load_config, parse_override
     from safenav.training.ppo_trainer import PPOTrainer
 
     overrides = {"safety.correction_penalty": args.alpha} if args.arm == "penalty" else {}
+    overrides.update(dict(parse_override(s) for s in args.set))
     config = load_config(None, overrides=overrides)
     config["training"]["seed"] = args.seed
     config["ppo"]["total_timesteps"] = args.timesteps
@@ -67,8 +79,14 @@ def main() -> int:
     commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     dirty = bool(subprocess.run(["git", "status", "--porcelain", "--", "safenav", "configs"], cwd=ROOT,
                                 capture_output=True, text=True).stdout.strip())
-    OUT_ROOT.mkdir(parents=True, exist_ok=True)
-    path = OUT_ROOT / f"{args.tag or f'train_{args.arm}_seed{args.seed}'}.json"
+    out_root = (ROOT / args.record_dir) if args.record_dir else OUT_ROOT
+    out_root.mkdir(parents=True, exist_ok=True)
+    path = out_root / f"{args.tag or f'train_{args.arm}_seed{args.seed}'}.json"
+
+    def battery_low():
+        b = psutil.sensors_battery()
+        return bool(args.min_battery_pct and b is not None and not b.power_plugged
+                    and b.percent < args.min_battery_pct)
     history = json.loads(path.read_text(encoding="utf-8")).get("invocations", []) if path.is_file() else []
     t0, cpu0 = time.time(), proc.cpu_times()
     chunks, stop_reason, finished = [], "deadline", False
@@ -78,6 +96,7 @@ def main() -> int:
         cpu1 = proc.cpu_times()
         record = {
             "arm": args.arm, "alpha": args.alpha if args.arm == "penalty" else 0.0, "seed": args.seed,
+            "overrides": {k: v for k, v in overrides.items()},
             "timesteps_planned": args.timesteps, "command": " ".join(sys.argv), "git_commit": commit,
             "code_modified_since_commit": dirty, "python": platform.python_version(), "torch": torch.__version__,
             "platform": platform.platform(),
@@ -92,6 +111,8 @@ def main() -> int:
 
     if psutil.virtual_memory().available / 2**20 < args.min_free_mb:
         stop_reason = "not started: free system memory below --min-free-mb"
+    elif battery_low():
+        stop_reason = "not started: on battery below --min-battery-pct"
     while stop_reason == "deadline" and time.time() - t0 < args.deadline_s:
         tc = time.time()
         trainer = PPOTrainer(config, run_dir=str(run_dir), safety_filter=True, verbose=False, resume=True)
@@ -116,6 +137,8 @@ def main() -> int:
             stop_reason = "memory limit (system)"
         elif sps < args.min_steps_per_s:
             stop_reason = "throughput below --min-steps-per-s (machine busy or paging)"
+        elif battery_low():
+            stop_reason = "on battery below --min-battery-pct"
         save_record()
 
     record = save_record()

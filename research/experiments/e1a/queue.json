@@ -1,0 +1,56 @@
+{
+  "common": [
+    "--timesteps",
+    "300000",
+    "--runs-root",
+    "runs/e1a",
+    "--record-dir",
+    "research/experiments/e1a/records",
+    "--chunk-updates",
+    "2",
+    "--min-steps-per-s",
+    "25"
+  ],
+  "jobs": [
+    {
+      "arm": "control",
+      "seed": 0
+    },
+    {
+      "arm": "penalty",
+      "seed": 0
+    },
+    {
+      "arm": "control",
+      "seed": 1
+    },
+    {
+      "arm": "penalty",
+      "seed": 1
+    },
+    {
+      "arm": "control",
+      "seed": 2
+    },
+    {
+      "arm": "penalty",
+      "seed": 2
+    },
+    {
+      "arm": "control",
+      "seed": 3
+    },
+    {
+      "arm": "penalty",
+      "seed": 3
+    },
+    {
+      "arm": "control",
+      "seed": 4
+    },
+    {
+      "arm": "penalty",
+      "seed": 4
+    }
+  ]
+}
