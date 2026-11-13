@@ -11,7 +11,8 @@ research/experiments/round3/PROTOCOL.md):
   "A"  multi-step escape planning, triggered at once by a stall signature (the filter cuts
        the commanded speed below v_cut, or the policy commands at most v_stop). The planner
        is used only if its best manoeuvre beats holding the current command by plan_margin
-       (predicted cost-to-go); it then commits to a_commit steps and re-checks.
+       (predicted cost-to-go); it then commits to a_commit steps and re-checks. Back-to-back
+       commitments form one activation, which ends when control returns to the policy.
   "B"  deadlock-triggered fixed behaviour: after `window` steps with less than `min_disp`
        net displacement, turn on the spot towards the tangent of the nearest barrier (the
        side closer to the goal direction), then follow that tangent at full speed for
@@ -195,22 +196,21 @@ class RecoveryController:
         c = self.cfg
         if self.queue:
             return self.queue.pop(0)
-        if self.active is not None:
-            self._end(step, pos, "commitment done")
         a = np.asarray(self.policy.act(obs), dtype=float)
         v_cmd = float(np.clip(a[0], 0.0, 1.0))
         v_lim = float(self.model.speed_limit(np.array([pos[0]]), np.array([pos[1]]), np.array([theta]))[0])
         signature = (v_cmd > v_lim + 1e-9 and v_lim < c.v_cut) or v_cmd <= c.v_stop
-        if not signature:
-            return a
-        hold = np.repeat(a[None, :], c.horizon, axis=0)
-        p = self._plan(pos, theta, extra=hold[None])
-        hold_cost = self.planner.predicted_cost(self.model, self.plan_field, pos, theta, hold)
-        if p.index < len(self.planner.library) and p.cost_end <= hold_cost - c.plan_margin:
-            if self.active is None:
-                self._start(step, pos)
-            self.queue = [p.controls[i] for i in range(1, c.a_commit)]
-            return p.controls[0]
+        if signature:
+            hold = np.repeat(a[None, :], c.horizon, axis=0)
+            p = self._plan(pos, theta, extra=hold[None])
+            hold_cost = self.planner.predicted_cost(self.model, self.plan_field, pos, theta, hold)
+            if p.index < len(self.planner.library) and p.cost_end <= hold_cost - c.plan_margin:
+                if self.active is None:            # back-to-back commitments form one activation
+                    self._start(step, pos)
+                self.queue = [p.controls[i] for i in range(1, c.a_commit)]
+                return p.controls[0]
+        if self.active is not None:                # control returns to the policy
+            self._end(step, pos, "returned to policy")
         return a
 
     # B: no-progress trigger + fixed tangent behaviour
