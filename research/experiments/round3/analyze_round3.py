@@ -177,6 +177,11 @@ def main() -> int:
         per_call = (calls.planner_time_s / calls.planner_calls) * 1000
         summary["overhead_overall"] = {"planner_ms_per_call_episode_mean_p99": float(np.percentile(per_call, 99)),
                                        "note": "per-call time is averaged within an episode; p99 is over episodes"}
+        if "planner_max_call_ms" in calls:
+            mx = calls.planner_max_call_ms
+            summary["overhead_overall"].update({"planner_max_call_ms_p99_over_episodes": float(np.percentile(mx, 99)),
+                                                "planner_max_call_ms_max": float(mx.max()),
+                                                "budget_ok": bool(np.percentile(mx, 99) <= 100.0)})
     (res / "summary.json").write_text(json.dumps(summary, indent=1, default=float), encoding="utf-8")
     print(json.dumps({"episodes": summary["episodes"], "collisions": summary["collisions"],
                       "min_clearance_m": summary["min_clearance_m"], "decisions": summary.get("decisions")}, indent=1))

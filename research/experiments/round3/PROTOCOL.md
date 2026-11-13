@@ -117,7 +117,21 @@ python research/experiments/round3/analyze_round3.py
 
 ## Amendments
 
-*(none yet)*
+**Amendment 1 (2026-11-13, after the pilot, before the main run; measurement only).** The protocol caps the 99th percentile of planner-call time at 100 ms. The pilot runner recorded only the mean time per call within an episode. The 99th percentile of that mean over pilot episodes was 24.7 ms, but this is not the quantity specified.
+- The controller now records the longest single planner call per episode (`planner_max_call_ms`).
+- The budget check uses the 99th percentile of that maximum over episodes, which is conservative (an upper bound on the per-call percentile).
+
+Nothing that affects the actions taken was changed. No other change was made after the pilot.
+
+**Pilot assessment (2026-11-13; exploratory).**
+- **Technical criteria:**
+  1. triggers fired for both stall types;
+  2. activations ended (at most 4 per episode for C, 17 for A);
+  3. recovery acted on both stall types;
+  4. 0 collisions in 2,000 episodes, minimum clearance 0.300 m;
+  5. mean controller time ≤ 3.3 ms per step, measured on battery;
+  6. no runaway loops.
+- **Conclusion:** the pilot is technically valid, and the main run proceeds unchanged. Its outcome numbers are in `results/pilot/summary.json` and are **not** used for any decision.
 
 ---
 

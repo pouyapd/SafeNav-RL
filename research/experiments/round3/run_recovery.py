@@ -39,7 +39,7 @@ FIELDS = ["method", "agent", "train_seed", "stage", "episode_seed", "start_goal_
           "intervention_steps", "min_obstacle_clearance", "tail_net_displacement_m", "start_geo_cost", "end_geo_cost",
           "activations", "activations_success", "repeat_activations", "recovery_steps", "tail_recovery_share",
           "first_activation_step", "mean_activation_steps", "exit_reasons", "planner_calls", "planner_time_s",
-          "controller_time_s", "field_setup_s", "episode_wall_s"]
+          "controller_time_s", "field_setup_s", "episode_wall_s", "planner_max_call_ms"]
 
 
 def main() -> int:
@@ -147,7 +147,8 @@ def main() -> int:
                            "planner_time_s": round(ctl.stats.planner_time_s, 5) if ctl else 0.0,
                            "controller_time_s": round(ctl.stats.controller_time_s, 5) if ctl else 0.0,
                            "field_setup_s": round(ctl.field_setup_s, 5) if ctl else 0.0,
-                           "episode_wall_s": round(time.perf_counter() - te, 4)}
+                           "episode_wall_s": round(time.perf_counter() - te, 4),
+                           "planner_max_call_ms": round(1000 * ctl.stats.planner_max_call_s, 3) if ctl else 0.0}
                     writer.writerow(row)
                     fh.flush()
                     completed += 1

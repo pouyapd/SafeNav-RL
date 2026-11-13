@@ -86,6 +86,7 @@ class EpisodeStats:
     activations: list = field(default_factory=list)
     planner_calls: int = 0
     planner_time_s: float = 0.0
+    planner_max_call_s: float = 0.0
     controller_time_s: float = 0.0
     recovery_steps: int = 0
 
@@ -137,8 +138,10 @@ class RecoveryController:
     def _plan(self, pos, theta, extra=None):
         t0 = time.perf_counter()
         p = self.planner.plan(self.model, self.plan_field, pos, theta, extra)
+        dt = time.perf_counter() - t0
         self.stats.planner_calls += 1
-        self.stats.planner_time_s += time.perf_counter() - t0
+        self.stats.planner_time_s += dt
+        self.stats.planner_max_call_s = max(self.stats.planner_max_call_s, dt)
         return p
 
     def _start(self, step, pos):

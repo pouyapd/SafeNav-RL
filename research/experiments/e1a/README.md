@@ -59,7 +59,7 @@ python research/experiments/e1_evaluate.py --arm penalty=runs/e1a/penalty/filter
 
 ### Execution facts
 
-- **Training.** 1.75 h of summed wall time, laptop on mains power, one process at a time. The control-0 run was interrupted by the end of a session and resumed exactly from its last chunk; `records/train_control_seed0.json` lists every invocation.
+- **Training.** 1.75 h of summed wall time, one process at a time. The laptop was on mains power, except for the first invocation of control seed 0; see the correction below. The control-0 run was interrupted by the end of a session and resumed exactly from its last chunk; `records/train_control_seed0.json` lists every invocation.
 - **Code.** Training ran at `d65e576`/`3aed35e`; the default code path is bit-identical to `bad41e9`. The run records show `code_modified_since_commit: false`.
 - **Sanity checks (pre-registered).**
   - `correction_penalty_mean` is > 0 in the penalty arm (seed 0, last update: 0.028) and 0 in the control.
@@ -116,3 +116,12 @@ With sampled actions, neither the deadlock rate nor the stall types differ betwe
 - Only α = 1 was tested, with no tuning of α.
 - The penalty uses the one-step filter of this repository, not the setting of the original paper; there are no safe resets.
 - E1b (1M steps) was not run. Under the protocol, E1b runs "only if E1a is positive or inconclusive". The primary result is a clear null for total deadlock, but the secondary shift between stall types may justify E1b as an **exploratory** follow-up, not as a confirmation of H1.
+
+### Correction (2026-11-13, round-3 audit)
+
+The [round-3 audit](../round3/audit/README.md) found two inaccuracies in the execution notes above. **The results are not affected.**
+- **Modified code during one invocation.** "The run records show `code_modified_since_commit: false`" is not true for control seed 0. Its second invocation (steps 40,960–196,608) ran while the round-2 opt-in code was being written in the same working tree.
+  - The run was retrained from scratch at commit `30b53d8` (the round-2 head; `safenav/` and `configs/` unmodified, one invocation).
+  - `best.pt`, `final.pt` and `validation.csv` are bit-identical to the committed ones (`../round3/audit/records/train_control_seed0.json`).
+- **Power state.** The first invocation of that run (206 s) was on battery, not on mains power.
+- **Re-running the evaluation.** Re-running it from the committed copies in `checkpoints/` needs the loader fix on `exp/round3-recovery`. The command above, which uses `runs/e1a/...`, is unchanged.
