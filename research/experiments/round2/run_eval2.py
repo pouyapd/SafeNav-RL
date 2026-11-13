@@ -43,7 +43,8 @@ FIELDS = ["agent", "kind", "train_seed", "checkpoint", "actions", "filter", "sta
 def find_seed_ckpts(d: Path, ckpt_name: str):
     out = []
     for s in range(10):
-        for c in (d / f"seed_{s}.pt", d / f"seed_{s}" / "checkpoints" / f"{ckpt_name}.pt"):
+        for c in (d / f"seed_{s}.pt", d / f"seed_{s}" / "checkpoints" / f"{ckpt_name}.pt",
+                  d / f"seed_{s}" / f"{ckpt_name}.pt"):  # last: committed copies (round-3 audit fix)
             if c.is_file():
                 out.append((s, c))
                 break

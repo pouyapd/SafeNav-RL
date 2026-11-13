@@ -44,6 +44,8 @@ def find_checkpoints(arm_dir: Path):
         if not m:
             continue
         ckpt = p if m.group(2) else p / "checkpoints" / "best.pt"
+        if not ckpt.is_file() and not m.group(2):
+            ckpt = p / "best.pt"  # committed copies, seed_<k>/best.pt (round-3 audit fix)
         if ckpt.is_file():
             out[int(m.group(1))] = ckpt
     return out
