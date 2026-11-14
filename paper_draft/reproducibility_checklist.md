@@ -14,7 +14,9 @@ Windows 11, Python 3.12.7, torch 2.10.0+cpu, gymnasium 1.2.3, numpy 2.4.1, CPU o
 | Trained agents committed | ✅ | `results/checkpoints/{filtered,unfiltered}/seed_{0..4}.pt` (hashes below) |
 | Per-episode results committed | ✅ | `results/benchmark/episodes.csv`, `results/stochastic_eval/episodes.csv` |
 | Benchmark regenerates from the checkpoints | ✅ | per-episode files byte-identical (audit §1); `summary.csv` differs by ≤ 1.8e-15 (summation order) |
-| Tests | ✅ | 113 on `exp/research-extensions` (2026-11-08), CI passed there; 99 on `exp/e1-pilot`; 90 on `main` |
+| Tests | ✅ | 138 on `exp/round3-recovery` (2026-11-14), CI passed there; 113 on `exp/research-extensions`; 99 on `exp/e1-pilot`; 90 on `main` |
+| Independent audit of round 2 | ✅ | `research/experiments/round3/audit_round2.py`: 223 checks, 820 episodes replayed identically from the committed checkpoint copies. The loader fix that makes this replay possible is on `exp/round3-recovery` |
+| Round 3 pre-registration | ✅ | protocol and analysis `c1abd93`, amendment 1 `5d2838d`, both pushed before the main run |
 | Training reproducible | ⚠️ partly | deterministic and exactly resumable at small scale (tests); the 10 × 1M-step runs were not repeated |
 | Analysis scripts read stored outputs only | ✅ | `research/scripts/*.py` |
 | Fixed seeds for every evaluation | ✅ | test 2,000,000 + 100,000·stage + i; validation 1,000,000 + …; fresh E1 set 5,000,000 + i |
@@ -73,6 +75,15 @@ python research/experiments/round2/make_figures.py      # -> paper_draft/figures
 # The evaluations can use the committed copies of the checkpoints instead of runs/:
 #   control=research/experiments/e1a/checkpoints/control  riskfree=research/experiments/round2/checkpoints/riskfree ...
 #   (same seed_<k>/best.pt files; their SHA-256 hashes are in the run records)
+
+# 4d. round 3 (2026-11-14): audit, mechanism analysis, recovery pilot and main experiment (evaluation only)
+python research/experiments/round3/audit_round2.py --replay 20
+python research/experiments/round3/mechanism.py
+python research/experiments/round3/run_recovery.py --tag main --agent filtered=results/checkpoints/filtered \
+    --agent unfiltered=results/checkpoints/unfiltered --stages expert --seed-base 8500000 --n 500 \
+    --set env.goal_sampling=rejection        # resumable; repeat until 25,000 rows (pilot: --tag pilot --seed-base 8300000 --n 40)
+python research/experiments/round3/analyze_round3.py --tag main
+python research/experiments/round3/make_figures_r3.py --tag main
 
 # 5. manuscript
 cd paper_draft && latexmk -pdf manuscript.tex

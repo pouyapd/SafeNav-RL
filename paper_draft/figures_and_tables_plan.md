@@ -31,6 +31,8 @@ Every figure and table below is generated from files in the repository. Status:
 | Table 2 | expert success / collision / timeout / interventions, 9 conditions | exists (numbers) | `results/benchmark/summary.csv`, `results/stochastic_eval/summary.json` |
 | Table 3 | stall-class counts, intermediate and expert | new | `research/audit_outputs/stall_taxonomy_all.csv` |
 | Table 4 | pre-registered fresh-scenario evaluation: κ = 0 / 0.5, final checkpoints | **new (2026-10-26)** | `research/experiments/lightweight/results/summary.json` |
+| Table 6 | recovery experiment: success, deadlock, moving timeouts, loops per method and agent type | **new (2026-11-14)** | `research/experiments/round3/results/main/summary.json` |
+| Fig. 8 `r3_outcomes.pdf`, `r3_trajectories.pdf` | recovery experiment: outcome composition; rule-selected trajectories | **new (2026-11-14)** | `research/experiments/round3/results/main/episodes.csv`; `python research/experiments/round3/make_figures_r3.py` |
 | Table 5 | success on the corrected generator (E3), all controllers, mean and sampled | **new (2026-11-08)** | `research/experiments/round2/results/summary.json` (plus `dwa_margin_0p35_e3_expert` for the exploratory row) |
 | Table R | remedies incl. correction penalty | **required** (E1) | E1 |
 

@@ -57,7 +57,8 @@ It does **not** propose a new safety filter or a new training algorithm. The cor
 | **Completed, pre-registered** (2026-11-08) | **E1a**: correction penalty vs. control, 5 seeds × 300k steps per arm. Primary result **null** | [`research/experiments/e1a/`](research/experiments/e1a/README.md) |
 | **Completed, pre-registered** (2026-11-08) | **E3**: corrected scenario generator, 1,000 scenarios per stage. **E4**: cause of self-stops (Beta policy and risk-free reward, 5 seeds × 300k steps each) | [`research/experiments/round2/`](research/experiments/round2/README.md) |
 | **Completed** (2026-11-08) | DWA-style local planner (tuned on validation scenarios, then frozen); exploratory filter-aware variant | same |
-| **Not done** | PPO-Lagrangian; MPC with a DT-CBF; E1b (penalty at 1M steps); any physical robot or 3D simulator | [`paper_draft/minimum_experiments.md`](paper_draft/minimum_experiments.md) |
+| **Completed, pre-registered** (2026-11-14) | **Round 3**: deadlock recovery by multi-step planning with the filter unchanged (5 methods × 10 agents × 500 unused scenarios); mechanism analysis (exploratory); independent audit of round 2 | [`research/experiments/round3/`](research/experiments/round3/PROTOCOL.md) |
+| **Not done** | PPO-Lagrangian; MPC with a DT-CBF; E1b (penalty at 1M steps); recovery without the exact map; any physical robot or 3D simulator | [`paper_draft/minimum_experiments.md`](paper_draft/minimum_experiments.md) |
 
 ## Key results
 
@@ -76,6 +77,10 @@ It does **not** propose a new safety filter or a new training algorithm. The cor
   - The **correction penalty** (α = 1) cut self-stops by 19.7 points but raised filter-blocked stalls by 14.0. Total deadlock: −5.1 points [−11.6, +1.7], so the pre-registered primary test is **null**.
   - A **Beta policy** (no clipping of speed samples) removed self-stops completely (−33.8 points [−41.3, −25.2]), but filter-blocked stalls rose by 33.6 points; total deadlock was unchanged.
   - A **reward without the risk term** removed them almost completely (−31.6 points [−39.4, −22.9]); filter-blocked stalls rose by 26.2 points, and success rose by 6.2 points [1.2, 11.2].
+- **A planning-level recovery layer removes almost all deadlock, with the filter unchanged** (pre-registered, 500 unused scenarios, 0 collisions). When the robot has made no progress for 3 s, a receding-horizon planner that uses the filter's map proposes multi-step manoeuvres; the filter still checks every action.
+  - **Agents trained with the filter:** total deadlock 58.8 % → 0.6 % (−58.2 points [−64.3, −52.4]); success 39.2 % → 85.9 % (+46.7 [+40.6, +52.6]).
+  - **Agents trained without the filter:** total deadlock 53.4 % → 0.4 % (−53.0 [−57.5, −48.5]); success 46.4 % → 85.2 % (+38.8 [+34.4, +43.4]).
+  - **Limits:** about 14 % of episodes still time out while moving; the same planner with a straight-line cost leaves 25–27 % deadlock; the method needs the exact map; one of two pre-set compute limits was not met ([details](research/experiments/round3/PROTOCOL.md)).
 - **A classical planner shows the same exchange.** A DWA-style planner solves 96 % of the expert test scenarios without the filter. With the filter, its success falls to 48 %, and every one of its timeouts is filter-blocked. Exploratory follow-up: when its own margin exceeds the filter's, it is never blocked again, but it then stalls in its own local minima.
 - **Honest goal distances roughly halve expert success.** On a corrected generator that keeps the requested start-goal distance, success falls to 37–43 % for PPO and to 57 % for the potential field ([details](research/experiments/round2/README.md)). The training contrasts replicate. One earlier null result does not: there, sampling also adds filter-blocked stalls.
 - **Training with the filter did not clearly help.** With the policy mean, the filter-trained agent reached 61.0 % expert success, against 65.0 % for the agent trained without it and given the filter at test time. With sampled actions the figures were 76.4 % [68.2, 84.6] and 70.0 % [66.3, 73.7]. The intervals overlap.
@@ -238,6 +243,32 @@ The protocols, analysis scripts and decision rules were committed and pushed **b
 
 <sub>Brackets: 95 % paired hierarchical bootstrap intervals (scenarios paired, seeds resampled), so they include seed-level uncertainty. Per-seed rates, seed-level t-intervals, Welch tests and Hedges' g are reported next to them in the experiment READMEs.</sub>
 
+### Round 3: deadlock recovery (pre-registered; 2026-11-14)
+
+Round 2 showed that removing self-stops only moved the stalls to the filter boundary. Round 3 asked whether supplying the missing manoeuvre *at* a stall removes the deadlock itself, without touching the filter. The [protocol](research/experiments/round3/PROTOCOL.md) (methods, parameters, endpoints, claim rule) was pushed before the pilot and the main run; the code is in [`safenav/recovery/`](safenav/recovery/), opt-in and unused by default.
+
+| Method | Agents trained with the filter: success / deadlock / moving timeout | Agents trained without it: success / deadlock / moving timeout |
+|---|---:|---:|
+| baseline (policy + filter) | 39.2 % / 58.8 % / 2.0 % | 46.4 % / 53.4 % / 0.3 % |
+| A: escape planning, immediate trigger | 87.9 % / 7.9 % / 4.2 % | 94.1 % / 2.4 % / 3.5 % |
+| B: triggered tangent-following behaviour (no map) | 69.6 % / 9.8 % / 20.6 % | 74.6 % / 22.9 % / 2.5 % |
+| **C: triggered receding-horizon planning (primary)** | **85.9 % / 0.6 % / 13.5 %** | **85.2 % / 0.4 % / 14.5 %** |
+| C with a straight-line cost (ablation, no global information) | 72.9 % / 25.3 % / 1.8 % | 72.2 % / 27.0 % / 0.8 % |
+
+<sub>25,000 episodes: 5 methods × 10 committed agents × 500 expert scenarios of the corrected generator (seeds 8,500,000+), policy mean, filter on. 0 collisions; minimum clearance 0.300 m. Primary tests (C vs. baseline, deadlock and success per agent type, Holm over 4): all p &lt; 0.001; intervals from a paired hierarchical bootstrap over seeds and scenarios.</sub>
+
+- **Decision.** The pre-registered claim rule is met for both agent types: C reduces total deadlock by more than 50 points, raises success, and causes no collision.
+- **Not covered by the claim.**
+  - Part of the deadlock becomes timeouts in which the robot is still moving (13.5–14.5 %).
+  - The immediate trigger (A) is more successful than C for agents trained without the filter; this is a secondary finding.
+  - Planner calls take 13–18 ms on average, but the pre-set 99th-percentile limit (100 ms) was not met on the measure recorded (189 ms).
+- **Mechanism analysis (exploratory, 6,000 replays).**
+  - The goal stays reachable from practically every stall.
+  - In 58.5 % of stalls the shortest safe path starts more than 45° away from the goal direction (close passages of successful episodes: 10.9 %).
+  - One 4 s manoeuvre is enough in only 46.5 % of stalls.
+  - The two stall types are geometrically different ([`MECHANISM.md`](research/experiments/round3/MECHANISM.md)).
+- **Audit of round 2.** 223 independent checks; all numbers reproduce. It found a checkpoint-loading bug in the reproduction path (fixed) and two inaccurate execution notes (corrected; results unaffected) ([`audit/README.md`](research/experiments/round3/audit/README.md)).
+
 ## Manuscript and literature review
 
 | Document | Content |
@@ -256,7 +287,7 @@ The manuscript marks every claim that the current evidence does not support with
 
 | Verified | Not verified or not done |
 |---|---|
-| 113 tests pass; GitHub Actions runs them on Python 3.10 and 3.12 | any physical robot, Gazebo or sim-to-real transfer |
+| 138 tests pass; GitHub Actions runs them on Python 3.10 and 3.12 | any physical robot, Gazebo or sim-to-real transfer |
 | the committed checkpoints reproduce the published per-episode benchmark results byte for byte | the ROS 2 node in `ros2_integration/` (an untested scaffold; only its scan helpers are tested) |
 | the filter's one-step bound under an adversarial policy, and the gap between samples | safety between samples for continuous-time dynamics, moving obstacles or sensing errors |
 | the stall taxonomy is insensitive to its thresholds and replicates on 500 unused scenarios (pre-registered) | PPO-Lagrangian and MPC baselines; E1b (1M steps); more than 5 seeds; the new arms (E1a, E4) were trained for 300k steps only |
@@ -359,7 +390,7 @@ Training is deterministic for a given seed on CPU, and resumption is exact; test
 ## Tests
 
 ```bash
-pytest            # 113 tests, about two to four minutes depending on the machine
+pytest            # 138 tests, about two to four minutes depending on the machine
 ```
 
 The tests cover:
@@ -368,6 +399,7 @@ The tests cover:
 - **Opt-in options:** the heading escape and the correction penalty, including an end-to-end check that the penalty reaches the training reward; the Beta policy (bounds, log-probabilities, training and reloading); the corrected goal sampling; and the DWA-style planner.
 - **Training:** GAE against hand-computed values, bit-for-bit reproducibility, and exact resumption.
 - **Evaluation:** metrics and intervals, and the feasibility oracle.
+- **Recovery (opt-in):** the planner's model equals the environment step by step; every mode is collision-free, ends its activations and cannot bypass the filter; determinism.
 - **The rest:** the supplementary seed-level statistics, config validation, the baselines, the committed checkpoints, the ROS 2 scan conversion, and an end-to-end train → benchmark → plot run.
 
 ## Repository map
@@ -379,6 +411,7 @@ SafeNav-RL/
 │   ├── safety/       # cbf_filter.py: CBF filter, SafetyFilterWrapper (opt-in correction penalty);
 │   │                 # heading_escape.py: opt-in test-time heading escape
 │   ├── agents/       # actor_critic.py, policy.py (PPOPolicy, checkpoints), baselines.py
+│   ├── recovery/     # opt-in deadlock recovery: filter model, cost-to-go fields, planner, controller
 │   ├── training/     # ppo_trainer.py, rollout_buffer.py, callbacks.py (logs, checkpoints)
 │   ├── evaluation/   # metrics.py, runner.py, feasibility.py, benchmark.py, sweep.py
 │   ├── viz/          # figures.py, plots.py, style.py
@@ -391,7 +424,8 @@ SafeNav-RL/
 ├── research/
 │   ├── experiments/  # lightweight/ (pre-registered evaluation), e1_pilot/ (E1 pilot),
 │   │                 # E1_correction_penalty.md, e1_evaluate.py and e1a/ (E1a results),
-│   │                 # round2/ (E3, E4, DWA: protocol, runners, results), tools/ (queue, statistics)
+│   │                 # round2/ (E3, E4, DWA: protocol, runners, results), tools/ (queue, statistics),
+│   │                 # round3/ (recovery experiment, mechanism analysis, audit of round 2)
 │   ├── scripts/      # stall taxonomy, statistics, audit diagnostics (read stored outputs only)
 │   ├── audit_outputs/
 │   └── *.md          # audit, literature reviews, plans
