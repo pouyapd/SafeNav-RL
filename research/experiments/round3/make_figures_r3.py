@@ -5,7 +5,7 @@ make_figures_r3.py — figures for round 3 (reads results/<tag>/episodes.csv; re
 
 Writes paper_draft/figures/r3_outcomes.pdf, r3_seeds.pdf and r3_trajectories.pdf.
 Trajectory cases are chosen by rule, not by appearance: for each agent type, the scenarios with the
-lowest seed in which the baseline deadlocks (seed 0 agent), plus the lowest-seed scenario in which C
+lowest seed in which the baseline deadlocks (seed 0 agent), plus the lowest-seed scenario not already shown in which C
 ends in a "moving" timeout, if any.
 """
 
@@ -120,8 +120,9 @@ def fig_trajectories(df, out):
         dl = b[b["class"].isin(["filter-blocked", "self-stop"])].sort_values("episode_seed")
         cases += [(agent, int(s)) for s in dl.episode_seed.head(2)]
     mv = df[(df.method == "C") & (df["class"] == "moving") & (df.train_seed == 0)].sort_values("episode_seed")
-    if len(mv):
-        cases.append((mv.iloc[0].agent, int(mv.iloc[0].episode_seed)))
+    mv = [(r.agent, int(r.episode_seed)) for r in mv.itertuples() if (r.agent, int(r.episode_seed)) not in cases]
+    if mv:
+        cases.append(mv[0])   # lowest-seed moving timeout of C that is not already shown
     base_seed = int(df.episode_seed.min())
     fig, axes = plt.subplots(1, len(cases), figsize=(1.75 * len(cases), 2.0))
     for ax, (agent, ep) in zip(np.atleast_1d(axes), cases):
