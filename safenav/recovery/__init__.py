@@ -3,7 +3,9 @@
 from safenav.recovery.controller import MODES, RecoveryConfig, RecoveryController
 from safenav.recovery.costmap import EuclideanField, GeodesicField
 from safenav.recovery.model import FilteredUnicycleModel
+from safenav.recovery.perception import INFO, ExactInfo, MapError, NoisyLocalisation, SensedMap
 from safenav.recovery.planner import EscapePlanner, maneuver_library
 
 __all__ = ["MODES", "RecoveryConfig", "RecoveryController", "EuclideanField", "GeodesicField",
-           "FilteredUnicycleModel", "EscapePlanner", "maneuver_library"]
+           "FilteredUnicycleModel", "EscapePlanner", "maneuver_library",
+           "INFO", "ExactInfo", "MapError", "NoisyLocalisation", "SensedMap"]
