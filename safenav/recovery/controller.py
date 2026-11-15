@@ -61,12 +61,15 @@ class RecoveryConfig:
     go_steps: int = 30           # B
     turn_tol: float = 0.1        # B: radians
     k_turn: float = 2.0          # B: turn-rate gain
+    planner: str = "reference"   # "reference" (round 3) or "fast" (round 4, same plans; fast.py)
 
     def __post_init__(self):
         if self.mode not in MODES:
             raise ValueError(f"mode must be one of {MODES}")
         if self.cost not in ("geodesic", "euclidean"):
             raise ValueError("cost must be geodesic or euclidean")
+        if self.planner not in ("reference", "fast"):
+            raise ValueError("planner must be reference or fast")
 
 
 @dataclass
@@ -87,6 +90,10 @@ class EpisodeStats:
     planner_calls: int = 0
     planner_time_s: float = 0.0
     planner_max_call_s: float = 0.0
+    planner_cpu_s: float = 0.0            # thread CPU time of the planner calls (excludes pre-emption)
+    planner_max_call_cpu_s: float = 0.0
+    call_wall_ms: list = field(default_factory=list)   # every planner call, wall clock
+    call_cpu_ms: list = field(default_factory=list)    # every planner call, thread CPU time
     controller_time_s: float = 0.0
     recovery_steps: int = 0
 
@@ -99,7 +106,11 @@ class RecoveryController:
     def __init__(self, policy, cfg: Optional[RecoveryConfig] = None):
         self.policy = policy
         self.cfg = cfg or RecoveryConfig()
-        self.planner = EscapePlanner(self.cfg.horizon)
+        if self.cfg.planner == "fast":
+            from safenav.recovery.fast import FastEscapePlanner
+            self.planner = FastEscapePlanner(self.cfg.horizon)
+        else:
+            self.planner = EscapePlanner(self.cfg.horizon)
         self.env = None
 
     # ── episode set-up ──────────────────────────────────────────────────────
@@ -136,9 +147,13 @@ class RecoveryController:
         return float(self.geo(pos))
 
     def _plan(self, pos, theta, extra=None):
-        t0 = time.perf_counter()
+        t0, c0 = time.perf_counter(), time.thread_time()
         p = self.planner.plan(self.model, self.plan_field, pos, theta, extra)
-        dt = time.perf_counter() - t0
+        dt, dc = time.perf_counter() - t0, time.thread_time() - c0
+        self.stats.planner_cpu_s += dc
+        self.stats.planner_max_call_cpu_s = max(self.stats.planner_max_call_cpu_s, dc)
+        self.stats.call_wall_ms.append(1000 * dt)
+        self.stats.call_cpu_ms.append(1000 * dc)
         self.stats.planner_calls += 1
         self.stats.planner_time_s += dt
         self.stats.planner_max_call_s = max(self.stats.planner_max_call_s, dt)
@@ -206,7 +221,9 @@ class RecoveryController:
         if signature:
             hold = np.repeat(a[None, :], c.horizon, axis=0)
             p = self._plan(pos, theta, extra=hold[None])
-            hold_cost = self.planner.predicted_cost(self.model, self.plan_field, pos, theta, hold)
+            extra = getattr(p, "extra_costs", None)   # the fast planner already scored the hold candidate
+            hold_cost = (float(extra[0]) if extra is not None
+                         else self.planner.predicted_cost(self.model, self.plan_field, pos, theta, hold))
             if p.index < len(self.planner.library) and p.cost_end <= hold_cost - c.plan_margin:
                 if self.active is None:            # back-to-back commitments form one activation
                     self._start(step, pos)
