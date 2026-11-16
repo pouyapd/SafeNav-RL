@@ -10,6 +10,7 @@ R=research/experiments/round4/run_round4.py
 AG="--agent filtered=results/checkpoints/filtered --agent unfiltered=results/checkpoints/unfiltered"
 REJ="--set env.goal_sampling=rejection"
 ALL="nofilter baseline A C C_loc C_map C_sensed planner_only path_follower"
+ALL_R="$ALL path_follower_inflated"   # amendment 1: exploratory variant added for the confirmatory set
 
 battery_ok() { python -c "import psutil;b=psutil.sensors_battery();print(int(b is None or b.power_plugged or b.percent>=35))"; }
 
@@ -36,7 +37,7 @@ case "${1:-}" in
     run latency $((10*100*4)) --methods A:reference A:fast C:reference C:fast $AG --stages expert --seed-base 4200000 --n 100 $REJ --record-calls --priority normal
     ;;
   confirmatory)
-    run r_expert $((10*200*7 + 2*200)) --methods $ALL $AG --stages expert --seed-base 4400000 --n 200 $REJ --record-calls
+    run r_expert $((10*200*7 + 3*200)) --methods $ALL_R $AG --stages expert --seed-base 4400000 --n 200 $REJ --record-calls
     run r_intermediate $((10*200*2)) --methods baseline C $AG --stages intermediate --seed-base 4410000 --n 200 $REJ
     run r_dense $((10*200*2)) --methods baseline C $AG --stages expert --seed-base 4420000 --n 200 $REJ --task min_obstacles=15 --task max_obstacles=25
     run r_heading $((10*200*2)) --methods baseline C $AG --stages expert --seed-base 4430000 --n 200 $REJ --heading-perturb

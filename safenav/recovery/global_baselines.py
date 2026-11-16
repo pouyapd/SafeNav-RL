@@ -11,6 +11,8 @@ checks every action.
                  on a 5 cm grid) tracked by pure pursuit: aim at the point `lookahead` metres along
                  the steepest-descent path; turn rate k * heading error (saturated at 1 rad/s);
                  speed v_max * max(0, cos(heading error)).
+  PathFollower(extra_margin=0.2)   exploratory variant (round 4, amendment 1): the same, but the path is
+                 planned with 0.2 m more clearance than the filter keeps.
 """
 
 import time
@@ -70,16 +72,31 @@ class PlannerOnly(_MapController):
 
 
 class PathFollower(_MapController):
+    """extra_margin > 0 (round-4 exploratory variant, amendment 1): the path is planned on the safe set
+    shrunk by extra_margin metres, so that it keeps away from the filter boundary. self.geo stays the
+    true field (used for scoring); steering uses self.path_geo."""
+
     name = "path_follower"
 
-    def __init__(self, lookahead=0.5, k_turn=2.0, v_max=1.0):
+    def __init__(self, lookahead=0.5, k_turn=2.0, v_max=1.0, extra_margin=0.0):
         self.lookahead, self.k_turn, self.v_max = float(lookahead), float(k_turn), float(v_max)
+        self.extra_margin = float(extra_margin)
+
+    def bind(self, env, seed=None):
+        super().bind(env, seed)
+        if self.extra_margin > 0:
+            m = self.model
+            self.path_geo = GeodesicField(self.base.obstacle_map.obstacles, self.base.goal_pos, workspace_size=m.W,
+                                          robot_radius=m.r, safe_distance=m.d + self.extra_margin,
+                                          wall_margin=m.wall_margin + self.extra_margin, goal_radius=m.goal_radius)
+        else:
+            self.path_geo = self.geo
 
     def act(self, obs):
         b = self.base
         pos, th = b.robot_pos.copy(), float(b.robot_theta)
         w0, c0 = time.perf_counter(), thread_cpu_s()
-        d = self.geo.path_direction(pos, self.lookahead)
+        d = self.path_geo.path_direction(pos, self.lookahead)
         if d is None:                               # inside the goal cell or no descent: turn to the goal
             g = b.goal_pos - pos
             d = g / max(float(np.hypot(*g)), 1e-9)

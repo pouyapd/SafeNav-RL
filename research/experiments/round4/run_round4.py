@@ -45,12 +45,12 @@ from run_eval import TAIL, classify  # noqa: E402
 from run_eval2 import find_seed_ckpts  # noqa: E402
 
 OUT_ROOT = Path(__file__).resolve().parent / "results"
-AGENT_FREE = ("planner_only", "path_follower")
+AGENT_FREE = ("planner_only", "path_follower", "path_follower_inflated")
 BINS = [0, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, float("inf")]   # ms
 FIELDS = ["method", "planner", "info", "agent", "train_seed", "stage", "episode_seed", "heading_offset",
           "start_goal_dist_m", "outcome", "class", "steps", "intervention_steps", "min_obstacle_clearance",
           "tail_net_displacement_m", "start_geo_cost", "end_geo_cost", "path_length_m", "mean_exec_speed",
-          "activations", "activations_success", "repeat_activations", "recovery_steps", "tail_recovery_share",
+          "activations", "activations_success", "activations_success_08", "repeat_activations", "recovery_steps", "tail_recovery_share",
           "first_activation_step", "mean_activation_steps", "exit_reasons", "map_rebuilds", "known_obstacles",
           "planner_calls", "call_wall_ms_p50", "call_wall_ms_p99", "call_wall_ms_max", "call_cpu_ms_max",
           "act_wall_ms_p50", "act_wall_ms_p99", "act_wall_ms_max", "act_cpu_ms_max", "act_steps_over_100ms",
@@ -190,7 +190,8 @@ def main() -> int:
                 ctl, info_name = None, "-"
                 policy.reset(seed=ep_seed)
             elif method in AGENT_FREE:
-                ctl = PlannerOnly(planner=pl) if method == "planner_only" else PathFollower()
+                ctl = (PlannerOnly(planner=pl) if method == "planner_only"
+                       else PathFollower(extra_margin=0.2 if method == "path_follower_inflated" else 0.0))
                 ctl.bind(env, ep_seed)
                 info_name = "exact"
             else:
@@ -235,6 +236,8 @@ def main() -> int:
                    "path_length_m": float(np.sum(np.hypot(*np.diff(tr, axis=0).T))) if len(tr) > 1 else 0.0,
                    "mean_exec_speed": float(np.mean(vexec)) if vexec else 0.0,
                    "activations": len(acts), "activations_success": sum(x.success for x in acts),
+                   "activations_success_08": sum(bool(np.isfinite(x.start_cost) and x.end_cost <= x.start_cost - 0.8)
+                                                 or x.reason == "episode end" and outcome == "success" for x in acts),
                    "repeat_activations": int(repeats), "recovery_steps": st.recovery_steps if st else 0,
                    "tail_recovery_share": float(np.mean(rec[-TAIL:])) if rec else 0.0,
                    "first_activation_step": acts[0].start_step if acts else "",

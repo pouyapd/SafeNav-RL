@@ -78,7 +78,8 @@ def seed_level(a, b):
 
 def contrast(df_a, m_a, df_b, m_b, agent, metric, planner_a=None, planner_b=None, seed=0):
     a = mat(df_a, m_a, agent, metric, planner_a)
-    b = mat(df_b, m_b, agent, metric, planner_b) if m_b not in ("planner_only", "path_follower") else mat(df_b, m_b, "map", metric)
+    b = (mat(df_b, m_b, agent, metric, planner_b) if m_b not in ("planner_only", "path_follower", "path_follower_inflated")
+         else mat(df_b, m_b, "map", metric))
     r = boot(a, b, seed=seed)
     r["seed_level"] = seed_level(a, b)
     return r
@@ -118,6 +119,8 @@ def rates(df):
         acts = g.activations.sum()
         r["recovery"] = {"activations_per_episode": float(g.activations.mean()),
                          "recovery_success_rate": float(g.activations_success.sum() / acts) if acts else None,
+                         "recovery_success_rate_08_supplementary": (float(g.activations_success_08.sum() / acts)
+                                                                    if acts and "activations_success_08" in g else None),
                          "repeat_activations": int(g.repeat_activations.sum()),
                          "map_rebuilds_mean": float(pd.to_numeric(g.map_rebuilds, errors="coerce").mean())}
         kn = pd.to_numeric(g.known_obstacles, errors="coerce")
@@ -242,7 +245,7 @@ def part_f(tag, missing):
         return None
     out = {"rates": rates(d)}
     comp = {}
-    for other in ("planner_only", "path_follower"):
+    for other in [o for o in ("planner_only", "path_follower", "path_follower_inflated") if o in set(d.method)]:
         for tname, agent in TYPES.items():
             for metric in ("success", "deadlock", "moving"):
                 comp[f"C_minus_{other}|{metric}|{tname}"] = contrast(d, "C", d, other, agent, metric)

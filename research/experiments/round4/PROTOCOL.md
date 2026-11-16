@@ -133,7 +133,23 @@ Analysis code: [`analyze_round4.py`](analyze_round4.py), committed with this pro
 
 ## Amendments
 
-*(none yet)*
+**Amendment 1 (2026-11-17, after the pilots, before every confirmatory run).**
+
+*Pilot assessment (exploratory; the outcome numbers are in `results/pilot_summary.json` and decide nothing).*
+- **Safety:** 0 collisions and minimum clearance ≥ 0.30 m for every method with the filter; `nofilter` collided, as expected.
+- **Mechanics:** triggers fired in all six conditions; map rebuilds occurred for the sensed map (about 6 per episode, about 7 obstacles known at the end).
+- **Latency:** the latency tails in the pilots (below-normal priority, 26–30 % system load) were far larger than in profiling. This is why Part P uses its own controlled run.
+
+*Two findings that are not defects of the pre-registered methods, and how they are handled.*
+1. **The pre-registered `path_follower` reached the goal in 0 of 30 pilot scenarios.** All 30 were filter-blocked stalls.
+   - **Cause:** the shortest path through the safe set runs along its boundary. Pure pursuit then steers slightly into an obstacle at barrier ≈ 0, and the filter holds the robot (replays: barrier 0.001–0.003 m, executed speed 0). This is the deadlock mechanism this study is about, not a code error.
+   - **Handling:** the method stays as specified. In addition, an **exploratory, separately labelled** variant `path_follower_inflated` is added to the confirmatory R-expert set. It plans the path with 0.2 m more clearance than the filter keeps, as a classical planner normally inflates its margin. Without it, the comparison in Part F would rest only on a strawman.
+   - The variant is not part of any pre-registered test. Its comparison with C is reported as exploratory.
+2. **`C_loc` recovery success rate (secondary metric) was 0.29, against 0.91 for C,** while its episode success was similar.
+   - **Cause:** under localisation noise, the exit test fires the first time the *estimated* cost-to-go has dropped by 1.0 m, so the true drop at that step is often just below 1.0 m, the threshold of the success definition.
+   - **Handling:** the pre-registered metric is unchanged. A **supplementary** count with a 0.8 m threshold (`activations_success_08`) is recorded and reported separately as such.
+
+No method parameter, endpoint, scenario set or hypothesis was changed.
 
 ---
 
