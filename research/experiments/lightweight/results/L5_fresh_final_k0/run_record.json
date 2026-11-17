@@ -1,0 +1,161 @@
+{
+  "invocations": [
+    {
+      "tag": "L5_fresh_final_k0",
+      "command": "research/experiments/lightweight/run_eval.py --tag L5_fresh_final_k0 --agents runs/benchmark --checkpoint-name final --stage expert --seed-base 9000000 --n 500 --kappa 0 --deadline-s 300",
+      "git_commit": "9ced8885622b91593e77dd4ebd7f620506b574cd",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 5000,
+      "episodes_completed": 1575,
+      "stopped_at_deadline": true,
+      "wall_s_this_invocation": 301.5,
+      "cpu_s_this_invocation": 203.3,
+      "peak_memory_mb": 203.8,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "checkpoints": {
+        "filtered_seed0": {
+          "path": "runs/benchmark/filtered/seed_0/checkpoints/final.pt",
+          "sha256": "4ed4eb531ca28fe3c4c93fca2819f84102b76903a39356eaaadfdc3033ab4e60"
+        },
+        "filtered_seed1": {
+          "path": "runs/benchmark/filtered/seed_1/checkpoints/final.pt",
+          "sha256": "b6ca30e9184b768934be10b0970d45846480f1852ae031f68e02c66033f91c8e"
+        },
+        "filtered_seed2": {
+          "path": "runs/benchmark/filtered/seed_2/checkpoints/final.pt",
+          "sha256": "9530a77cc17e18dfd4de3df34b877e725ee8eda81d71253004169815be27cadd"
+        },
+        "filtered_seed3": {
+          "path": "runs/benchmark/filtered/seed_3/checkpoints/final.pt",
+          "sha256": "ff93d1b1d70d4c554b83e982042542d5c7bf336272c26cd26945dbb284660987"
+        },
+        "filtered_seed4": {
+          "path": "runs/benchmark/filtered/seed_4/checkpoints/final.pt",
+          "sha256": "e3ba5b29a60c47a68f39f51417fcb7b6dbf6a0288ea56c7b10918144c9c9364a"
+        },
+        "unfiltered_seed0": {
+          "path": "runs/benchmark/unfiltered/seed_0/checkpoints/final.pt",
+          "sha256": "45138be8d66313e2aef3e1157227252aac12af1cb72d2a1ac56aa382bd6f74a5"
+        },
+        "unfiltered_seed1": {
+          "path": "runs/benchmark/unfiltered/seed_1/checkpoints/final.pt",
+          "sha256": "39383b54be8dd0d49004b9167ff3cad05a444651f1b7703437ac4886cc4ff0c2"
+        },
+        "unfiltered_seed2": {
+          "path": "runs/benchmark/unfiltered/seed_2/checkpoints/final.pt",
+          "sha256": "c635e2a38848f8bec2eb0b09cda5b97d61885e8d314ff3ce8883aeef96ef5fc2"
+        },
+        "unfiltered_seed3": {
+          "path": "runs/benchmark/unfiltered/seed_3/checkpoints/final.pt",
+          "sha256": "92e33ef0b73204361aa8d58536da05f17085832aa863f061c6d7c504d3336acd"
+        },
+        "unfiltered_seed4": {
+          "path": "runs/benchmark/unfiltered/seed_4/checkpoints/final.pt",
+          "sha256": "0b5792624237fb3902e0b0c8070ffed981f177365d08a87f5bbcc57138b311cc"
+        }
+      }
+    },
+    {
+      "tag": "L5_fresh_final_k0",
+      "command": "research/experiments/lightweight/run_eval.py --tag L5_fresh_final_k0 --agents runs/benchmark --checkpoint-name final --stage expert --seed-base 9000000 --n 500 --kappa 0 --deadline-s 300",
+      "git_commit": "9ced8885622b91593e77dd4ebd7f620506b574cd",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 5000,
+      "episodes_completed": 2041,
+      "stopped_at_deadline": true,
+      "wall_s_this_invocation": 302.5,
+      "cpu_s_this_invocation": 81.5,
+      "peak_memory_mb": 205.6,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "checkpoints": {
+        "filtered_seed0": {
+          "path": "runs/benchmark/filtered/seed_0/checkpoints/final.pt",
+          "sha256": "4ed4eb531ca28fe3c4c93fca2819f84102b76903a39356eaaadfdc3033ab4e60"
+        },
+        "filtered_seed1": {
+          "path": "runs/benchmark/filtered/seed_1/checkpoints/final.pt",
+          "sha256": "b6ca30e9184b768934be10b0970d45846480f1852ae031f68e02c66033f91c8e"
+        },
+        "filtered_seed2": {
+          "path": "runs/benchmark/filtered/seed_2/checkpoints/final.pt",
+          "sha256": "9530a77cc17e18dfd4de3df34b877e725ee8eda81d71253004169815be27cadd"
+        },
+        "filtered_seed3": {
+          "path": "runs/benchmark/filtered/seed_3/checkpoints/final.pt",
+          "sha256": "ff93d1b1d70d4c554b83e982042542d5c7bf336272c26cd26945dbb284660987"
+        },
+        "filtered_seed4": {
+          "path": "runs/benchmark/filtered/seed_4/checkpoints/final.pt",
+          "sha256": "e3ba5b29a60c47a68f39f51417fcb7b6dbf6a0288ea56c7b10918144c9c9364a"
+        },
+        "unfiltered_seed0": {
+          "path": "runs/benchmark/unfiltered/seed_0/checkpoints/final.pt",
+          "sha256": "45138be8d66313e2aef3e1157227252aac12af1cb72d2a1ac56aa382bd6f74a5"
+        },
+        "unfiltered_seed1": {
+          "path": "runs/benchmark/unfiltered/seed_1/checkpoints/final.pt",
+          "sha256": "39383b54be8dd0d49004b9167ff3cad05a444651f1b7703437ac4886cc4ff0c2"
+        },
+        "unfiltered_seed2": {
+          "path": "runs/benchmark/unfiltered/seed_2/checkpoints/final.pt",
+          "sha256": "c635e2a38848f8bec2eb0b09cda5b97d61885e8d314ff3ce8883aeef96ef5fc2"
+        },
+        "unfiltered_seed3": {
+          "path": "runs/benchmark/unfiltered/seed_3/checkpoints/final.pt",
+          "sha256": "92e33ef0b73204361aa8d58536da05f17085832aa863f061c6d7c504d3336acd"
+        },
+        "unfiltered_seed4": {
+          "path": "runs/benchmark/unfiltered/seed_4/checkpoints/final.pt",
+          "sha256": "0b5792624237fb3902e0b0c8070ffed981f177365d08a87f5bbcc57138b311cc"
+        }
+      }
+    },
+    {
+      "tag": "L5_fresh_final_k0",
+      "command": "research/experiments/lightweight/run_eval.py --tag L5_fresh_final_k0 --agents runs/benchmark --checkpoint-name final --variants filtered --stage expert --seed-base 9000000 --n 500 --kappa 0 --deadline-s 360",
+      "git_commit": "9ced8885622b91593e77dd4ebd7f620506b574cd",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 2500,
+      "episodes_completed": 2500,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 199.3,
+      "cpu_s_this_invocation": 67.3,
+      "peak_memory_mb": 205.4,
+      "priority": "below normal",
+      "torch_threads": 1,
+      "checkpoints": {
+        "filtered_seed0": {
+          "path": "runs/benchmark/filtered/seed_0/checkpoints/final.pt",
+          "sha256": "4ed4eb531ca28fe3c4c93fca2819f84102b76903a39356eaaadfdc3033ab4e60"
+        },
+        "filtered_seed1": {
+          "path": "runs/benchmark/filtered/seed_1/checkpoints/final.pt",
+          "sha256": "b6ca30e9184b768934be10b0970d45846480f1852ae031f68e02c66033f91c8e"
+        },
+        "filtered_seed2": {
+          "path": "runs/benchmark/filtered/seed_2/checkpoints/final.pt",
+          "sha256": "9530a77cc17e18dfd4de3df34b877e725ee8eda81d71253004169815be27cadd"
+        },
+        "filtered_seed3": {
+          "path": "runs/benchmark/filtered/seed_3/checkpoints/final.pt",
+          "sha256": "ff93d1b1d70d4c554b83e982042542d5c7bf336272c26cd26945dbb284660987"
+        },
+        "filtered_seed4": {
+          "path": "runs/benchmark/filtered/seed_4/checkpoints/final.pt",
+          "sha256": "e3ba5b29a60c47a68f39f51417fcb7b6dbf6a0288ea56c7b10918144c9c9364a"
+        }
+      }
+    }
+  ]
+}

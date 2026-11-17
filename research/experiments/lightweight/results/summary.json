@@ -1,0 +1,191 @@
+{
+  "note": "Pre-registered analysis; see README.md. Rates are shares of episodes (x100 = per 100 episodes).",
+  "L2_kappa_selection": {
+    "validation": {
+      "0": {
+        "success": 0.647,
+        "collisions": 0
+      },
+      "0.5": {
+        "success": 0.685,
+        "collisions": 0
+      },
+      "1.0": {
+        "success": 0.656,
+        "collisions": 0
+      }
+    },
+    "kappa_star": 0.5
+  },
+  "L3_rates": {
+    "kappa0": {
+      "filtered": {
+        "episodes": 2500,
+        "success": 0.6388,
+        "collisions": 0,
+        "min_clearance_m": 0.3000000011425646,
+        "timeouts": 903,
+        "classes": {
+          "self-stop": 577,
+          "filter-blocked": 297,
+          "moving": 29
+        }
+      },
+      "unfiltered": {
+        "episodes": 2500,
+        "success": 0.6832,
+        "collisions": 0,
+        "min_clearance_m": 0.3000000011843196,
+        "timeouts": 792,
+        "classes": {
+          "filter-blocked": 709,
+          "self-stop": 81,
+          "moving": 2
+        }
+      }
+    },
+    "kappa0.5": {
+      "filtered": {
+        "episodes": 2500,
+        "success": 0.6396,
+        "collisions": 0,
+        "min_clearance_m": 0.3000000011413322,
+        "timeouts": 901,
+        "classes": {
+          "self-stop": 615,
+          "filter-blocked": 244,
+          "moving": 42
+        }
+      },
+      "unfiltered": {
+        "episodes": 2500,
+        "success": 0.7556,
+        "collisions": 0,
+        "min_clearance_m": 0.3000000011886286,
+        "timeouts": 611,
+        "classes": {
+          "filter-blocked": 523,
+          "self-stop": 85,
+          "moving": 3
+        }
+      }
+    }
+  },
+  "L3_tests": {
+    "H1_type1_unfiltered_kstar_minus_k0": {
+      "difference": -0.07440000000000002,
+      "ci95": [
+        -0.10240000000000002,
+        -0.04799000000000014
+      ]
+    },
+    "H2_type2_filtered_kstar_minus_k0": {
+      "difference": 0.015199999999999991,
+      "ci95": [
+        -0.007610000000000013,
+        0.0388
+      ]
+    },
+    "H4_success_unfiltered_kstar_minus_k0": {
+      "difference": 0.07240000000000002,
+      "ci95": [
+        0.0504,
+        0.0968
+      ]
+    },
+    "expl_success_filtered_kstar_minus_k0": {
+      "difference": 0.0007999999999999119,
+      "ci95": [
+        -0.02200000000000002,
+        0.024009999999999875
+      ]
+    },
+    "expl_type1_filtered_kstar_minus_k0": {
+      "difference": -0.021199999999999997,
+      "ci95": [
+        -0.0468,
+        0.001999999999999988
+      ]
+    },
+    "expl_type2_unfiltered_kstar_minus_k0": {
+      "difference": 0.0016000000000000042,
+      "ci95": [
+        -0.009999999999999995,
+        0.012799999999999999
+      ]
+    },
+    "R1_type1_filtered_minus_unfiltered_k0": {
+      "difference": -0.1648,
+      "ci95": [
+        -0.2284,
+        -0.1012
+      ]
+    },
+    "R1_type2_filtered_minus_unfiltered_k0": {
+      "difference": 0.19840000000000002,
+      "ci95": [
+        0.128,
+        0.26080000000000003
+      ]
+    },
+    "expl_success_filtered_minus_unfiltered_k0": {
+      "difference": -0.044399999999999995,
+      "ci95": [
+        -0.08519999999999994,
+        -0.0020000000000000018
+      ]
+    }
+  },
+  "L3_decisions": {
+    "H1": "partly (interval < 0, effect < 10 points)",
+    "H2": "supported",
+    "H3": "supported",
+    "H4": "supported",
+    "R1": "supported"
+  },
+  "L3_safety_kappa0.5": {
+    "collisions": 0,
+    "min_clearance_m": 0.3000000011413322
+  },
+  "L5_variants_analysed": [
+    "filtered"
+  ],
+  "L5_rates_final": {
+    "filtered": {
+      "episodes": 2500,
+      "success": 0.5908,
+      "collisions": 0,
+      "min_clearance_m": 0.3000000012580628,
+      "timeouts": 1023,
+      "classes": {
+        "self-stop": 870,
+        "filter-blocked": 123,
+        "moving": 30
+      }
+    }
+  },
+  "L5_tests": {
+    "success_filtered_final_minus_best": {
+      "difference": -0.04800000000000004,
+      "ci95": [
+        -0.08839999999999992,
+        -0.01200000000000001
+      ]
+    },
+    "type1_filtered_final_minus_best": {
+      "difference": -0.0696,
+      "ci95": [
+        -0.1296,
+        -0.0148
+      ]
+    },
+    "type2_filtered_final_minus_best": {
+      "difference": 0.11719999999999997,
+      "ci95": [
+        0.02959999999999996,
+        0.208
+      ]
+    }
+  },
+  "L5_decision_C1": "supported"
+}
