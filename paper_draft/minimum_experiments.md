@@ -2,6 +2,16 @@
 
 Nothing in this file has been run, except where it says **done**. Expensive runs wait for the author's approval.
 
+## Status on 2026-11-14 (round 3; adds to the table of 2026-11-08 below)
+
+| Experiment | Status | Result | Where |
+|---|---|---|---|
+| Audit of round 2 | **completed** | 223 checks; all contrasts and quoted numbers reproduce; one loader bug fixed; two execution notes corrected | `research/experiments/round3/audit/` |
+| Mechanism analysis (M1–M4) | **completed, exploratory** | M1 supported (58.5 % of stalls need a > 45° detour, against 10.9 % of close passages); M2 not supported (46.5 % escapable by one 4 s manoeuvre); M3 partly; M4 not supported | `research/experiments/round3/MECHANISM.md` |
+| Recovery pilot (2,000 episodes) | **completed, exploratory** | technically valid; 0 collisions | `research/experiments/round3/results/pilot/` |
+| Recovery main experiment (25,000 episodes) | **completed, confirmatory** | C vs. baseline: deadlock −58.2 [−64.3, −52.4] and −53.0 [−57.5, −48.5] points; success +46.7 and +38.8; 0 collisions; **claim rule met**. Moving timeouts 13.5–14.5 %; the 99th-percentile timing limit was not met | `research/experiments/round3/PROTOCOL.md` |
+| Recovery without the exact map; tuned trigger delay; E4 agents under recovery | **not executed** | – | – |
+
 ## Status on 2026-11-08 (supersedes the table of 2026-10-26 below, which is kept for the record)
 
 | Experiment | Status | Result | Where |
