@@ -1,0 +1,16 @@
+{
+ "M1_dev45_stalls_vs_passages": [
+  0.5849506298944501,
+  0.10914826498422713
+ ],
+ "M2_escape_geodesic_share_stalls": 0.4647599591419816,
+ "M3_local_min_stalls_vs_passages": [
+  0.1773918964930201,
+  0.0037854889589905363
+ ],
+ "M4_type_difference_points": {
+  "dev45": 13.186471122541665,
+  "escape_geodesic": -23.820764826551542,
+  "euclid_local_min": 25.17998020064705
+ }
+} 6000 / 6000
