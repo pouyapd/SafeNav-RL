@@ -1,0 +1,2895 @@
+{
+ "n_checks": 223,
+ "n_failed": 2,
+ "findings": [
+  "[D] L2 kappa-tuning scenarios disjoint from the trainer's validation scenarios: 20 shared seeds (1,200,000-1,200,019): the kappa rule used 20 scenarios that also selected the checkpoints; both are validation uses, no test leakage",
+  "[E] run record train_control_seed0.json: {'commits': ['3aed35e', 'd65e576'], 'invocations': 4, 'steps': 301056, 'overrides': {}}"
+ ],
+ "seed_purposes": {
+  "research/experiments/e1_pilot/results/eval_control_best/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/e1_pilot/results/eval_control_final/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/e1_pilot/results/eval_penalty_best/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/e1_pilot/results/eval_penalty_final/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/e1a/eval/episodes.csv": [
+   "E1a primary (fresh)",
+   "committed test set"
+  ],
+  "research/experiments/lightweight/results/L1_repro_committed_expert/episodes.csv": [
+   "committed test set"
+  ],
+  "research/experiments/lightweight/results/L2_val_k0/episodes.csv": [
+   "validation (training checkpoint selection; L2 kappa tuning at 1.2M)"
+  ],
+  "research/experiments/lightweight/results/L2_val_k0.5/episodes.csv": [
+   "validation (training checkpoint selection; L2 kappa tuning at 1.2M)"
+  ],
+  "research/experiments/lightweight/results/L2_val_k1.0/episodes.csv": [
+   "validation (training checkpoint selection; L2 kappa tuning at 1.2M)"
+  ],
+  "research/experiments/lightweight/results/L3_fresh_mean_k0/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/lightweight/results/L3_fresh_mean_k0.5/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/lightweight/results/L5_fresh_final_k0/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/lightweight/results/smoke/episodes.csv": [
+   "committed test set"
+  ],
+  "research/experiments/round2/results/dwa_fresh_on/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/round2/results/dwa_margin_0p35_e3_expert/episodes.csv": [
+   "E3 expert"
+  ],
+  "research/experiments/round2/results/dwa_margin_0p35_fresh_on/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/round2/results/dwa_margin_0p35_test_on/episodes.csv": [
+   "committed test set"
+  ],
+  "research/experiments/round2/results/dwa_margin_0p45_e3_expert/episodes.csv": [
+   "E3 expert"
+  ],
+  "research/experiments/round2/results/dwa_margin_0p45_fresh_on/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/round2/results/dwa_margin_0p45_test_on/episodes.csv": [
+   "committed test set"
+  ],
+  "research/experiments/round2/results/dwa_test_off/episodes.csv": [
+   "committed test set"
+  ],
+  "research/experiments/round2/results/dwa_test_on/episodes.csv": [
+   "committed test set"
+  ],
+  "research/experiments/round2/results/dwa_tune_00/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_01/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_02/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_03/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_04/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_05/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_06/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_07/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_08/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_09/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_10/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/dwa_tune_11/episodes.csv": [
+   "DWA tuning (validation)"
+  ],
+  "research/experiments/round2/results/e3_dense_mean/episodes.csv": [
+   "E3-dense"
+  ],
+  "research/experiments/round2/results/e3_expert_mean/episodes.csv": [
+   "E3 expert"
+  ],
+  "research/experiments/round2/results/e3_expert_sampled/episodes.csv": [
+   "E3 expert"
+  ],
+  "research/experiments/round2/results/e3_intermediate_mean/episodes.csv": [
+   "E3 intermediate"
+  ],
+  "research/experiments/round2/results/e3_intermediate_sampled/episodes.csv": [
+   "E3 intermediate"
+  ],
+  "research/experiments/round2/results/e4_diag_committed_fresh/episodes.csv": [
+   "fresh set (L3)"
+  ],
+  "research/experiments/round2/results/e4_mean/episodes.csv": [
+   "E4 primary"
+  ],
+  "research/experiments/round2/results/e4_sampled/episodes.csv": [
+   "E4 primary"
+  ]
+ },
+ "records": {
+  "train_control_seed0.json": {
+   "commits": [
+    "3aed35e",
+    "d65e576"
+   ],
+   "invocations": 4,
+   "steps": 301056
+  },
+  "train_control_seed1.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_control_seed2.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_control_seed3.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_control_seed4.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_penalty_seed0.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 2,
+   "steps": 301056
+  },
+  "train_penalty_seed1.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_penalty_seed2.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_penalty_seed3.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_penalty_seed4.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_beta_policy_seed0.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 2,
+   "steps": 301056
+  },
+  "train_beta_policy_seed1.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_beta_policy_seed2.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_beta_policy_seed3.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 2,
+   "steps": 301056
+  },
+  "train_beta_policy_seed4.json": {
+   "commits": [
+    "8702fb7"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_riskfree_seed0.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_riskfree_seed1.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 3,
+   "steps": 301056
+  },
+  "train_riskfree_seed2.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_riskfree_seed3.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 1,
+   "steps": 301056
+  },
+  "train_riskfree_seed4.json": {
+   "commits": [
+    "3aed35e"
+   ],
+   "invocations": 2,
+   "steps": 301056
+  }
+ },
+ "replay": {
+  "e4_mean": {
+   "replayed": 300,
+   "matched_rows": 300,
+   "identical": 300
+  },
+  "e3_expert_mean": {
+   "replayed": 220,
+   "matched_rows": 220,
+   "identical": 220
+  },
+  "e3_expert_sampled": {
+   "replayed": 100,
+   "matched_rows": 100,
+   "identical": 100
+  },
+  "e1a_fresh": {
+   "replayed": 200,
+   "matched_rows": 200,
+   "identical": 200
+  }
+ },
+ "quotes": [
+  {
+   "doc": "README",
+   "expected": "\u22125.1 points [\u221211.6, +1.7]",
+   "found": true
+  },
+  {
+   "doc": "e1a",
+   "expected": "[\u221211.6, +1.7]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "$-5.1$ points [$-11.6$, 1.7]",
+   "found": true
+  },
+  {
+   "doc": "README",
+   "expected": "[\u22125.8, +6.3]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "[$-5.8$, 6.3]",
+   "found": true
+  },
+  {
+   "doc": "e1a",
+   "expected": "\u221219.7 points [\u221232.2, \u22126.9]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "19.7 points [6.9, 32.2]",
+   "found": true
+  },
+  {
+   "doc": "e1a",
+   "expected": "+14.0 points [+2.4, +26.6]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "14.0 points [2.4, 26.6]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "\u221229.7 [\u221237.7, \u221220.6]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "29.7 points [20.6, 37.7]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "+34.1 [+22.9, +42.9]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "34.1 points [22.9, 42.9]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "\u221235.8 [\u221243.5, \u221225.7]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "35.8 points [25.7, 43.5]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "+7.3 [+2.5, +14.3]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "7.3 points [2.5, 14.3]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "\u221233.8 [\u221241.3, \u221225.2]",
+   "found": true
+  },
+  {
+   "doc": "README",
+   "expected": "\u221233.8 points [\u221241.3, \u221225.2]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "$-33.8$ points [$-41.3$, $-25.2$]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "\u221231.6 [\u221239.4, \u221222.9]",
+   "found": true
+  },
+  {
+   "doc": "README",
+   "expected": "\u221231.6 points [\u221239.4, \u221222.9]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "$-31.6$ points [$-39.4$, $-22.9$]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "+6.2 [+1.2, +11.2]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "6.2 points [1.2, 11.2]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "+33.6 [+27.3, +40.1]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "33.6 points [27.3, 40.1]",
+   "found": true
+  },
+  {
+   "doc": "round2",
+   "expected": "+26.2 [+21.0, +31.4]",
+   "found": true
+  },
+  {
+   "doc": "manuscript",
+   "expected": "26.2 points [21.0, 31.4]",
+   "found": true
+  }
+ ],
+ "checks": [
+  {
+   "section": "A",
+   "check": "E1a penalty - control deadlock mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.05119999999999997,
+     [
+      -0.11599999999999999,
+      0.014799999999999982
+     ]
+    ],
+    "stored": [
+     -0.05119999999999997,
+     [
+      -0.1164,
+      0.017199999999999993
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control deadlock sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.021199999999999997,
+     [
+      -0.028010000000000014,
+      0.0728
+     ]
+    ],
+    "stored": [
+     0.021199999999999997,
+     [
+      -0.029209999999999993,
+      0.07239999999999999
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control success mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0048000000000000265,
+     [
+      -0.05400000000000005,
+      0.062000000000000055
+     ]
+    ],
+    "stored": [
+     0.0048000000000000265,
+     [
+      -0.058399999999999896,
+      0.06320000000000003
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control success sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.04080000000000006,
+     [
+      -0.09079999999999999,
+      0.008809999999999884
+     ]
+    ],
+    "stored": [
+     -0.04080000000000006,
+     [
+      -0.09120000000000006,
+      0.009599999999999942
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control type1 mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.14,
+     [
+      0.024790000000000006,
+      0.26560999999999985
+     ]
+    ],
+    "stored": [
+     0.14,
+     [
+      0.02360000000000001,
+      0.266
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control type1 sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.024800000000000016,
+     [
+      -0.040400000000000005,
+      0.09279999999999998
+     ]
+    ],
+    "stored": [
+     0.024800000000000016,
+     [
+      -0.0412,
+      0.09319999999999999
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control type2 mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.1968,
+     [
+      -0.3216,
+      -0.07320000000000002
+     ]
+    ],
+    "stored": [
+     -0.1968,
+     [
+      -0.3224,
+      -0.06880000000000003
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control type2 sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.003599999999999999,
+     [
+      -0.037599999999999995,
+      0.031200000000000002
+     ]
+    ],
+    "stored": [
+     -0.003599999999999999,
+     [
+      -0.038400000000000004,
+      0.0328
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control collision mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "stored": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - control collision sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "stored": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed deadlock mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0012000000000000344,
+     [
+      -0.044800000000000006,
+      0.04799999999999999
+     ]
+    ],
+    "stored": [
+     0.0012000000000000344,
+     [
+      -0.045599999999999974,
+      0.04799999999999999
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed deadlock sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.008800000000000002,
+     [
+      -0.039599999999999996,
+      0.05879999999999999
+     ]
+    ],
+    "stored": [
+     0.008800000000000002,
+     [
+      -0.04001,
+      0.05880000000000002
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed success mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.04959999999999998,
+     [
+      -0.09079999999999999,
+      -0.00880000000000003
+     ]
+    ],
+    "stored": [
+     -0.04959999999999998,
+     [
+      -0.09079999999999999,
+      -0.00840000000000007
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed success sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.09360000000000002,
+     [
+      -0.14239999999999997,
+      -0.04679999999999995
+     ]
+    ],
+    "stored": [
+     -0.09360000000000002,
+     [
+      -0.1412,
+      -0.045599999999999974
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed type1 mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.07239999999999999,
+     [
+      -0.0456,
+      0.19960999999999987
+     ]
+    ],
+    "stored": [
+     0.07239999999999999,
+     [
+      -0.04759999999999999,
+      0.20240999999999987
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed type1 sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.005999999999999978,
+     [
+      -0.074,
+      0.062
+     ]
+    ],
+    "stored": [
+     -0.005999999999999978,
+     [
+      -0.0728,
+      0.0632
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed type2 mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.07719999999999999,
+     [
+      -0.184,
+      0.03
+     ]
+    ],
+    "stored": [
+     -0.07719999999999999,
+     [
+      -0.1864,
+      0.030799999999999994
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed type2 sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0144,
+     [
+      -0.022399999999999996,
+      0.05159999999999999
+     ]
+    ],
+    "stored": [
+     0.0144,
+     [
+      -0.022400000000000003,
+      0.052000000000000005
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed collision mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "stored": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a penalty - committed collision sampled",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "stored": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E1a Holm adjustment (monotone step-down)",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.2752,
+     0.8718
+    ],
+    "stored": [
+     0.2752,
+     0.8718
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 expert 1_type1_with_minus_without_mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.2966000000000001,
+     [
+      -0.376005,
+      -0.20860000000000006
+     ]
+    ],
+    "stored": [
+     -0.2966000000000001,
+     [
+      -0.3768,
+      -0.2062
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 expert 2_type2_with_minus_without_mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.34099999999999997,
+     [
+      0.23119499999999998,
+      0.42760000000000004
+     ]
+    ],
+    "stored": [
+     0.34099999999999997,
+     [
+      0.2286,
+      0.4286
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 expert 3_type2_filtered_sampled_minus_mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.3576,
+     [
+      -0.4358,
+      -0.2576
+     ]
+    ],
+    "stored": [
+     -0.3576,
+     [
+      -0.435405,
+      -0.2568
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 expert 4_type1_filtered_sampled_minus_mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0728,
+     [
+      0.02400000000000002,
+      0.143
+     ]
+    ],
+    "stored": [
+     0.0728,
+     [
+      0.02479999999999999,
+      0.14279999999999998
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 expert success with-without",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.05920000000000003,
+     [
+      -0.12779999999999997,
+      0.0025999999999999925
+     ]
+    ],
+    "stored": [
+     -0.05920000000000003,
+     [
+      -0.125005,
+      0.002799999999999969
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 intermediate 1_type1_with_minus_without_mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.1426,
+     [
+      -0.1886,
+      -0.0954
+     ]
+    ],
+    "stored": [
+     -0.1426,
+     [
+      -0.1896,
+      -0.09519999999999999
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 intermediate 2_type2_with_minus_without_mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.1888,
+     [
+      0.1298,
+      0.2404
+     ]
+    ],
+    "stored": [
+     0.1888,
+     [
+      0.12919499999999998,
+      0.2404
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 intermediate 3_type2_filtered_sampled_minus_mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.2108,
+     [
+      -0.26,
+      -0.1532
+     ]
+    ],
+    "stored": [
+     -0.2108,
+     [
+      -0.2602,
+      -0.153
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 intermediate 4_type1_filtered_sampled_minus_mean",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.007199999999999998,
+     [
+      -0.034,
+      0.019400000000000008
+     ]
+    ],
+    "stored": [
+     -0.007199999999999998,
+     [
+      -0.0346,
+      0.0196
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E3 intermediate success with-without",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.07799999999999996,
+     [
+      -0.13139999999999996,
+      -0.02559500000000003
+     ]
+    ],
+    "stored": [
+     -0.07799999999999996,
+     [
+      -0.132005,
+      -0.023400000000000087
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 beta_policy-control success",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.0023999999999999577,
+     [
+      -0.06159999999999999,
+      0.05599999999999994
+     ]
+    ],
+    "stored": [
+     -0.0023999999999999577,
+     [
+      -0.06279999999999997,
+      0.05520000000000003
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 beta_policy-control type1",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.3356,
+     [
+      0.27359999999999995,
+      0.39959999999999996
+     ]
+    ],
+    "stored": [
+     0.3356,
+     [
+      0.2732,
+      0.4008
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 beta_policy-control type2",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.338,
+     [
+      -0.4148,
+      -0.2552
+     ]
+    ],
+    "stored": [
+     -0.338,
+     [
+      -0.4124,
+      -0.2524
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 beta_policy-control deadlock",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.002799999999999969,
+     [
+      -0.06679999999999997,
+      0.06319999999999998
+     ]
+    ],
+    "stored": [
+     -0.002799999999999969,
+     [
+      -0.06639999999999996,
+      0.0636099999999999
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 beta_policy-control collision",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "stored": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 riskfree-control success",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.06240000000000001,
+     [
+      0.014399999999999968,
+      0.11280000000000001
+     ]
+    ],
+    "stored": [
+     0.06240000000000001,
+     [
+      0.011599999999999944,
+      0.11200999999999985
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 riskfree-control type1",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.262,
+     [
+      0.2096,
+      0.312
+     ]
+    ],
+    "stored": [
+     0.262,
+     [
+      0.21039,
+      0.31400000000000006
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 riskfree-control type2",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.316,
+     [
+      -0.39401,
+      -0.23199999999999998
+     ]
+    ],
+    "stored": [
+     -0.316,
+     [
+      -0.3928,
+      -0.22919000000000014
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 riskfree-control deadlock",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.054400000000000004,
+     [
+      -0.10759999999999997,
+      -0.0024000000000000132
+     ]
+    ],
+    "stored": [
+     -0.054400000000000004,
+     [
+      -0.10679999999999995,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 riskfree-control collision",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ],
+    "stored": [
+     0.0,
+     [
+      0.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 H4a_beta_minus_control_policy_stall",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.3384,
+     [
+      -0.4156,
+      -0.25559000000000015
+     ]
+    ],
+    "stored": [
+     -0.3384,
+     [
+      -0.4132,
+      -0.2524
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 H4b_riskfree_minus_control_policy_stall",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.31639999999999996,
+     [
+      -0.39480000000000004,
+      -0.23199999999999998
+     ]
+    ],
+    "stored": [
+     -0.31639999999999996,
+     [
+      -0.39399999999999996,
+      -0.2292
+     ]
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "E4 decision rule applied as pre-registered",
+   "ok": true,
+   "detail": {
+    "H4a_beta_minus_control_policy_stall": true,
+    "H4b_riskfree_minus_control_policy_stall": true
+   }
+  },
+  {
+   "section": "B",
+   "check": "E1a seed-level success",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.8858847405023271,
+     0.8858847405023271
+    ],
+    "g": [
+     0.08604793193799756,
+     0.08604793193799756
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E1a seed-level deadlock",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.2027789548090006,
+     0.2027789548090006
+    ],
+    "g": [
+     -0.824230984769507,
+     -0.824230984769507
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E1a seed-level type1",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.10022540240898824,
+     0.10022540240898824
+    ],
+    "g": [
+     1.174235725774732,
+     1.174235725774732
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E1a seed-level type2",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.022195568599292417,
+     0.022195568599292417
+    ],
+    "g": [
+     -1.6162870572911998,
+     -1.6162870572911998
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E1a seed-level policy_stall",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.026918772388185422,
+     0.026918772388185422
+    ],
+    "g": [
+     -1.5455373924387588,
+     -1.5455373924387588
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 seed-level riskfree success",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.05270188975753544,
+     0.05270188975753544
+    ],
+    "g": [
+     1.420441612405966,
+     1.420441612405966
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 seed-level riskfree deadlock",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.09622426159551452,
+     0.09622426159551452
+    ],
+    "g": [
+     -1.156209049494015,
+     -1.156209049494015
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 seed-level riskfree type1",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     5.63199562446227e-06,
+     5.63199562446227e-06
+    ],
+    "g": [
+     6.426874421268955,
+     6.426874421268955
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 seed-level riskfree policy_stall",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.001155309987021481,
+     0.001155309987021481
+    ],
+    "g": [
+     -4.205203721564352,
+     -4.205203721564352
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 seed-level beta_policy success",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.9390546580151875,
+     0.9390546580151875
+    ],
+    "g": [
+     -0.04510845978355244,
+     -0.04510845978355244
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 seed-level beta_policy deadlock",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.9367740898664214,
+     0.9367740898664214
+    ],
+    "g": [
+     -0.046765020711191374,
+     -0.046765020711191374
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 seed-level beta_policy type1",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     5.246161303944496e-06,
+     5.246161303944496e-06
+    ],
+    "g": [
+     6.441548088051103,
+     6.441548088051103
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 seed-level beta_policy policy_stall",
+   "ok": true,
+   "detail": {
+    "welch_p": [
+     0.0012594287699216966,
+     0.0012594287699216966
+    ],
+    "g": [
+     -4.6303410177430555,
+     -4.6303410177430555
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 t-interval policy_stall control",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.2224868251191555,
+     0.45431317488084455
+    ],
+    "stored": [
+     0.22250540771476873,
+     0.45429459228523134
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 t-interval policy_stall riskfree",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.00636869385211904,
+     0.050368693852119034
+    ],
+    "stored": [
+     -0.006364145931087011,
+     0.05036414593108701
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "E4 t-interval policy_stall beta_policy",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.0,
+     0.0
+    ],
+    "stored": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "section": "C",
+   "check": "dwa_test_on beginner success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 95,
+    "n": 100
+   }
+  },
+  {
+   "section": "C",
+   "check": "dwa_test_on expert success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 48,
+    "n": 100
+   }
+  },
+  {
+   "section": "C",
+   "check": "dwa_test_on intermediate success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 64,
+    "n": 100
+   }
+  },
+  {
+   "section": "C",
+   "check": "dwa_test_off beginner success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 100,
+    "n": 100
+   }
+  },
+  {
+   "section": "C",
+   "check": "dwa_test_off expert success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 96,
+    "n": 100
+   }
+  },
+  {
+   "section": "C",
+   "check": "dwa_test_off intermediate success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 94,
+    "n": 100
+   }
+  },
+  {
+   "section": "C",
+   "check": "dwa_fresh_on expert success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 250,
+    "n": 500
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_expert_mean potential_field success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 570,
+    "n": 1000
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_expert_mean gotogoal success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 98,
+    "n": 1000
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_expert_mean dwa success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 153,
+    "n": 1000
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_intermediate_mean potential_field success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 835,
+    "n": 1000
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_intermediate_mean gotogoal success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 294,
+    "n": 1000
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_intermediate_mean dwa success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 369,
+    "n": 1000
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_dense_mean potential_field success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 254,
+    "n": 500
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_dense_mean gotogoal success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 37,
+    "n": 500
+   }
+  },
+  {
+   "section": "C",
+   "check": "e3_dense_mean dwa success + Wilson",
+   "ok": true,
+   "detail": {
+    "k": 54,
+    "n": 500
+   }
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/e1_pilot/results/eval_control_best/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/e1_pilot/results/eval_control_final/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/e1_pilot/results/eval_penalty_best/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/e1_pilot/results/eval_penalty_final/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/e1a/eval/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E1a primary (fresh)",
+    "committed test set"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/lightweight/results/L1_repro_committed_expert/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "committed test set"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/lightweight/results/L2_val_k0/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "validation (training checkpoint selection; L2 kappa tuning at 1.2M)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/lightweight/results/L2_val_k0.5/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "validation (training checkpoint selection; L2 kappa tuning at 1.2M)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/lightweight/results/L2_val_k1.0/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "validation (training checkpoint selection; L2 kappa tuning at 1.2M)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/lightweight/results/L3_fresh_mean_k0/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/lightweight/results/L3_fresh_mean_k0.5/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/lightweight/results/L5_fresh_final_k0/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/lightweight/results/smoke/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "committed test set"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_fresh_on/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_margin_0p35_e3_expert/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E3 expert"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_margin_0p35_fresh_on/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_margin_0p35_test_on/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "committed test set"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_margin_0p45_e3_expert/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E3 expert"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_margin_0p45_fresh_on/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_margin_0p45_test_on/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "committed test set"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_test_off/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "committed test set"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_test_on/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "committed test set"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_00/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_01/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_02/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_03/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_04/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_05/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_06/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_07/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_08/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_09/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_10/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/dwa_tune_11/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "DWA tuning (validation)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/e3_dense_mean/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E3-dense"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/e3_expert_mean/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E3 expert"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/e3_expert_sampled/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E3 expert"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/e3_intermediate_mean/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E3 intermediate"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/e3_intermediate_sampled/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E3 intermediate"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/e4_diag_committed_fresh/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "fresh set (L3)"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/e4_mean/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E4 primary"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "seed ranges of research/experiments/round2/results/e4_sampled/episodes.csv are declared",
+   "ok": true,
+   "detail": [
+    "E4 primary"
+   ]
+  },
+  {
+   "section": "D",
+   "check": "L2 kappa-tuning scenarios disjoint from the trainer's validation scenarios",
+   "ok": false,
+   "detail": "20 shared seeds (1,200,000-1,200,019): the kappa rule used 20 scenarios that also selected the checkpoints; both are validation uses, no test leakage"
+  },
+  {
+   "section": "D",
+   "check": "DWA tuning scenarios unused elsewhere",
+   "ok": true,
+   "detail": 0
+  },
+  {
+   "section": "E",
+   "check": "run record train_control_seed0.json",
+   "ok": false,
+   "detail": {
+    "commits": [
+     "3aed35e",
+     "d65e576"
+    ],
+    "invocations": 4,
+    "steps": 301056,
+    "overrides": {}
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_control_seed1.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {}
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_control_seed2.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {}
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_control_seed3.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {}
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_control_seed4.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {}
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_penalty_seed0.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 2,
+    "steps": 301056,
+    "overrides": {
+     "safety.correction_penalty": 1.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_penalty_seed1.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "safety.correction_penalty": 1.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_penalty_seed2.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "safety.correction_penalty": 1.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_penalty_seed3.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "safety.correction_penalty": 1.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_penalty_seed4.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "safety.correction_penalty": 1.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_beta_policy_seed0.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 2,
+    "steps": 301056,
+    "overrides": {
+     "network.distribution": "beta"
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_beta_policy_seed1.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "network.distribution": "beta"
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_beta_policy_seed2.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "network.distribution": "beta"
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_beta_policy_seed3.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 2,
+    "steps": 301056,
+    "overrides": {
+     "network.distribution": "beta"
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_beta_policy_seed4.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "8702fb7"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "network.distribution": "beta"
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_riskfree_seed0.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "reward.risk_penalty_beta": 0.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_riskfree_seed1.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 3,
+    "steps": 301056,
+    "overrides": {
+     "reward.risk_penalty_beta": 0.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_riskfree_seed2.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "reward.risk_penalty_beta": 0.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_riskfree_seed3.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 1,
+    "steps": 301056,
+    "overrides": {
+     "reward.risk_penalty_beta": 0.0
+    }
+   }
+  },
+  {
+   "section": "E",
+   "check": "run record train_riskfree_seed4.json",
+   "ok": true,
+   "detail": {
+    "commits": [
+     "3aed35e"
+    ],
+    "invocations": 2,
+    "steps": 301056,
+    "overrides": {
+     "reward.risk_penalty_beta": 0.0
+    }
+   }
+  },
+  {
+   "section": "F",
+   "check": "e4_mean control_seed0 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_0\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean control_seed1 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_1\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean control_seed2 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_2\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean control_seed3 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_3\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean control_seed4 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_4\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean riskfree_seed0 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_0\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean riskfree_seed1 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_1\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean riskfree_seed2 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_2\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean riskfree_seed3 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_3\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean riskfree_seed4 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_4\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean beta_policy_seed0 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_0\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean beta_policy_seed1 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_1\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean beta_policy_seed2 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_2\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean beta_policy_seed3 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_3\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_mean beta_policy_seed4 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_4\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled control_seed0 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_0\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled control_seed1 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_1\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled control_seed2 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_2\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled control_seed3 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_3\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled control_seed4 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\e1a\\checkpoints\\control\\seed_4\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled riskfree_seed0 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_0\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled riskfree_seed1 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_1\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled riskfree_seed2 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_2\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled riskfree_seed3 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_3\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled riskfree_seed4 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\riskfree\\seed_4\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled beta_policy_seed0 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_0\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled beta_policy_seed1 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_1\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled beta_policy_seed2 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_2\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled beta_policy_seed3 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_3\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "e4_sampled beta_policy_seed4 hash == committed copy",
+   "ok": true,
+   "detail": "research\\experiments\\round2\\checkpoints\\beta_policy\\seed_4\\best.pt"
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 0 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 0 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 1 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 1 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 2 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 2 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 3 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 3 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 4 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a control seed 4 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 0 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 0 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 1 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 1 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 2 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 2 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 3 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 3 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 4 best.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "F",
+   "check": "E1a penalty seed 4 final.pt copy identical to run output",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "G",
+   "check": "replay e4_mean: 300 episodes identical",
+   "ok": true,
+   "detail": {
+    "replayed": 300,
+    "matched_rows": 300,
+    "identical": 300
+   }
+  },
+  {
+   "section": "G",
+   "check": "replay e3_expert_mean: 220 episodes identical",
+   "ok": true,
+   "detail": {
+    "replayed": 220,
+    "matched_rows": 220,
+    "identical": 220
+   }
+  },
+  {
+   "section": "G",
+   "check": "replay e3_expert_sampled: 100 episodes identical",
+   "ok": true,
+   "detail": {
+    "replayed": 100,
+    "matched_rows": 100,
+    "identical": 100
+   }
+  },
+  {
+   "section": "G",
+   "check": "replay E1a fresh (run_eval2 vs e1_evaluate)",
+   "ok": true,
+   "detail": {
+    "replayed": 200,
+    "matched_rows": 200,
+    "identical": 200
+   }
+  },
+  {
+   "section": "H",
+   "check": "README quotes '\u22125.1 points [\u221211.6, +1.7]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "e1a quotes '[\u221211.6, +1.7]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '$-5.1$ points [$-11.6$, 1.7]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "README quotes '[\u22125.8, +6.3]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '[$-5.8$, 6.3]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "e1a quotes '\u221219.7 points [\u221232.2, \u22126.9]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '19.7 points [6.9, 32.2]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "e1a quotes '+14.0 points [+2.4, +26.6]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '14.0 points [2.4, 26.6]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '\u221229.7 [\u221237.7, \u221220.6]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '29.7 points [20.6, 37.7]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '+34.1 [+22.9, +42.9]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '34.1 points [22.9, 42.9]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '\u221235.8 [\u221243.5, \u221225.7]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '35.8 points [25.7, 43.5]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '+7.3 [+2.5, +14.3]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '7.3 points [2.5, 14.3]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '\u221233.8 [\u221241.3, \u221225.2]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "README quotes '\u221233.8 points [\u221241.3, \u221225.2]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '$-33.8$ points [$-41.3$, $-25.2$]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '\u221231.6 [\u221239.4, \u221222.9]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "README quotes '\u221231.6 points [\u221239.4, \u221222.9]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '$-31.6$ points [$-39.4$, $-22.9$]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '+6.2 [+1.2, +11.2]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '6.2 points [1.2, 11.2]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '+33.6 [+27.3, +40.1]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '33.6 points [27.3, 40.1]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "round2 quotes '+26.2 [+21.0, +31.4]'",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "H",
+   "check": "manuscript quotes '26.2 points [21.0, 31.4]'",
+   "ok": true,
+   "detail": null
+  }
+ ]
+}
