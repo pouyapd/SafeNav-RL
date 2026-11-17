@@ -1,4 +1,4 @@
-# Submission package (prepared 2026-11-17; nothing has been submitted)
+# Submission package (prepared 2026-11-17; on `main`; nothing has been submitted)
 
 **Primary target:** *Robotics and Autonomous Systems* (Elsevier).
 **Alternatives:** *Engineering Applications of Artificial Intelligence*; *Journal of Intelligent & Robotic Systems*.
