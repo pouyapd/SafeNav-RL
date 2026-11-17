@@ -58,7 +58,8 @@ It does **not** propose a new safety filter or a new training algorithm. The cor
 | **Completed, pre-registered** (2026-11-08) | **E3**: corrected scenario generator, 1,000 scenarios per stage. **E4**: cause of self-stops (Beta policy and risk-free reward, 5 seeds × 300k steps each) | [`research/experiments/round2/`](research/experiments/round2/README.md) |
 | **Completed** (2026-11-08) | DWA-style local planner (tuned on validation scenarios, then frozen); exploratory filter-aware variant | same |
 | **Completed, pre-registered** (2026-11-14) | **Round 3**: deadlock recovery by multi-step planning with the filter unchanged (5 methods × 10 agents × 500 unused scenarios); mechanism analysis (exploratory); independent audit of round 2 | [`research/experiments/round3/`](research/experiments/round3/PROTOCOL.md) |
-| **Not done** | PPO-Lagrangian; MPC with a DT-CBF; E1b (penalty at 1M steps); recovery without the exact map; any physical robot or 3D simulator | [`paper_draft/minimum_experiments.md`](paper_draft/minimum_experiments.md) |
+| **Completed, pre-registered** (2026-11-17) | **Round 4**: audit of round 3; an equivalent, faster planner and a latency test; robustness of the recovery layer (6 conditions × 10 agents × 200 unused scenarios); baselines without the learned policy; timeout analysis (exploratory) | [`research/experiments/round4/`](research/experiments/round4/PROTOCOL.md) |
+| **Not done** | PPO-Lagrangian; MPC with a DT-CBF; E1b (penalty at 1M steps); recovery with a real perception or mapping stack; any physical robot or 3D simulator | [`paper_draft/minimum_experiments.md`](paper_draft/minimum_experiments.md) |
 
 ## Key results
 
@@ -80,7 +81,8 @@ It does **not** propose a new safety filter or a new training algorithm. The cor
 - **A planning-level recovery layer removes almost all deadlock, with the filter unchanged** (pre-registered, 500 unused scenarios, 0 collisions). When the robot has made no progress for 3 s, a receding-horizon planner that uses the filter's map proposes multi-step manoeuvres; the filter still checks every action.
   - **Agents trained with the filter:** total deadlock 58.8 % → 0.6 % (−58.2 points [−64.3, −52.4]); success 39.2 % → 85.9 % (+46.7 [+40.6, +52.6]).
   - **Agents trained without the filter:** total deadlock 53.4 % → 0.4 % (−53.0 [−57.5, −48.5]); success 46.4 % → 85.2 % (+38.8 [+34.4, +43.4]).
-  - **Limits:** about 14 % of episodes still time out while moving; the same planner with a straight-line cost leaves 25–27 % deadlock; the method needs the exact map; one of two pre-set compute limits was not met ([details](research/experiments/round3/PROTOCOL.md)).
+  - **Limits:** about 14 % of episodes still time out while moving; the same planner with a straight-line cost leaves 25–27 % deadlock ([details](research/experiments/round3/PROTOCOL.md)).
+  - **Round 4** (pre-registered, new scenarios): the result holds with more obstacles, at the intermediate stage, with random initial headings, with position noise and with a map built from the robot's own sensor. A wrong map brings deadlock back to 18–21 %. **The planner on its own, with the exact map, is more successful than the policy with recovery** (95 % against 85–86 %) ([details](#round-4-latency-robustness-and-baselines-pre-registered-2026-11-17)).
 - **A classical planner shows the same exchange.** A DWA-style planner solves 96 % of the expert test scenarios without the filter. With the filter, its success falls to 48 %, and every one of its timeouts is filter-blocked. Exploratory follow-up: when its own margin exceeds the filter's, it is never blocked again, but it then stalls in its own local minima.
 - **Honest goal distances roughly halve expert success.** On a corrected generator that keeps the requested start-goal distance, success falls to 37–43 % for PPO and to 57 % for the potential field ([details](research/experiments/round2/README.md)). The training contrasts replicate. One earlier null result does not: there, sampling also adds filter-blocked stalls.
 - **Training with the filter did not clearly help.** With the policy mean, the filter-trained agent reached 61.0 % expert success, against 65.0 % for the agent trained without it and given the filter at test time. With sampled actions the figures were 76.4 % [68.2, 84.6] and 70.0 % [66.3, 73.7]. The intervals overlap.
@@ -269,6 +271,36 @@ Round 2 showed that removing self-stops only moved the stalls to the filter boun
   - The two stall types are geometrically different ([`MECHANISM.md`](research/experiments/round3/MECHANISM.md)).
 - **Audit of round 2.** 223 independent checks; all numbers reproduce. It found a checkpoint-loading bug in the reproduction path (fixed) and two inaccurate execution notes (corrected; results unaffected) ([`audit/README.md`](research/experiments/round3/audit/README.md)).
 
+### Round 4: latency, robustness and baselines (pre-registered; 2026-11-17)
+
+The [protocol](research/experiments/round4/PROTOCOL.md) (acceptance criteria, 24-test primary family, claim rule) was pushed before the pilots; one dated amendment after the pilots added an exploratory baseline variant and a supplementary metric before any confirmatory run. All scenario sets are new (seeds 4,200,000+).
+
+- **Audit of round 3.** 68 independent checks, 0 failed. The 776 main-run episodes without a run record were replayed and are identical ([`audit/`](research/experiments/round4/audit/README.md)).
+- **Latency** ([profiling](research/experiments/round4/profile/README.md)).
+  - An equivalent planner (`RecoveryConfig(planner="fast")`, opt-in) skips only work whose result is known in advance; every candidate is still rolled through the exact filter model.
+  - Plans are identical in 4,000 of 4,000 calls and episodes in 2,000 of 2,000; it uses 0.58 [0.57, 0.59] of the CPU time per call.
+  - In a dedicated run (laptop, normal priority, mains power, about 33 % background load), the call p99 was 25.0 ms against 45.7 ms, and 0.003 % of control steps took ≥ 100 ms. Every call above 100 ms was pre-empted by the OS.
+  - The original planner met the target too: the round-3 189 ms was the per-episode maximum under background load. **Not a real-time guarantee.**
+- **Robustness of C** (C vs. baseline, 200 scenarios per condition, 10 agents; all 24 Holm-adjusted tests pass; 0 collisions):
+
+| Condition | Deadlock: baseline → C (with / without filter in training) | Success: baseline → C |
+|---|---|---|
+| intermediate stage | 35.3 → 0.1 / 29.2 → 0.3 % | 61.3 → 91.5 / 70.5 → 92.9 % |
+| dense (15–25 obstacles) | 64.2 → 0.7 / 65.6 → 0.7 % | 33.2 → 83.3 / 34.0 → 80.2 % |
+| random initial heading | 60.5 → 0.4 / 55.8 → 0.1 % | 37.4 → 83.3 / 43.9 → 81.0 % |
+| position noise (5 cm, 0.05 rad) | 54.9 → 0.1 / 50.8 → 0.2 % | 43.0 → 84.5 / 49.1 → 84.7 % |
+| wrong map (shifted, resized, 10 % missing) | 54.9 → 18.4 / 50.8 → 21.3 % | 43.0 → 71.5 / 49.1 → 71.6 % |
+| map known only when seen (idealised) | 54.9 → 0.1 / 50.8 → 0.5 % | 43.0 → 86.6 / 49.1 → 85.2 % |
+
+  The filter always uses the true state and map; only the recovery layer's information changes.
+- **Baselines on the same scenarios.**
+  - The planner alone, with the exact map at every step, reached 95.0 % success, against 86.3 / 85.2 % for C. The difference is 8.7 [4.4, 13.2] and 9.8 [5.0, 14.9] points.
+  - A classical shortest-safe-path follower reached 11 % (89 % filter-blocked). With a 0.2 m larger margin (exploratory) it reached 64.5 %.
+  - The policy without the filter collided in 9.1 / 1.0 % of episodes.
+- **Moving timeouts (exploratory).**
+  - The 700 round-3 cases are mostly slow progress: 0.22 m/s on average, and the filter limits speed in 66 % of steps.
+  - On 200 of them, 800 steps rescue 75 %, and planning from the start 82 %.
+
 ## Manuscript and literature review
 
 | Document | Content |
@@ -425,7 +457,8 @@ SafeNav-RL/
 │   ├── experiments/  # lightweight/ (pre-registered evaluation), e1_pilot/ (E1 pilot),
 │   │                 # E1_correction_penalty.md, e1_evaluate.py and e1a/ (E1a results),
 │   │                 # round2/ (E3, E4, DWA: protocol, runners, results), tools/ (queue, statistics),
-│   │                 # round3/ (recovery experiment, mechanism analysis, audit of round 2)
+│   │                 # round3/ (recovery experiment, mechanism analysis, audit of round 2),
+│   │                 # round4/ (audit of round 3, profiling, latency, robustness, baselines, timeouts)
 │   ├── scripts/      # stall taxonomy, statistics, audit diagnostics (read stored outputs only)
 │   ├── audit_outputs/
 │   └── *.md          # audit, literature reviews, plans
