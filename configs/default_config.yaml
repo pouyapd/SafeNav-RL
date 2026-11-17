@@ -50,6 +50,9 @@ safety:
 # Curriculum Learning
 # ─────────────────────────────────────────────
 curriculum:
+  # min/max_goal_dist are the *requested* start-goal distances. reset() draws the start in
+  # [1.5, 5]^2 and clips the goal to [1.5, 8.5]^2, so generated distances are often shorter
+  # (e.g. 53 of the 100 expert test goals are closer than 5 m; see README, Environment details).
   enabled: true
   advance_threshold: 0.70       # Success rate to advance to next stage
   window_size: 100              # Episodes to compute success rate over

@@ -1,0 +1,7 @@
+"comparison (expert, success rate)",difference,ci95_low,ci95_high
+cost of adding the filter at test time (unfiltered agent): off - on,0.29599999999999993,0.21599999999999997,0.384
+"filter-trained vs unfiltered-trained, filter on, mean actions",-0.040000000000000036,-0.10799999999999998,0.03200000000000003
+"filter-trained vs unfiltered-trained, filter on, sampled actions",0.06400000000000006,-0.016000000000000014,0.1520499999999993
+"sampled - mean actions, filter-trained agent",0.15400000000000003,0.07799999999999996,0.24
+"sampled - mean actions, unfiltered-trained agent",0.04999999999999993,0.0040000000000000036,0.10399999999999998
+"filter-trained (sampled) vs potential field, filter on",0.04400000000000004,-0.04004999999999999,0.13

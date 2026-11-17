@@ -2,8 +2,10 @@
 Deterministic vs. sampled actions for the trained PPO agents (filter on, test scenarios).
 
 The benchmark evaluates the policy mean (deterministic). Failure replays showed
-agents that stop at a keep-out boundary and never turn away; this script checks
-how often sampling actions from the policy (seeded per episode) avoids that.
+agents that stall in front of obstacles: blocked by the filter at the keep-out
+boundary, or stopped by the policy itself before it (see the README, "Where the
+policies struggle"). This script checks how often sampling actions from the
+policy (seeded per episode) avoids that.
 
     python scripts/stochastic_eval.py --runs runs/benchmark --out results/stochastic_eval
 
