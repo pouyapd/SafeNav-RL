@@ -155,4 +155,200 @@ No method parameter, endpoint, scenario set or hypothesis was changed.
 
 ## Results
 
-*(added after the runs)*
+Added on 2026-11-17, after all confirmatory runs. The numbers come from [`results/summary.json`](results/summary.json), produced by `python research/experiments/round4/analyze_round4.py`, and from [`timeouts/summary.json`](timeouts/summary.json). Pilot numbers (exploratory, seeds 4,3x0,000+) are in [`results/pilot_summary.json`](results/pilot_summary.json); they decided nothing and are not repeated here.
+
+**Data integrity.**
+
+| Set | Rows | Expected |
+|---|---:|---:|
+| R-expert | 14,600 | 10 agents × 200 × 7 learned methods + 3 map methods × 200 |
+| R-intermediate | 4,000 | 4,000 |
+| R-dense | 4,000 | 4,000 |
+| R-heading | 4,000 | 4,000 |
+| latency (Part P) | 4,000 | 4,000 |
+
+- No duplicate keys, no NUL bytes, and only the pre-registered seeds were used.
+- **Safety:** 0 collisions and minimum clearance ≥ 0.300 m in every method that uses the filter, in every set. `nofilter` collided, as expected; it has no safety layer.
+
+### Part P: latency (confirmatory)
+
+**Run configuration:**
+- commit `f0194a1`;
+- 4,000 episodes;
+- mains power, priority normal;
+- system load from the user's applications about 33 %.
+
+| Per planner call (38,041 paired calls) | Reference | Fast |
+|---|---:|---:|
+| Wall p50 / p90 / p95 / p99 / max (ms) | 8.1 / 18.4 / 26.4 / 45.7 / 480.6 | 4.5 / 10.2 / 15.0 / **25.0** / 224.9 |
+| CPU p50 / p99 / max (ms) | 8.0 / 31.2 / 54.4 | 4.4 / 18.7 / 40.6 |
+| Calls ≥ 100 ms (all pre-empted: CPU < ½ wall) | 17 | 9 |
+| Control steps ≥ 100 ms (of 419,777) | 57 (0.014 %) | 12 (0.003 %) |
+| Per-episode longest step, p99 (ms) | 123.0 | 79.7 |
+
+The paired fast/reference CPU ratio is 0.58, 95 % CI [0.573, 0.589]; the median per call is 0.56.
+
+| Criterion | Result |
+|---|---|
+| P1: fast call p99 < 100 ms | **met** (25.0 ms) |
+| P2: fewer than 1 % of control steps ≥ 100 ms | **met** (0.003 %) |
+| P3: non-inferiority | **met**. All 2,000 matched episode pairs are identical in every non-timing column, so every success and deadlock difference is exactly 0 (CI [0, 0]); 0 collisions; clearance ≥ 0.300 m |
+
+**Interpretation.**
+- The fast planner is adopted for Parts R and F. It changes speed only, not behaviour.
+- The reference planner also met the 100 ms target in this configuration. The round-3 figure of 189 ms was the p99 over episodes of each episode's longest call, measured partly under concurrent load (see [`audit/`](audit/)). It did not mean that the reference planner was too slow.
+- Every call above 100 ms was operating-system pre-emption, not computation. The longest CPU time of any fast call was 40.6 ms.
+- **This is one laptop with a general-purpose OS. It is not a real-time guarantee.**
+
+**Latency outside Part P.** The R and F runs used below-normal priority and were not latency-controlled. Their tails are larger: in R-expert, 321 of 258,177 calls took ≥ 100 ms of wall time. Every one of them was pre-empted, and the longest CPU time of any call was 64.9 ms. These runs say nothing about latency beyond this.
+
+### Part R: robustness (confirmatory, primary family of 24 tests)
+
+C_k − baseline on the same scenarios, in percentage points, with 95 % paired hierarchical bootstrap intervals.
+- Every bootstrap p is < 0.0001 (0 of 10,000 replicates), and so is every Holm-adjusted p.
+- Every seed-level paired t-test gives p ≤ 0.0011, and every seed has the same sign.
+
+| Condition (k) | Agent type | Deadlock: baseline → C_k | Δ deadlock [95 % CI] | Success: baseline → C_k | Δ success [95 % CI] | Claim |
+|---|---|---|---|---|---|---|
+| localisation error | with filter | 54.9 → 0.1 | −54.8 [−62.0, −47.6] | 43.0 → 84.5 | +41.5 [+34.5, +48.4] | yes |
+| localisation error | without filter | 50.8 → 0.2 | −50.6 [−57.0, −44.0] | 49.1 → 84.7 | +35.6 [+29.4, +41.7] | yes |
+| map error | with filter | 54.9 → 18.4 | −36.5 [−43.3, −30.0] | 43.0 → 71.5 | +28.5 [+21.2, +36.1] | yes |
+| map error | without filter | 50.8 → 21.3 | −29.5 [−35.0, −24.0] | 49.1 → 71.6 | +22.5 [+17.4, +27.7] | yes |
+| sensed map | with filter | 54.9 → 0.1 | −54.8 [−62.2, −47.3] | 43.0 → 86.6 | +43.6 [+36.4, +50.9] | yes |
+| sensed map | without filter | 50.8 → 0.5 | −50.3 [−56.8, −43.7] | 49.1 → 85.2 | +36.1 [+30.0, +42.1] | yes |
+| intermediate | with filter | 35.3 → 0.1 | −35.2 [−41.7, −28.7] | 61.3 → 91.5 | +30.2 [+24.0, +36.5] | yes |
+| intermediate | without filter | 29.2 → 0.3 | −28.9 [−35.3, −22.8] | 70.5 → 92.9 | +22.4 [+17.2, +28.0] | yes |
+| dense | with filter | 64.2 → 0.7 | −63.5 [−70.2, −56.9] | 33.2 → 83.3 | +50.1 [+43.8, +56.6] | yes |
+| dense | without filter | 65.6 → 0.7 | −64.9 [−71.5, −58.4] | 34.0 → 80.2 | +46.2 [+39.6, +52.9] | yes |
+| random heading | with filter | 60.5 → 0.4 | −60.1 [−66.6, −53.7] | 37.4 → 83.3 | +45.9 [+39.2, +52.8] | yes |
+| random heading | without filter | 55.8 → 0.1 | −55.7 [−62.8, −48.6] | 43.9 → 81.0 | +37.1 [+30.4, +44.0] | yes |
+
+**All 12 claims hold** (R1, R2, and the safety condition). On exact R-expert, C itself reaches deadlock 0.2 % / 0.3 % and success 86.3 % / 85.2 % (with / without filter during training).
+
+**Imperfect information versus exact (secondary, unadjusted; C_k − C on R-expert).**
+
+| Condition | Δ deadlock | Δ success | Δ moving timeouts |
+|---|---|---|---|
+| localisation error, with filter | −0.1 [−0.6, +0.4] | −1.8 [−4.1, +0.2] | +1.9 [−0.1, +4.2] |
+| localisation error, without filter | −0.1 [−0.9, +0.7] | −0.5 [−2.1, +0.8] | +0.6 [−1.1, +2.6] |
+| **map error, with filter** | **+18.2 [+13.7, +22.8]** | **−14.8 [−18.9, −10.8]** | −3.4 [−7.4, +0.2] |
+| **map error, without filter** | **+21.0 [+15.8, +26.5]** | **−13.6 [−18.2, −9.2]** | −7.4 [−12.4, −2.4] |
+| sensed map, with filter | −0.1 [−0.6, +0.0] | +0.3 [−0.9, +1.5] | −0.2 [−1.3, +0.9] |
+| sensed map, without filter | +0.2 [+0.0, +0.8] | +0.0 [−1.0, +1.0] | −0.2 [−1.4, +0.9] |
+
+**Reading.**
+- **Localisation noise (σ = 5 cm / 0.05 rad) and the "known when seen" map cost almost nothing.**
+- **A wrong map is the real weakness.**
+  - With map errors, deadlock comes back to 18–21 %, almost all filter-blocked.
+  - The planner plans through gaps that the true map does not have, or misses obstacles. The filter, which uses the truth, then blocks the manoeuvre.
+  - C still more than halves the baseline deadlock here, but it is clearly worse than with the exact map.
+- **Recovery success rate** (secondary):
+  - C 0.87 / 0.86;
+  - C_loc 0.34 / 0.36, or 0.81 / 0.78 on the supplementary 0.8 m threshold of Amendment 1;
+  - C_map 0.31 / 0.21;
+  - C_sensed 0.86 / 0.84, with about 5.9 map rebuilds and about 7.2 known obstacles per episode.
+- **Scope.** The sensed-map condition is an idealisation: perfect obstacle shape once a beam hits it, with no SLAM. The map-error model is one synthetic error model. Neither result says how C would behave with a real mapping stack.
+
+### Part F: baseline fairness (R-expert, 200 scenarios)
+
+Rates in %. Learned methods are pooled over 10 agents (with / without filter during training); the map-based methods have no learned agent. Every method uses the same scenarios, the same filter (except `nofilter`), the same 400-step limit and the same success definition.
+
+| Method | Success | Collision | Deadlock (filter-blocked) | Moving timeout | Min clearance (m) | Planner calls / episode |
+|---|---|---|---|---|---|---|
+| policy, no filter (`nofilter`) | 54.0 / 94.1 | **9.1 / 1.0** | 35.7 / 4.9 (0 / 0) | 1.2 / 0.0 | **−0.080 / −0.029** | 0 |
+| policy + filter (`baseline`) | 43.0 / 49.1 | 0 | 54.9 / 50.8 (19.7 / 45.2) | 2.1 / 0.1 | 0.300 | 0 |
+| A | 90.0 / 94.9 | 0 | 5.4 / 1.6 | 4.6 / 3.5 | 0.300 | 22.9 / 12.3 |
+| C | 86.3 / 85.2 | 0 | 0.2 / 0.3 | 13.5 / 14.5 | 0.300 | 11.1 / 9.8 |
+| planner only | 95.0 | 0 | 3.0 (2.5) | 2.0 | 0.300 | 35.1 |
+| shortest-path follower (pre-registered) | 11.0 | 0 | 89.0 (89.0) | 0.0 | 0.300 | 368 lookups |
+| path follower, +0.2 m margin (**exploratory**, Amendment 1) | 64.5 | 0 | 35.5 (35.5) | 0.0 | 0.300 | 220 lookups |
+
+**Pre-registered secondary comparisons (unadjusted, success, C − X).**
+
+| Comparison | With filter | Without filter |
+|---|---|---|
+| C − planner only | **−8.7 [−13.2, −4.4]** | **−9.8 [−14.9, −5.0]** |
+| C − shortest-path follower | +75.3 [+69.5, +81.0] | +74.2 [+68.2, +80.1] |
+| C − path follower +0.2 m (exploratory) | +21.8 [+15.4, +28.2] | +20.7 [+14.1, +27.2] |
+
+**Reading.**
+- **The planner alone is better than C.**
+  - It has higher success (95 % against 86 % / 85 %), with the same filter and 0 collisions. Its median steps to the goal on successes (147.5) fall between C with filter-trained agents (173) and without (135).
+  - C has less deadlock (0.2–0.3 % against 3.0 %), but many more moving timeouts (13.5–14.5 % against 2.0 %).
+  - The study therefore does **not** show that the learned policy adds value over a model-based planner with an exact map. The C result is a recovery result for a learned policy, not a claim that the hybrid is the best navigator here.
+- **Information access differs.**
+  - Planner only and the path followers use the exact map and state at every step.
+  - C uses the policy's noisy observation and needs the map only while recovering; with the sensed map it performs as with the exact map.
+  - The planner-only and sensed-map combination was not run.
+- **Computation differs.** Planner only makes about 35 planner calls per episode, against about 10–11 for C.
+- **The classical shortest-path follower (pre-registered) fails** (89 % filter-blocked). This is the boundary-grazing deadlock explained in Amendment 1.
+  - With a 0.2 m inflated margin (exploratory) it reaches 64.5 %.
+  - All of its remaining failures are filter-blocked as well.
+  - No further tuning of the classical baseline was done, so its numbers are a lower bound for a well-tuned classical stack.
+- **Mode A has higher success than C here** (90.0 / 94.9 % against 86.3 / 85.2 %), but more deadlock (5.4 / 1.6 % against 0.2 / 0.3 %).
+
+### Part T: moving timeouts of C (exploratory)
+
+**Decomposition (round-3 C, 700 moving timeouts, all reproduced exactly; medians).**
+
+| Quantity | Median |
+|---|---|
+| First trigger | step 108 |
+| Steps spent waiting inside the 30-step trigger windows | 90 |
+| Activations | 3 |
+| Recovery steps | 138 (70 turning on the spot, 66 driving) |
+| Policy steps | 262 |
+| Steps where the filter lowered the commanded speed | 66 % |
+| Executed / commanded speed | 0.32 |
+| Mean executed speed | 0.22 m/s |
+| Start → goal geodesic | 8.6 m |
+| Progress | 4.3 m |
+| Remaining at the time limit | 4.5 m |
+
+- In 86 % of these episodes, more than 2 m remained at the limit.
+- In 19 %, the policy undid more than 1 m of the recovery's progress.
+
+**Counterfactual replays (200 sampled moving timeouts; one factor changed; 0 collisions in every variant).**
+
+| Variant | Success | Moving timeout | Deadlock |
+|---|---:|---:|---:|
+| unchanged (control) | 0.0 | 100.0 | 0.0 |
+| time limit 800 steps | 75.0 | 22.5 | 2.5 |
+| trigger window 15 steps | 42.5 | 57.0 | 0.5 |
+| recovery keeps control after triggering | 40.5 | 55.5 | 4.0 |
+| planner only from step 0 | 82.0 | 14.5 | 3.5 |
+| filter γ = 1.0 (diagnostic only) | 49.5 | 49.5 | 1.0 |
+
+**Reading.** The moving timeouts are mainly **slow progress**, not being stuck.
+- With the filter active and much turning on the spot, the robot moves at about a fifth of its top speed (0.22 m/s against 1.0 m/s).
+- At that speed, the 400-step limit covers about 8.6 m, which is about the median path length.
+- Each of the following recovers part of the lost time:
+  - a longer limit;
+  - earlier triggering;
+  - not handing back to the policy;
+  - a planner from the start;
+  - a less conservative filter rate.
+
+  None removes all timeouts.
+- **Computation time cannot cause a timeout here.** The simulation advances by steps, not by wall time.
+
+**Limits of this analysis.**
+- The sample was selected on the outcome. The rates above say how many *of these failures* a change rescues, not what the change would do to all episodes: a change could also turn current successes into failures, which was not measured.
+- γ = 1.0 changes the safety filter's speed cap. It is reported as a diagnostic of conservativeness only, and is not proposed.
+- Nothing from Part T was used to change a method.
+
+### What round 4 does and does not show
+
+**Shows:**
+- The fast planner gives identical behaviour at about 58 % of the CPU time per call.
+- Under the stated laptop configuration, both planners meet the 100 ms p99 target.
+- The C recovery result holds under the following, with 0 collisions throughout:
+  - intermediate scenarios, dense scenarios and random initial headings;
+  - small localisation noise and a "known when seen" map.
+- It degrades clearly, though it still beats the baseline, when the planner's map is wrong.
+
+**Does not show:**
+- any real-time guarantee;
+- behaviour with a real perception or mapping stack, or on a real robot;
+- that a learned policy with recovery beats a model-based planner with the same exact map. **It does not: planner only had higher success.**
+- that the classical baseline was tuned as well as C.

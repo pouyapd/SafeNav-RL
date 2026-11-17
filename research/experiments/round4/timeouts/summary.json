@@ -1,0 +1,86 @@
+{
+ "episodes": 700,
+ "reproduced_moving_timeouts": 700,
+ "wall_s": 469.8,
+ "decomposition_median": {
+  "steps": 400.0,
+  "steps_before_first_activation": 108.5,
+  "activations": 3.0,
+  "trigger_wait_steps": 90.0,
+  "recovery_steps": 138.0,
+  "recovery_turn_steps": 70.0,
+  "recovery_drive_steps": 66.0,
+  "policy_steps": 262.0,
+  "policy_regress_m": 0.0,
+  "filter_limited_share": 0.6625,
+  "speed_ratio_exec_over_cmd": 0.3245647629608033,
+  "mean_exec_speed": 0.2133046629207501,
+  "remaining_geo_m": 4.489518395093583,
+  "start_geo_m": 8.637005768508867,
+  "progress_m": 4.255939751330889
+ },
+ "decomposition_mean": {
+  "steps": 400.0,
+  "steps_before_first_activation": 111.25285714285714,
+  "activations": 2.775714285714286,
+  "trigger_wait_steps": 83.27142857142857,
+  "recovery_steps": 139.67714285714285,
+  "recovery_turn_steps": 69.76714285714286,
+  "recovery_drive_steps": 69.91,
+  "policy_steps": 260.3228571428571,
+  "policy_regress_m": 0.3842176713620886,
+  "filter_limited_share": 0.6416821428571429,
+  "speed_ratio_exec_over_cmd": 0.352297843239346,
+  "mean_exec_speed": 0.21597391844316544,
+  "remaining_geo_m": 5.444688488672424,
+  "start_geo_m": 9.351485152114929,
+  "progress_m": 3.9067966634425058
+ },
+ "share_policy_regress_over_1m": 0.18571428571428572,
+ "share_remaining_over_2m": 0.8614285714285714,
+ "share_start_geo_over_10m": 0.3871428571428571,
+ "counterfactuals": {
+  "control": {
+   "n": 200,
+   "success": 0.0,
+   "moving_timeout": 1.0,
+   "deadlock": 0.0,
+   "collision": 0.0
+  },
+  "gamma_1.0": {
+   "n": 200,
+   "success": 0.495,
+   "moving_timeout": 0.495,
+   "deadlock": 0.01,
+   "collision": 0.0
+  },
+  "max_steps_800": {
+   "n": 200,
+   "success": 0.75,
+   "moving_timeout": 0.225,
+   "deadlock": 0.025,
+   "collision": 0.0
+  },
+  "no_handback": {
+   "n": 200,
+   "success": 0.405,
+   "moving_timeout": 0.555,
+   "deadlock": 0.04,
+   "collision": 0.0
+  },
+  "planner_only": {
+   "n": 200,
+   "success": 0.82,
+   "moving_timeout": 0.145,
+   "deadlock": 0.035,
+   "collision": 0.0
+  },
+  "window_15": {
+   "n": 200,
+   "success": 0.425,
+   "moving_timeout": 0.57,
+   "deadlock": 0.005,
+   "collision": 0.0
+  }
+ }
+}
