@@ -1,0 +1,466 @@
+{
+  "invocations": [
+    {
+      "tag": "e4_sampled",
+      "command": "research/experiments/round2/run_eval2.py --tag e4_sampled --agent control=runs/e1a/control/filtered --agent riskfree=runs/e4/riskfree/filtered --agent beta_policy=runs/e4/beta_policy/filtered --stages expert --seed-base 6500000 --n 500 --deadline-s 1500 --sampled",
+      "git_commit": "efbf65607da89f15c8fb5b623787dbf87ac4a5fb",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 7500,
+      "episodes_completed": 6400,
+      "stopped_at_deadline": true,
+      "wall_s_this_invocation": 1500.3,
+      "cpu_s_this_invocation": 1373.9,
+      "peak_memory_mb": 207.9,
+      "checkpoints": {
+        "control_seed0": {
+          "path": "runs/e1a/control/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "289726c194c1a32c6b54439a3c82de84ddab274a77c1434db5d6fed23256165a"
+        },
+        "control_seed1": {
+          "path": "runs/e1a/control/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "8bb94e3cdee5aae41460fb8721a0039cfa91629d95fc03f448cc657cf5b352b0"
+        },
+        "control_seed2": {
+          "path": "runs/e1a/control/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "d272a323db1ee81d99ee270036ee9e1ffc170d93a89d45dd0bcfa734fb1fdd6a"
+        },
+        "control_seed3": {
+          "path": "runs/e1a/control/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "b6a9d0643bde225706cbfceff1284127d862bb0f4c17ecdd905e74196c17c9dc"
+        },
+        "control_seed4": {
+          "path": "runs/e1a/control/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "2a9b2617c300f8e1b7bb16f2a9b186d0dfcec7d33a819cda2a8ecd3f8bfe6950"
+        },
+        "riskfree_seed0": {
+          "path": "runs/e4/riskfree/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "2331fe48676b46ab2bda773ec17e68ddbbb3a23708eb83ade026f6984feb94d4"
+        },
+        "riskfree_seed1": {
+          "path": "runs/e4/riskfree/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "f90673b650eac12cd0d5af696813132aefff9f407416270442db679cd723dd05"
+        },
+        "riskfree_seed2": {
+          "path": "runs/e4/riskfree/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "dfdfdf5dcb837ec0e7abcecc1acd1603d0d5e25a43a27d2cf8395f68dc76bb05"
+        },
+        "riskfree_seed3": {
+          "path": "runs/e4/riskfree/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "66d9c50cca6633088eae5a30d2c24231cfaa9c4204a4fb2fda1a7c4de508bbc3"
+        },
+        "riskfree_seed4": {
+          "path": "runs/e4/riskfree/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "64ec1196cd4817004c7f8b38b85044b1404c8a1d42608205459d02c909cef95d"
+        },
+        "beta_policy_seed0": {
+          "path": "runs/e4/beta_policy/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "904140c14ed5496abd7b836cbc0a6336c268620bef49d1ce8a80e5dc73029837"
+        },
+        "beta_policy_seed1": {
+          "path": "runs/e4/beta_policy/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "4e27f757a0f6536213f54e6324be3abc5c4b463ab91fdcbeae9832e5220a6995"
+        },
+        "beta_policy_seed2": {
+          "path": "runs/e4/beta_policy/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "52975e2628a99ed1e85c37013c6db0bfcb79506cfc49b338bbbc9d9419a6ccf5"
+        },
+        "beta_policy_seed3": {
+          "path": "runs/e4/beta_policy/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "4d64d1bd5dd2e7345c5a2cd720a00d157a300f319cbafdc824121efe487c87b4"
+        },
+        "beta_policy_seed4": {
+          "path": "runs/e4/beta_policy/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "fbb1ef8e789eca16c97df4de66049ba899f41aa77d8f25a5362f3857963b34b8"
+        }
+      }
+    },
+    {
+      "tag": "e4_sampled",
+      "command": "research/experiments/round2/run_eval2.py --tag e4_sampled --agent control=runs/e1a/control/filtered --agent riskfree=runs/e4/riskfree/filtered --agent beta_policy=runs/e4/beta_policy/filtered --stages expert --seed-base 6500000 --n 500 --deadline-s 1500 --sampled",
+      "git_commit": "efbf65607da89f15c8fb5b623787dbf87ac4a5fb",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 7500,
+      "episodes_completed": 7500,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 400.7,
+      "cpu_s_this_invocation": 375.1,
+      "peak_memory_mb": 209.4,
+      "checkpoints": {
+        "control_seed0": {
+          "path": "runs/e1a/control/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "289726c194c1a32c6b54439a3c82de84ddab274a77c1434db5d6fed23256165a"
+        },
+        "control_seed1": {
+          "path": "runs/e1a/control/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "8bb94e3cdee5aae41460fb8721a0039cfa91629d95fc03f448cc657cf5b352b0"
+        },
+        "control_seed2": {
+          "path": "runs/e1a/control/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "d272a323db1ee81d99ee270036ee9e1ffc170d93a89d45dd0bcfa734fb1fdd6a"
+        },
+        "control_seed3": {
+          "path": "runs/e1a/control/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "b6a9d0643bde225706cbfceff1284127d862bb0f4c17ecdd905e74196c17c9dc"
+        },
+        "control_seed4": {
+          "path": "runs/e1a/control/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "2a9b2617c300f8e1b7bb16f2a9b186d0dfcec7d33a819cda2a8ecd3f8bfe6950"
+        },
+        "riskfree_seed0": {
+          "path": "runs/e4/riskfree/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "2331fe48676b46ab2bda773ec17e68ddbbb3a23708eb83ade026f6984feb94d4"
+        },
+        "riskfree_seed1": {
+          "path": "runs/e4/riskfree/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "f90673b650eac12cd0d5af696813132aefff9f407416270442db679cd723dd05"
+        },
+        "riskfree_seed2": {
+          "path": "runs/e4/riskfree/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "dfdfdf5dcb837ec0e7abcecc1acd1603d0d5e25a43a27d2cf8395f68dc76bb05"
+        },
+        "riskfree_seed3": {
+          "path": "runs/e4/riskfree/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "66d9c50cca6633088eae5a30d2c24231cfaa9c4204a4fb2fda1a7c4de508bbc3"
+        },
+        "riskfree_seed4": {
+          "path": "runs/e4/riskfree/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "64ec1196cd4817004c7f8b38b85044b1404c8a1d42608205459d02c909cef95d"
+        },
+        "beta_policy_seed0": {
+          "path": "runs/e4/beta_policy/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "904140c14ed5496abd7b836cbc0a6336c268620bef49d1ce8a80e5dc73029837"
+        },
+        "beta_policy_seed1": {
+          "path": "runs/e4/beta_policy/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "4e27f757a0f6536213f54e6324be3abc5c4b463ab91fdcbeae9832e5220a6995"
+        },
+        "beta_policy_seed2": {
+          "path": "runs/e4/beta_policy/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "52975e2628a99ed1e85c37013c6db0bfcb79506cfc49b338bbbc9d9419a6ccf5"
+        },
+        "beta_policy_seed3": {
+          "path": "runs/e4/beta_policy/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "4d64d1bd5dd2e7345c5a2cd720a00d157a300f319cbafdc824121efe487c87b4"
+        },
+        "beta_policy_seed4": {
+          "path": "runs/e4/beta_policy/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "fbb1ef8e789eca16c97df4de66049ba899f41aa77d8f25a5362f3857963b34b8"
+        }
+      }
+    },
+    {
+      "tag": "e4_sampled",
+      "command": "research/experiments/round2/run_eval2.py --tag e4_sampled --agent control=runs/e1a/control/filtered --agent riskfree=runs/e4/riskfree/filtered --agent beta_policy=runs/e4/beta_policy/filtered --stages expert --seed-base 6500000 --n 500 --deadline-s 1500 --sampled",
+      "git_commit": "efbf65607da89f15c8fb5b623787dbf87ac4a5fb",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 7500,
+      "episodes_completed": 7500,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 0.1,
+      "cpu_s_this_invocation": 0.1,
+      "peak_memory_mb": 207.1,
+      "checkpoints": {
+        "control_seed0": {
+          "path": "runs/e1a/control/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "289726c194c1a32c6b54439a3c82de84ddab274a77c1434db5d6fed23256165a"
+        },
+        "control_seed1": {
+          "path": "runs/e1a/control/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "8bb94e3cdee5aae41460fb8721a0039cfa91629d95fc03f448cc657cf5b352b0"
+        },
+        "control_seed2": {
+          "path": "runs/e1a/control/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "d272a323db1ee81d99ee270036ee9e1ffc170d93a89d45dd0bcfa734fb1fdd6a"
+        },
+        "control_seed3": {
+          "path": "runs/e1a/control/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "b6a9d0643bde225706cbfceff1284127d862bb0f4c17ecdd905e74196c17c9dc"
+        },
+        "control_seed4": {
+          "path": "runs/e1a/control/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "2a9b2617c300f8e1b7bb16f2a9b186d0dfcec7d33a819cda2a8ecd3f8bfe6950"
+        },
+        "riskfree_seed0": {
+          "path": "runs/e4/riskfree/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "2331fe48676b46ab2bda773ec17e68ddbbb3a23708eb83ade026f6984feb94d4"
+        },
+        "riskfree_seed1": {
+          "path": "runs/e4/riskfree/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "f90673b650eac12cd0d5af696813132aefff9f407416270442db679cd723dd05"
+        },
+        "riskfree_seed2": {
+          "path": "runs/e4/riskfree/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "dfdfdf5dcb837ec0e7abcecc1acd1603d0d5e25a43a27d2cf8395f68dc76bb05"
+        },
+        "riskfree_seed3": {
+          "path": "runs/e4/riskfree/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "66d9c50cca6633088eae5a30d2c24231cfaa9c4204a4fb2fda1a7c4de508bbc3"
+        },
+        "riskfree_seed4": {
+          "path": "runs/e4/riskfree/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "64ec1196cd4817004c7f8b38b85044b1404c8a1d42608205459d02c909cef95d"
+        },
+        "beta_policy_seed0": {
+          "path": "runs/e4/beta_policy/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "904140c14ed5496abd7b836cbc0a6336c268620bef49d1ce8a80e5dc73029837"
+        },
+        "beta_policy_seed1": {
+          "path": "runs/e4/beta_policy/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "4e27f757a0f6536213f54e6324be3abc5c4b463ab91fdcbeae9832e5220a6995"
+        },
+        "beta_policy_seed2": {
+          "path": "runs/e4/beta_policy/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "52975e2628a99ed1e85c37013c6db0bfcb79506cfc49b338bbbc9d9419a6ccf5"
+        },
+        "beta_policy_seed3": {
+          "path": "runs/e4/beta_policy/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "4d64d1bd5dd2e7345c5a2cd720a00d157a300f319cbafdc824121efe487c87b4"
+        },
+        "beta_policy_seed4": {
+          "path": "runs/e4/beta_policy/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "fbb1ef8e789eca16c97df4de66049ba899f41aa77d8f25a5362f3857963b34b8"
+        }
+      }
+    },
+    {
+      "tag": "e4_sampled",
+      "command": "research/experiments/round2/run_eval2.py --tag e4_sampled --agent control=runs/e1a/control/filtered --agent riskfree=runs/e4/riskfree/filtered --agent beta_policy=runs/e4/beta_policy/filtered --stages expert --seed-base 6500000 --n 500 --deadline-s 1500 --sampled",
+      "git_commit": "efbf65607da89f15c8fb5b623787dbf87ac4a5fb",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 7500,
+      "episodes_completed": 7500,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 0.1,
+      "cpu_s_this_invocation": 0.1,
+      "peak_memory_mb": 206.5,
+      "checkpoints": {
+        "control_seed0": {
+          "path": "runs/e1a/control/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "289726c194c1a32c6b54439a3c82de84ddab274a77c1434db5d6fed23256165a"
+        },
+        "control_seed1": {
+          "path": "runs/e1a/control/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "8bb94e3cdee5aae41460fb8721a0039cfa91629d95fc03f448cc657cf5b352b0"
+        },
+        "control_seed2": {
+          "path": "runs/e1a/control/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "d272a323db1ee81d99ee270036ee9e1ffc170d93a89d45dd0bcfa734fb1fdd6a"
+        },
+        "control_seed3": {
+          "path": "runs/e1a/control/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "b6a9d0643bde225706cbfceff1284127d862bb0f4c17ecdd905e74196c17c9dc"
+        },
+        "control_seed4": {
+          "path": "runs/e1a/control/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "2a9b2617c300f8e1b7bb16f2a9b186d0dfcec7d33a819cda2a8ecd3f8bfe6950"
+        },
+        "riskfree_seed0": {
+          "path": "runs/e4/riskfree/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "2331fe48676b46ab2bda773ec17e68ddbbb3a23708eb83ade026f6984feb94d4"
+        },
+        "riskfree_seed1": {
+          "path": "runs/e4/riskfree/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "f90673b650eac12cd0d5af696813132aefff9f407416270442db679cd723dd05"
+        },
+        "riskfree_seed2": {
+          "path": "runs/e4/riskfree/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "dfdfdf5dcb837ec0e7abcecc1acd1603d0d5e25a43a27d2cf8395f68dc76bb05"
+        },
+        "riskfree_seed3": {
+          "path": "runs/e4/riskfree/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "66d9c50cca6633088eae5a30d2c24231cfaa9c4204a4fb2fda1a7c4de508bbc3"
+        },
+        "riskfree_seed4": {
+          "path": "runs/e4/riskfree/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "64ec1196cd4817004c7f8b38b85044b1404c8a1d42608205459d02c909cef95d"
+        },
+        "beta_policy_seed0": {
+          "path": "runs/e4/beta_policy/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "904140c14ed5496abd7b836cbc0a6336c268620bef49d1ce8a80e5dc73029837"
+        },
+        "beta_policy_seed1": {
+          "path": "runs/e4/beta_policy/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "4e27f757a0f6536213f54e6324be3abc5c4b463ab91fdcbeae9832e5220a6995"
+        },
+        "beta_policy_seed2": {
+          "path": "runs/e4/beta_policy/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "52975e2628a99ed1e85c37013c6db0bfcb79506cfc49b338bbbc9d9419a6ccf5"
+        },
+        "beta_policy_seed3": {
+          "path": "runs/e4/beta_policy/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "4d64d1bd5dd2e7345c5a2cd720a00d157a300f319cbafdc824121efe487c87b4"
+        },
+        "beta_policy_seed4": {
+          "path": "runs/e4/beta_policy/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "fbb1ef8e789eca16c97df4de66049ba899f41aa77d8f25a5362f3857963b34b8"
+        }
+      }
+    },
+    {
+      "tag": "e4_sampled",
+      "command": "research/experiments/round2/run_eval2.py --tag e4_sampled --agent control=runs/e1a/control/filtered --agent riskfree=runs/e4/riskfree/filtered --agent beta_policy=runs/e4/beta_policy/filtered --stages expert --seed-base 6500000 --n 500 --deadline-s 1500 --sampled",
+      "git_commit": "efbf65607da89f15c8fb5b623787dbf87ac4a5fb",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 7500,
+      "episodes_completed": 7500,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 0.2,
+      "cpu_s_this_invocation": 0.1,
+      "peak_memory_mb": 206.9,
+      "checkpoints": {
+        "control_seed0": {
+          "path": "runs/e1a/control/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "289726c194c1a32c6b54439a3c82de84ddab274a77c1434db5d6fed23256165a"
+        },
+        "control_seed1": {
+          "path": "runs/e1a/control/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "8bb94e3cdee5aae41460fb8721a0039cfa91629d95fc03f448cc657cf5b352b0"
+        },
+        "control_seed2": {
+          "path": "runs/e1a/control/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "d272a323db1ee81d99ee270036ee9e1ffc170d93a89d45dd0bcfa734fb1fdd6a"
+        },
+        "control_seed3": {
+          "path": "runs/e1a/control/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "b6a9d0643bde225706cbfceff1284127d862bb0f4c17ecdd905e74196c17c9dc"
+        },
+        "control_seed4": {
+          "path": "runs/e1a/control/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "2a9b2617c300f8e1b7bb16f2a9b186d0dfcec7d33a819cda2a8ecd3f8bfe6950"
+        },
+        "riskfree_seed0": {
+          "path": "runs/e4/riskfree/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "2331fe48676b46ab2bda773ec17e68ddbbb3a23708eb83ade026f6984feb94d4"
+        },
+        "riskfree_seed1": {
+          "path": "runs/e4/riskfree/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "f90673b650eac12cd0d5af696813132aefff9f407416270442db679cd723dd05"
+        },
+        "riskfree_seed2": {
+          "path": "runs/e4/riskfree/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "dfdfdf5dcb837ec0e7abcecc1acd1603d0d5e25a43a27d2cf8395f68dc76bb05"
+        },
+        "riskfree_seed3": {
+          "path": "runs/e4/riskfree/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "66d9c50cca6633088eae5a30d2c24231cfaa9c4204a4fb2fda1a7c4de508bbc3"
+        },
+        "riskfree_seed4": {
+          "path": "runs/e4/riskfree/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "64ec1196cd4817004c7f8b38b85044b1404c8a1d42608205459d02c909cef95d"
+        },
+        "beta_policy_seed0": {
+          "path": "runs/e4/beta_policy/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "904140c14ed5496abd7b836cbc0a6336c268620bef49d1ce8a80e5dc73029837"
+        },
+        "beta_policy_seed1": {
+          "path": "runs/e4/beta_policy/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "4e27f757a0f6536213f54e6324be3abc5c4b463ab91fdcbeae9832e5220a6995"
+        },
+        "beta_policy_seed2": {
+          "path": "runs/e4/beta_policy/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "52975e2628a99ed1e85c37013c6db0bfcb79506cfc49b338bbbc9d9419a6ccf5"
+        },
+        "beta_policy_seed3": {
+          "path": "runs/e4/beta_policy/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "4d64d1bd5dd2e7345c5a2cd720a00d157a300f319cbafdc824121efe487c87b4"
+        },
+        "beta_policy_seed4": {
+          "path": "runs/e4/beta_policy/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "fbb1ef8e789eca16c97df4de66049ba899f41aa77d8f25a5362f3857963b34b8"
+        }
+      }
+    },
+    {
+      "tag": "e4_sampled",
+      "command": "research/experiments/round2/run_eval2.py --tag e4_sampled --agent control=runs/e1a/control/filtered --agent riskfree=runs/e4/riskfree/filtered --agent beta_policy=runs/e4/beta_policy/filtered --stages expert --seed-base 6500000 --n 500 --deadline-s 1500 --sampled",
+      "git_commit": "efbf65607da89f15c8fb5b623787dbf87ac4a5fb",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 7500,
+      "episodes_completed": 7500,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 0.2,
+      "cpu_s_this_invocation": 0.1,
+      "peak_memory_mb": 206.8,
+      "checkpoints": {
+        "control_seed0": {
+          "path": "runs/e1a/control/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "289726c194c1a32c6b54439a3c82de84ddab274a77c1434db5d6fed23256165a"
+        },
+        "control_seed1": {
+          "path": "runs/e1a/control/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "8bb94e3cdee5aae41460fb8721a0039cfa91629d95fc03f448cc657cf5b352b0"
+        },
+        "control_seed2": {
+          "path": "runs/e1a/control/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "d272a323db1ee81d99ee270036ee9e1ffc170d93a89d45dd0bcfa734fb1fdd6a"
+        },
+        "control_seed3": {
+          "path": "runs/e1a/control/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "b6a9d0643bde225706cbfceff1284127d862bb0f4c17ecdd905e74196c17c9dc"
+        },
+        "control_seed4": {
+          "path": "runs/e1a/control/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "2a9b2617c300f8e1b7bb16f2a9b186d0dfcec7d33a819cda2a8ecd3f8bfe6950"
+        },
+        "riskfree_seed0": {
+          "path": "runs/e4/riskfree/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "2331fe48676b46ab2bda773ec17e68ddbbb3a23708eb83ade026f6984feb94d4"
+        },
+        "riskfree_seed1": {
+          "path": "runs/e4/riskfree/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "f90673b650eac12cd0d5af696813132aefff9f407416270442db679cd723dd05"
+        },
+        "riskfree_seed2": {
+          "path": "runs/e4/riskfree/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "dfdfdf5dcb837ec0e7abcecc1acd1603d0d5e25a43a27d2cf8395f68dc76bb05"
+        },
+        "riskfree_seed3": {
+          "path": "runs/e4/riskfree/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "66d9c50cca6633088eae5a30d2c24231cfaa9c4204a4fb2fda1a7c4de508bbc3"
+        },
+        "riskfree_seed4": {
+          "path": "runs/e4/riskfree/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "64ec1196cd4817004c7f8b38b85044b1404c8a1d42608205459d02c909cef95d"
+        },
+        "beta_policy_seed0": {
+          "path": "runs/e4/beta_policy/filtered/seed_0/checkpoints/best.pt",
+          "sha256": "904140c14ed5496abd7b836cbc0a6336c268620bef49d1ce8a80e5dc73029837"
+        },
+        "beta_policy_seed1": {
+          "path": "runs/e4/beta_policy/filtered/seed_1/checkpoints/best.pt",
+          "sha256": "4e27f757a0f6536213f54e6324be3abc5c4b463ab91fdcbeae9832e5220a6995"
+        },
+        "beta_policy_seed2": {
+          "path": "runs/e4/beta_policy/filtered/seed_2/checkpoints/best.pt",
+          "sha256": "52975e2628a99ed1e85c37013c6db0bfcb79506cfc49b338bbbc9d9419a6ccf5"
+        },
+        "beta_policy_seed3": {
+          "path": "runs/e4/beta_policy/filtered/seed_3/checkpoints/best.pt",
+          "sha256": "4d64d1bd5dd2e7345c5a2cd720a00d157a300f319cbafdc824121efe487c87b4"
+        },
+        "beta_policy_seed4": {
+          "path": "runs/e4/beta_policy/filtered/seed_4/checkpoints/best.pt",
+          "sha256": "fbb1ef8e789eca16c97df4de66049ba899f41aa77d8f25a5362f3857963b34b8"
+        }
+      }
+    }
+  ]
+}

@@ -118,4 +118,174 @@ python research/experiments/tools/run_queue.py --queue research/experiments/roun
 
 ## Results
 
-*(added after the runs)*
+All numbers below come from `results/<tag>/episodes.csv` through [`analyze_round2.py`](analyze_round2.py), which writes `results/summary.json`. Figures come from [`make_figures.py`](make_figures.py). Plots are in `paper_draft/figures/`: `e3_outcomes.pdf`, `dwa_filter.pdf` and `e4_seeds.pdf`.
+
+**Executed code.** Every evaluation ran at commit `3aed35e` or later, as recorded in each `run_record.json`. An invocation that was killed when a session ended leaves no record entry. Its rows were kept and the run resumed: rows are keyed by (agent, seed, stage, scenario), so no episode is counted twice. Peak memory was under 210 MB per process.
+
+**Status of each experiment**
+
+| Experiment | Status |
+|---|---|
+| DWA tuning (12 configurations) and DWA evaluation | **completed** |
+| E3, expert and intermediate, mean and sampled actions | **completed (confirmatory)** |
+| E3-dense | **completed (exploratory)** |
+| E4-diagnostics | **completed (descriptive)** |
+| E4 training arms and evaluation | **completed (confirmatory)**; see below |
+| Exploratory DWA margin ([note](exploratory_dwa_margin.md), committed before its runs) | **completed (exploratory)**; see the DWA section |
+
+### Check across runners
+
+The E4-diagnostic run of the 5 filter-trained agents on the fresh set reproduces L3 exactly:
+- 63.9 % success;
+- 577 self-stops;
+- 297 filter-blocks;
+- 29 moving timeouts.
+
+L3 used `research/experiments/lightweight/run_eval.py`; this run used `run_eval2.py`. The new runner therefore does not change outcomes.
+
+### E3: corrected generator (start-goal distances honoured)
+
+- **The generator works as intended.**
+  - Expert start-goal distances run from 5.00 to 9.00 m, median 5.76 m.
+  - Intermediate distances run from 5.00 to 7.98 m, median 5.74 m.
+  - The joint redraw never fell back (0 fallbacks).
+  - There were **0 collisions** across all 52,500 E3 and E3-dense episodes (46,000 + 6,500). The filter is on in all of them, and the minimum clearance is 0.30 m.
+
+**H3 contrasts.** Paired hierarchical bootstrap with 10,000 replicates; the intervals include seed resampling. Values are in points.
+
+| Contrast | Expert | Criterion met? | Intermediate (secondary) | Criterion met? |
+|---|---:|---|---:|---|
+| 1. Type I, trained with − without the filter (mean) | −29.7 [−37.7, −20.6] | yes | −14.3 [−19.0, −9.5] | yes |
+| 2. Type II, trained with − without the filter (mean) | +34.1 [+22.9, +42.9] | yes | +18.9 [+12.9, +24.0] | yes |
+| 3. Type II, filter-trained, sampled − mean | −35.8 [−43.5, −25.7] | yes | −21.1 [−26.0, −15.3] | yes |
+| 4. Type I, filter-trained, sampled − mean (the interval must include 0) | **+7.3 [+2.5, +14.3]** | **no** | −0.7 [−3.5, +2.0] | yes |
+| **H3** | **partly supported (3 of 4)** | | supported (4 of 4) | |
+
+**Reading.**
+- The two-mechanism picture holds on the corrected generator:
+  - training with the filter trades Type I stalls for Type II stalls;
+  - sampled actions remove most Type II stalls.
+- The original null in contrast 4 does **not** replicate in the expert stage. With honest long goal distances, sampling turns part of the self-stops into filter-blocks: the filter-trained agents' Type I rises from 21.0 % to 28.3 %. On the original test set this effect was not detectable (+0.8 [−7.6, +10.0]).
+- H3 is therefore only partly supported. The claim that "sampling does not affect Type I" should be dropped.
+
+**Success.** Seed-level mean ± SD over 5 seeds, t-interval over seeds; baselines with Wilson intervals over episodes.
+
+| Agent | Expert, mean | Expert, sampled | Intermediate, mean | Intermediate, sampled |
+|---|---:|---:|---:|---:|
+| PPO trained without the filter | 43.1 ± 4.0 [38.2, 48.1] | 53.2 ± 3.1 [49.3, 57.0] | 73.8 ± 3.0 [70.1, 77.6] | 80.1 ± 2.1 [77.4, 82.7] |
+| PPO trained with the filter | 37.2 ± 6.7 [29.0, 45.5] | 55.6 ± 7.9 [45.7, 65.4] | 66.0 ± 5.6 [59.1, 73.0] | 78.5 ± 6.1 [70.9, 86.1] |
+| Potential field | 57.0 [53.9, 60.0] | – | 83.5 [81.1, 85.7] | – |
+| DWA-style (frozen) | 15.3 [13.2, 17.7] | – | 36.9 [34.0, 39.9] | – |
+| Go-to-goal | 9.8 [8.1, 11.8] | – | 29.4 [26.7, 32.3] | – |
+
+**Further observations.**
+- **Effect of the generator.** On the generator that clips goals (fresh set, L3), the same agents reached 63.9 % (with filter) and 68.3 % (without filter) expert success. With goals at their requested distance they reach 37.2 % and 43.1 %.
+  - A large part of the published expert success came from goals that clipping moved closer. Success also falls with distance: for filter-trained agents, 38.8 % at 5–7 m against 21.1 % at 7–9 m.
+  - The two sets differ in scenarios as well as in generator, so this comparison is descriptive.
+- **Success, trained with − without the filter (mean actions):**
+  - expert: −5.9 points [−12.5, +0.3], p = 0.064;
+  - intermediate: −7.8 [−13.2, −2.3], p = 0.003.
+
+  The filter-trained agents are not more successful, and in the intermediate stage they are less successful.
+- **The untuned potential field is the strongest method here.** Its timeouts are mostly "moving" (oscillation or wandering), not stalls; its success interval lies above both PPO intervals. This is descriptive: PPO intervals are over seeds and the baselines' over episodes, and no method was tuned on these sets.
+
+**E3-dense (exploratory; 15–25 requested obstacles, expert, 500 scenarios, mean actions).** All methods lose success relative to the E3 expert set, and the ranking is unchanged:
+- potential field: 50.8 % [46.4, 55.2];
+- PPO trained without the filter: 37.9 %;
+- PPO trained with the filter: 31.1 %;
+- DWA: 10.8 %;
+- go-to-goal: 7.4 %.
+
+There were 0 collisions.
+
+### E4-diagnostics (descriptive; 5 committed filter-trained agents, 500 fresh expert scenarios)
+
+- In **all 577 self-stops**, the policy's raw speed command was ≤ 0 in at least half of the last 100 steps (100 %). The median raw command over those steps was −0.20 (IQR −0.43 to −0.06), and in 20.8 % it was below −0.5.
+- In 70.7 % of the self-stops the risk score at the end was exactly 0. The risk-penalty term was therefore not active at the stall position in most of them. The median barrier value at the end was 0.41 m.
+- **Reading.** The policies stop by commanding speeds below the action bound, which clipping maps to exactly 0. This is consistent with the aliasing explanation. That the risk term is mostly inactive at the end argues against a *current* reward incentive, although the reward could still have shaped the policy during training. This analysis shows *where* in action space the policies stop; it does not establish the cause. That is the job of E4.
+
+### DWA-style baseline
+
+**Tuning (100 validation scenarios, filter on).** All 12 configurations reached 37–39 % success with 0 collisions, and every timeout was filter-blocked. The rule selected configuration 2 (`w_heading = 0.2`, `w_clearance = 0.5`, `clearance_min = 0.05`). The grid barely mattered, a first sign that the filter, not the weights, limits this planner.
+
+**Evaluation (frozen configuration).** Wilson 95 % intervals.
+
+| Set | Filter | Beginner | Intermediate | Expert | Collisions | Timeout classes |
+|---|---|---:|---:|---:|---:|---|
+| Committed test (100 per stage) | off | 100 % [96.3, 100] | 94 % [87.5, 97.2] | **96 % [90.2, 98.4]** | 0 | 10 self-stop |
+| Committed test (100 per stage) | on | 95 % [88.8, 97.8] | 64 % [54.2, 72.7] | **48 % [38.5, 57.7]** | 0 | 93 filter-blocked |
+| Fresh (500 expert) | on | – | – | 50 % [45.6, 54.4] | 0 | 250 filter-blocked |
+
+**Reading.**
+- Without the filter, this planner solves 96 % of the committed expert test scenarios with no collisions. Its minimum clearance, however, was 0.027 m, against the filter's 0.30 m margin.
+- With the filter, every timeout is filter-blocked. The planner steers into the band the filter forbids, and then stays there.
+- So **Type I deadlock is not specific to learned policies**: a classical local planner stalls in front of this filter in the same way. This motivated the exploratory margin follow-up below.
+- The DWA-off result is **not** a fair safety comparison with filtered PPO: it keeps a much smaller margin.
+
+**Exploratory: a DWA whose own margin respects the filter margin** ([note](exploratory_dwa_margin.md); committed in `8702fb7` before these runs; post hoc, descriptive). The frozen weights are kept and only `clearance_min` changes. The filter is on throughout; Wilson 95 % intervals.
+
+| Set | Frozen (`clearance_min` 0.05 m) | 0.35 m | 0.45 m |
+|---|---:|---:|---:|
+| Committed test, expert (100) | 48 % [38.5, 57.7]; 52 filter-blocked | **63 % [53.2, 71.8]; 0 filter-blocked, 37 self-stop** | 55 % [45.2, 64.4]; 0 filter-blocked, 45 self-stop |
+| Committed test, intermediate (100) | 64 % [54.2, 72.7] | 82 % [73.3, 88.3] | 76 % [66.8, 83.3] |
+| Fresh expert (500) | 50.0 % [45.6, 54.4]; 250 filter-blocked | **67.8 % [63.6, 71.7]; 0 filter-blocked, 160 self-stop** | 59.0 % [54.6, 63.2]; 0 filter-blocked, 204 self-stop |
+| E3 expert, corrected generator (1,000) | 15.3 % [13.2, 17.7]; 847 filter-blocked | **43.6 % [40.6, 46.7]; 0 filter-blocked, 564 self-stop** | 29.1 % [26.4, 32.0]; 0 filter-blocked, 702 self-stop |
+
+There were 0 collisions throughout. The minimum clearance was 0.31 m with a margin of 0.35 m, and 0.38 m with 0.45 m.
+
+**Reading (exploratory).**
+- Once the planner's own margin exceeds the filter margin, **filter-blocked stalls disappear completely** in all three sets, and success rises by 15–28 points.
+- The timeouts that remain are all "self-stops". Here this means the planner found no admissible rollout and turned in place (commanded speed 0). This is the planner's own local minimum, the classical counterpart of a policy-side stop. A larger margin makes it more frequent.
+- So for a classical planner, Type I deadlock behind this filter is a **margin mismatch** that a filter-aware design avoids. What remains is a planning problem: no global route, local minima.
+- This parallels the PPO results: training with the filter removes most Type I stalls, and Type II stops take their place.
+- **Limitations.** The variants were chosen after seeing the frozen DWA's results and were not tuned. The test, fresh and E3 sets were all already used in this round. Only one weight configuration was tried.
+
+### E4: what causes the self-stops? (completed, confirmatory)
+
+**Execution.**
+- All 10 new runs (riskfree and beta_policy, seeds 0–4) reached 301,056 steps on mains power. Each records exactly one override, and none had modified code (`records/`).
+- Nine ran at `3aed35e`. Beta seed 4 ran at `8702fb7`, which only adds a note and a statistics tool, so training code is unchanged.
+- The queue took 3.7 h of wall time, including waits.
+- The control arm is the E1a control (`runs/e1a/control`, copied to `../e1a/checkpoints/control`). The new checkpoints are in `checkpoints/<arm>/seed_<s>/`, and their SHA-256 hashes are in `results/e4_*/run_record.json`.
+- Evaluation: 500 expert scenarios (seed base 6,500,000) × 15 agents × {mean, sampled} = 15,000 episodes. There were **0 collisions**.
+
+**Primary endpoint: policy-side stall rate** (self-stop + other stall; mean actions). Paired hierarchical bootstrap, Holm over the two tests.
+
+| Arm | Policy-side stall, per seed 0–4 | Mean ± SD | Difference to control [95 % CI] | p (Holm) | Criterion (≤ −10 points, CI < 0) |
+|---|---|---:|---:|---:|---|
+| control | .188 .390 .334 .344 .436 | 33.8 ± 9.3 % | – | – | – |
+| riskfree (`risk_penalty_beta = 0`) | .062 .010 .020 .010 .008 | 2.2 ± 2.3 % | **−31.6 [−39.4, −22.9]** | < 0.001 | **H4b holds** |
+| beta_policy | .000 .000 .000 .000 .000 | 0.0 ± 0.0 % | **−33.8 [−41.3, −25.2]** | < 0.001 | **H4a holds** |
+
+**Pre-registered reading: "both".** Each intervention on its own removes almost all policy-side stalls. Seed-level Welch tests agree: p = 0.001 for both, Hedges' g −4.2 (riskfree) and −4.6 (beta).
+
+**Secondary (mean actions; unadjusted).**
+
+| Arm − control | Success | Type I (filter-blocked) | Type II (self-stop) | Total deadlock |
+|---|---:|---:|---:|---:|
+| riskfree | **+6.2 [+1.2, +11.2]** (p = 0.016) | **+26.2 [+21.0, +31.4]** | −31.6 [−39.3, −22.9] | −5.4 [−10.7, 0.0] (p = 0.051) |
+| beta_policy | −0.2 [−6.3, +5.5] | **+33.6 [+27.3, +40.1]** | −33.8 [−41.2, −25.2] | −0.3 [−6.6, +6.4] |
+
+| Arm | Success, mean actions (seed mean ± SD, t-CI) | Success, sampled |
+|---|---:|---:|
+| control | 59.0 ± 5.2 [52.5, 65.5] | 71.3 [68.2, 74.4] |
+| riskfree | 65.2 ± 2.1 [62.6, 67.9] | 70.4 [67.1, 73.7] |
+| beta_policy | 58.8 ± 4.4 [53.3, 64.2] | 66.8 [60.2, 73.3] |
+
+**Check of the classification.**
+- The Beta agents' 985 timeouts are filter-blocked stalls at the boundary: end barrier median 0.000 m, 90th percentile 0.000 m. The policy's raw speed command there has a median of +0.52.
+- They are therefore not hidden stops. The Beta agents push forward into the filter.
+- The control's self-stops end at a median barrier of 0.53 m, with a raw command of −0.13.
+
+**Reading.**
+- Both candidate causes are sufficient to remove the self-stops. Bounded actions (no clipping of `v ≤ 0`) and a reward without the risk term each remove them on their own. So the explanations are not exclusive, and neither alone is *the* cause.
+- More important, **neither intervention removes the deadlock**. The stalls move from before the boundary (self-stop) to the boundary (filter-blocked):
+  - total deadlock is unchanged for the Beta policy (39.4 % against 39.7 %);
+  - it is only slightly lower without the risk term (34.2 %);
+  - success rises by 6 points only in the riskfree arm.
+- The same substitution appeared with the correction penalty (E1a) and, in reverse, with the margin-aware DWA. In this setting, self-stopping looks like the policy's learned alternative to being held at the boundary, not an independent failure.
+- **Caveats (stated in advance).**
+  - The Beta policy also changes exploration.
+  - Removing the risk term also removes an incentive to keep clearance.
+  - Neither arm was tuned.
+  - These are 300k-step agents.

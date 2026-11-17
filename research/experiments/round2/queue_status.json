@@ -1,0 +1,78 @@
+{
+  "queue": "research\\experiments\\round2\\e4_queue.json",
+  "started": "2026-11-08 17:32:48",
+  "jobs": [
+    {
+      "arm": "riskfree",
+      "seed": 0,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 579.0, \"cpu_s_this_invocation\": 543.0}"
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 0,
+      "invocations": 2,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 889.9, \"cpu_s_this_invocation\": 671.5}"
+    },
+    {
+      "arm": "riskfree",
+      "seed": 1,
+      "invocations": 3,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 238.5, \"cpu_s_this_invocation\": 132.1}"
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 1,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 598.3, \"cpu_s_this_invocation\": 531.9}"
+    },
+    {
+      "arm": "riskfree",
+      "seed": 2,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 401.3, \"cpu_s_this_invocation\": 371.5}"
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 2,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 430.0, \"cpu_s_this_invocation\": 401.8}"
+    },
+    {
+      "arm": "riskfree",
+      "seed": 3,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 326.9, \"cpu_s_this_invocation\": 301.8}"
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 3,
+      "invocations": 2,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 181.9, \"cpu_s_this_invocation\": 175.0}"
+    },
+    {
+      "arm": "riskfree",
+      "seed": 4,
+      "invocations": 2,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 303.0, \"cpu_s_this_invocation\": 266.2}"
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 4,
+      "invocations": 1,
+      "done": true,
+      "last_result": "{\"finished\": true, \"stop_reason\": \"finished\", \"wall_s_this_invocation\": 807.5, \"cpu_s_this_invocation\": 713.1}"
+    }
+  ],
+  "state": "finished",
+  "elapsed_h": 3.672
+}

@@ -24,6 +24,16 @@ logs/
 !results/checkpoints/
 !results/checkpoints/*/
 !results/checkpoints/*/seed_*.pt
+# ...and the round-2 training checkpoints (best.pt / final.pt per run) needed to reproduce
+# the E1a and E4 evaluations.
+!research/experiments/e1a/checkpoints/
+!research/experiments/e1a/checkpoints/*/
+!research/experiments/e1a/checkpoints/*/*/
+!research/experiments/e1a/checkpoints/*/*/*.pt
+!research/experiments/round2/checkpoints/
+!research/experiments/round2/checkpoints/*/
+!research/experiments/round2/checkpoints/*/*/
+!research/experiments/round2/checkpoints/*/*/*.pt
 
 # Plots and animations
 *.gif

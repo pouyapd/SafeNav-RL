@@ -1,0 +1,117 @@
+{
+ "all_agree": true,
+ "checks": [
+  {
+   "check": "E1a deadlock penalty-control",
+   "estimate": -0.05119999999999997,
+   "ci95": [
+    -0.11599999999999999,
+    0.015609999999999857
+   ],
+   "stored_estimate": -0.05119999999999997,
+   "stored_ci95": [
+    -0.1164,
+    0.017199999999999993
+   ],
+   "agrees": true
+  },
+  {
+   "check": "E1a success penalty-control",
+   "estimate": 0.0048000000000000265,
+   "ci95": [
+    -0.05601000000000004,
+    0.062000000000000055
+   ],
+   "stored_estimate": 0.0048000000000000265,
+   "stored_ci95": [
+    -0.058399999999999896,
+    0.06320000000000003
+   ],
+   "agrees": true
+  },
+  {
+   "check": "E3 expert 1_type1_with_minus_without_mean",
+   "estimate": -0.2966000000000001,
+   "ci95": [
+    -0.37499999999999994,
+    -0.2066
+   ],
+   "stored_estimate": -0.2966000000000001,
+   "stored_ci95": [
+    -0.3768,
+    -0.2062
+   ],
+   "agrees": true
+  },
+  {
+   "check": "E3 expert 2_type2_with_minus_without_mean",
+   "estimate": 0.34099999999999997,
+   "ci95": [
+    0.227995,
+    0.4272
+   ],
+   "stored_estimate": 0.34099999999999997,
+   "stored_ci95": [
+    0.2286,
+    0.4286
+   ],
+   "agrees": true
+  },
+  {
+   "check": "E3 expert 3_type2_filtered_sampled_minus_mean",
+   "estimate": -0.3576,
+   "ci95": [
+    -0.4366,
+    -0.256
+   ],
+   "stored_estimate": -0.3576,
+   "stored_ci95": [
+    -0.435405,
+    -0.2568
+   ],
+   "agrees": true
+  },
+  {
+   "check": "E3 expert 4_type1_filtered_sampled_minus_mean",
+   "estimate": 0.0728,
+   "ci95": [
+    0.024200000000000027,
+    0.14179999999999998
+   ],
+   "stored_estimate": 0.0728,
+   "stored_ci95": [
+    0.02479999999999999,
+    0.14279999999999998
+   ],
+   "agrees": true
+  },
+  {
+   "check": "E4 H4a_beta_minus_control_policy_stall",
+   "estimate": -0.3384,
+   "ci95": [
+    -0.41441,
+    -0.2536
+   ],
+   "stored_estimate": -0.3384,
+   "stored_ci95": [
+    -0.4132,
+    -0.2524
+   ],
+   "agrees": true
+  },
+  {
+   "check": "E4 H4b_riskfree_minus_control_policy_stall",
+   "estimate": -0.31639999999999996,
+   "ci95": [
+    -0.3948,
+    -0.23159000000000013
+   ],
+   "stored_estimate": -0.31639999999999996,
+   "stored_ci95": [
+    -0.39399999999999996,
+    -0.2292
+   ],
+   "agrees": true
+  }
+ ]
+}

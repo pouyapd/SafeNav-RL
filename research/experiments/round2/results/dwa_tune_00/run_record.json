@@ -1,0 +1,20 @@
+{
+  "invocations": [
+    {
+      "tag": "dwa_tune_00",
+      "command": "C:\\Users\\user\\Desktop\\GITHUB\\SafeNav-RL\\research\\experiments\\round2\\run_eval2.py --tag dwa_tune_00 --baseline dwa --stages expert --seed-base 1300000 --n 100 --deadline-s 1800 --dwa w_heading=0.2 --dwa w_clearance=0.2 --dwa clearance_min=0.05",
+      "git_commit": "3aed35ed62671344c642ded94029fc839d115316",
+      "python": "3.12.7",
+      "torch": "2.10.0+cpu",
+      "numpy": "2.4.1",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "episodes_planned": 100,
+      "episodes_completed": 100,
+      "stopped_at_deadline": false,
+      "wall_s_this_invocation": 61.2,
+      "cpu_s_this_invocation": 50.2,
+      "peak_memory_mb": 200.5,
+      "checkpoints": {}
+    }
+  ]
+}
