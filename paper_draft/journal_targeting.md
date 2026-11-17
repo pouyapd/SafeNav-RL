@@ -1,5 +1,19 @@
 # Journal targeting
 
+**Update 2026-11-17 (after round 4):** the current recommendation is in [`q1_readiness_review.md`](q1_readiness_review.md) §6.
+
+| Role | Journal |
+|---|---|
+| Primary | Robotics and Autonomous Systems |
+| Alternative 1 | Engineering Applications of Artificial Intelligence |
+| Alternative 2 | Journal of Intelligent & Robotic Systems |
+
+Autonomous Robots and RA-L are no longer recommended:
+- Autonomous Robots prefers data from physical robots, and its length limit is about 75,000 characters.
+- RA-L's letter format would need about a 70 % cut.
+
+The text below is the earlier assessment, kept for the record.
+
 Date: 2026-10-25.
 
 ## How the journal information was verified

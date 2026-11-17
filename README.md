@@ -59,6 +59,7 @@ It does **not** propose a new safety filter or a new training algorithm. The cor
 | **Completed** (2026-11-08) | DWA-style local planner (tuned on validation scenarios, then frozen); exploratory filter-aware variant | same |
 | **Completed, pre-registered** (2026-11-14) | **Round 3**: deadlock recovery by multi-step planning with the filter unchanged (5 methods × 10 agents × 500 unused scenarios); mechanism analysis (exploratory); independent audit of round 2 | [`research/experiments/round3/`](research/experiments/round3/PROTOCOL.md) |
 | **Completed, pre-registered** (2026-11-17) | **Round 4**: audit of round 3; an equivalent, faster planner and a latency test; robustness of the recovery layer (6 conditions × 10 agents × 200 unused scenarios); baselines without the learned policy; timeout analysis (exploratory) | [`research/experiments/round4/`](research/experiments/round4/PROTOCOL.md) |
+| **Prepared, not submitted** (2026-11-17) | Manuscript revised for submission (title, 250-word abstract, method section, contributions, discussion); supplementary material; submission package; internal Q1 readiness review. Decision: nearly ready; only author-side items remain | [`paper_draft/q1_readiness_review.md`](paper_draft/q1_readiness_review.md) |
 | **Not done** | PPO-Lagrangian; MPC with a DT-CBF; E1b (penalty at 1M steps); recovery with a real perception or mapping stack; any physical robot or 3D simulator | [`paper_draft/minimum_experiments.md`](paper_draft/minimum_experiments.md) |
 
 ## Key results
@@ -305,15 +306,21 @@ The [protocol](research/experiments/round4/PROTOCOL.md) (acceptance criteria, 24
 
 | Document | Content |
 |---|---|
-| [`paper_draft/manuscript.pdf`](paper_draft/manuscript.pdf) · [`manuscript.tex`](paper_draft/manuscript.tex) · [`references.bib`](paper_draft/references.bib) | journal-neutral **draft**, not submitted or peer reviewed; every number is traceable to a repository file ([`figures_and_tables_plan.md`](paper_draft/figures_and_tables_plan.md)) |
+| [`paper_draft/manuscript.pdf`](paper_draft/manuscript.pdf) · [`manuscript.tex`](paper_draft/manuscript.tex) · [`references.bib`](paper_draft/references.bib) | manuscript prepared for submission; **not submitted or peer reviewed**. Every number is traceable to a repository file ([`figures_and_tables_plan.md`](paper_draft/figures_and_tables_plan.md)); the round-4 numbers are checked by [`verify_manuscript_round4.py`](research/scripts/verify_manuscript_round4.py) |
+| [`paper_draft/supplementary.pdf`](paper_draft/supplementary.pdf) · [`supplementary.tex`](paper_draft/supplementary.tex) | supplementary material: configuration, recovery parameters, pre-registration record, additional tables, timeout analysis, statistics, reproduction |
+| [`paper_draft/q1_readiness_review.md`](paper_draft/q1_readiness_review.md) · [`submission/`](paper_draft/submission/README.md) | internal readiness review: audit, three-reviewer critique, journal strategy, merge advice. Submission package: abstract, highlights, cover letter and declarations to confirm |
 | [`paper_draft/evidence_gap_analysis.md`](paper_draft/evidence_gap_analysis.md) · [`minimum_experiments.md`](paper_draft/minimum_experiments.md) | what is supported now, what is missing, and the experiments that would close each gap |
 | [`paper_draft/reproducibility_checklist.md`](paper_draft/reproducibility_checklist.md) · [`journal_targeting.md`](paper_draft/journal_targeting.md) | reproducibility status; candidate venues and a realistic readiness assessment |
 | [`research/literature_review_gap_analysis.md`](research/literature_review_gap_analysis.md) | targeted (not systematic) literature review: closest work, claim-by-claim novelty assessment, reading depth for each source |
 | [`research/LITERATURE_REVIEW.md`](research/LITERATURE_REVIEW.md) · [`research/REPOSITORY_AUDIT.md`](research/REPOSITORY_AUDIT.md) | earlier review and repository audit |
 
-The manuscript marks every claim that the current evidence does not support with **[EVIDENCE REQUIRED]**. Six of the eight earlier markers (E1 in four places, E3, E4) were removed on 2026-11-08, once their experiments had run and the primary results had been recomputed independently. Two remain:
-- the missing PPO-Lagrangian and MPC baselines;
-- an archived release with a DOI.
+No **[EVIDENCE REQUIRED]** markers remain.
+- On 2026-11-08, six of the eight were removed after their experiments.
+- On 2026-11-17:
+  - the missing PPO-Lagrangian and MPC baselines became a stated limitation;
+  - the archive DOI became an author item.
+- Blue **Author to confirm** markers flag what only the author can supply: affiliation, declarations and the archive DOI.
+- All 52 DOIs in the bibliography were checked against Crossref ([`verify_bibliography.py`](research/scripts/verify_bibliography.py)).
 
 ## Limitations and open evidence
 

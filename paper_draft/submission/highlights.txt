@@ -1,0 +1,5 @@
+Learned navigation policies deadlock behind a CBF safety filter in two distinct ways
+Training with the filter turns filter-blocked stalls into self-stops
+Removing self-stops in training moved the stalls to the filter boundary
+Multi-step recovery planning cut deadlock below 1% with the filter unchanged
+With the exact map, the planner alone beat the policy with recovery (95% vs 85–86%)
