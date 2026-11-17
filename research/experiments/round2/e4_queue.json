@@ -1,0 +1,86 @@
+{
+  "common": [
+    "--timesteps",
+    "300000",
+    "--runs-root",
+    "runs/e4",
+    "--record-dir",
+    "research/experiments/round2/records",
+    "--chunk-updates",
+    "2",
+    "--min-steps-per-s",
+    "25"
+  ],
+  "jobs": [
+    {
+      "arm": "riskfree",
+      "seed": 0,
+      "set": [
+        "reward.risk_penalty_beta=0.0"
+      ]
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 0,
+      "set": [
+        "network.distribution=beta"
+      ]
+    },
+    {
+      "arm": "riskfree",
+      "seed": 1,
+      "set": [
+        "reward.risk_penalty_beta=0.0"
+      ]
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 1,
+      "set": [
+        "network.distribution=beta"
+      ]
+    },
+    {
+      "arm": "riskfree",
+      "seed": 2,
+      "set": [
+        "reward.risk_penalty_beta=0.0"
+      ]
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 2,
+      "set": [
+        "network.distribution=beta"
+      ]
+    },
+    {
+      "arm": "riskfree",
+      "seed": 3,
+      "set": [
+        "reward.risk_penalty_beta=0.0"
+      ]
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 3,
+      "set": [
+        "network.distribution=beta"
+      ]
+    },
+    {
+      "arm": "riskfree",
+      "seed": 4,
+      "set": [
+        "reward.risk_penalty_beta=0.0"
+      ]
+    },
+    {
+      "arm": "beta_policy",
+      "seed": 4,
+      "set": [
+        "network.distribution=beta"
+      ]
+    }
+  ]
+}

@@ -158,6 +158,8 @@ def validate_config(cfg: Mapping[str, Any]) -> None:
     check("env", "max_steps", positive_int, "must be a positive integer")
     check("env", "sensor_noise_std", non_negative, "must be >= 0")
     check("env", "risk_distance", positive, "must be a positive number (metres)", required=False)
+    check("env", "goal_sampling", lambda v: v in ("clip", "rejection"), "must be 'clip' or 'rejection'",
+          required=False)
 
     # sensor (optional section)
     if "sensor" in cfg:
@@ -221,6 +223,8 @@ def validate_config(cfg: Mapping[str, Any]) -> None:
     check("network", "activation", lambda v: v in ("tanh", "relu"), "must be 'tanh' or 'relu'",
           required=False)
     check("network", "action_dim", lambda v: v == 2, "must be 2 (v, omega)", required=False)
+    check("network", "distribution", lambda v: v in ("gaussian", "beta"), "must be 'gaussian' or 'beta'",
+          required=False)
     net = cfg["network"]
     if _is_number(net.get("log_std_min")) and _is_number(net.get("log_std_max")) \
             and net["log_std_min"] >= net["log_std_max"]:
