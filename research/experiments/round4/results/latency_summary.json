@@ -1,0 +1,352 @@
+{
+ "P": {
+  "episodes": 4000,
+  "collisions": 0,
+  "min_clearance_m": 0.3000000035989632,
+  "reference": {
+   "calls": 38041,
+   "call_wall_ms": {
+    "p50": 8.0516,
+    "p90": 18.4063,
+    "p95": 26.3968,
+    "p99": 45.65713999999996,
+    "max": 480.5802,
+    "mean": 10.699648197996897,
+    "n": 38041
+   },
+   "call_cpu_ms": {
+    "p50": 7.9757,
+    "p90": 14.5265,
+    "p95": 19.6121,
+    "p99": 31.21253999999996,
+    "max": 54.3648,
+    "mean": 9.644155973817723,
+    "n": 38041
+   },
+   "calls_over_100ms": 17,
+   "calls_over_100ms_preempted_share": 1.0,
+   "steps": 419777,
+   "steps_over_100ms": 57,
+   "share_steps_over_100ms": 0.00013578638181701238,
+   "step_p99_bin_ms": [
+    20,
+    50
+   ],
+   "episode_act_max_ms": {
+    "p50": 14.077149999820904,
+    "p90": 57.62776999968084,
+    "p95": 77.21290499991937,
+    "p99": 122.95400600015454,
+    "max": 676.8532999999479,
+    "mean": 23.319945100001636,
+    "n": 2000
+   }
+  },
+  "fast": {
+   "calls": 38041,
+   "call_wall_ms": {
+    "p50": 4.4624,
+    "p90": 10.2068,
+    "p95": 15.0103,
+    "p99": 25.029279999999993,
+    "max": 224.8965,
+    "mean": 6.046758344943614,
+    "n": 38041
+   },
+   "call_cpu_ms": {
+    "p50": 4.4487,
+    "p90": 8.3571,
+    "p95": 11.6817,
+    "p99": 18.732759999999985,
+    "max": 40.5924,
+    "mean": 5.512555724087169,
+    "n": 38041
+   },
+   "calls_over_100ms": 9,
+   "calls_over_100ms_preempted_share": 1.0,
+   "steps": 419777,
+   "steps_over_100ms": 12,
+   "share_steps_over_100ms": 2.858660669831839e-05,
+   "step_p99_bin_ms": [
+    10,
+    20
+   ],
+   "episode_act_max_ms": {
+    "p50": 6.313099999943006,
+    "p90": 26.108709999789436,
+    "p95": 46.332730000040094,
+    "p99": 79.676265000121,
+    "max": 225.5345000003217,
+    "mean": 11.356464099997083,
+    "n": 2000
+   }
+  },
+  "P1_call_p99_below_100ms": true,
+  "P2_step_p99_below_100ms": true,
+  "paired_calls": 38041,
+  "cpu_ratio_fast_over_reference_per_episode": {
+   "mean": 0.5809573980499015,
+   "ci95": [
+    0.5734453136898682,
+    0.5888023133566969
+   ],
+   "median_per_call": 0.5606507894387687
+  },
+  "P3": {
+   "A_success_with_filter": {
+    "difference": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "p_boot": 1.0,
+    "seed_level": {
+     "per_seed_method": {
+      "0": 0.79,
+      "1": 0.86,
+      "2": 0.85,
+      "3": 0.84,
+      "4": 0.89
+     },
+     "per_seed_reference": {
+      "0": 0.79,
+      "1": 0.86,
+      "2": 0.85,
+      "3": 0.84,
+      "4": 0.89
+     },
+     "mean_difference": 0.0,
+     "paired_t_p": null,
+     "d_z": NaN,
+     "hedges_g_av": 0.0,
+     "same_sign_all_seeds": true
+    }
+   },
+   "A_deadlock_with_filter": {
+    "difference": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "p_boot": 1.0,
+    "seed_level": {
+     "per_seed_method": {
+      "0": 0.16,
+      "1": 0.09,
+      "2": 0.07,
+      "3": 0.09,
+      "4": 0.06
+     },
+     "per_seed_reference": {
+      "0": 0.16,
+      "1": 0.09,
+      "2": 0.07,
+      "3": 0.09,
+      "4": 0.06
+     },
+     "mean_difference": 0.0,
+     "paired_t_p": null,
+     "d_z": NaN,
+     "hedges_g_av": 0.0,
+     "same_sign_all_seeds": true
+    }
+   },
+   "A_success_without_filter": {
+    "difference": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "p_boot": 1.0,
+    "seed_level": {
+     "per_seed_method": {
+      "0": 0.95,
+      "1": 0.91,
+      "2": 0.91,
+      "3": 0.87,
+      "4": 0.92
+     },
+     "per_seed_reference": {
+      "0": 0.95,
+      "1": 0.91,
+      "2": 0.91,
+      "3": 0.87,
+      "4": 0.92
+     },
+     "mean_difference": 0.0,
+     "paired_t_p": null,
+     "d_z": NaN,
+     "hedges_g_av": 0.0,
+     "same_sign_all_seeds": true
+    }
+   },
+   "A_deadlock_without_filter": {
+    "difference": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "p_boot": 1.0,
+    "seed_level": {
+     "per_seed_method": {
+      "0": 0.01,
+      "1": 0.01,
+      "2": 0.05,
+      "3": 0.06,
+      "4": 0.04
+     },
+     "per_seed_reference": {
+      "0": 0.01,
+      "1": 0.01,
+      "2": 0.05,
+      "3": 0.06,
+      "4": 0.04
+     },
+     "mean_difference": 0.0,
+     "paired_t_p": null,
+     "d_z": NaN,
+     "hedges_g_av": 0.0,
+     "same_sign_all_seeds": true
+    }
+   },
+   "C_success_with_filter": {
+    "difference": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "p_boot": 1.0,
+    "seed_level": {
+     "per_seed_method": {
+      "0": 0.79,
+      "1": 0.85,
+      "2": 0.8,
+      "3": 0.85,
+      "4": 0.84
+     },
+     "per_seed_reference": {
+      "0": 0.79,
+      "1": 0.85,
+      "2": 0.8,
+      "3": 0.85,
+      "4": 0.84
+     },
+     "mean_difference": 0.0,
+     "paired_t_p": null,
+     "d_z": NaN,
+     "hedges_g_av": 0.0,
+     "same_sign_all_seeds": true
+    }
+   },
+   "C_deadlock_with_filter": {
+    "difference": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "p_boot": 1.0,
+    "seed_level": {
+     "per_seed_method": {
+      "0": 0.01,
+      "1": 0.0,
+      "2": 0.01,
+      "3": 0.01,
+      "4": 0.0
+     },
+     "per_seed_reference": {
+      "0": 0.01,
+      "1": 0.0,
+      "2": 0.01,
+      "3": 0.01,
+      "4": 0.0
+     },
+     "mean_difference": 0.0,
+     "paired_t_p": null,
+     "d_z": NaN,
+     "hedges_g_av": 0.0,
+     "same_sign_all_seeds": true
+    }
+   },
+   "C_success_without_filter": {
+    "difference": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "p_boot": 1.0,
+    "seed_level": {
+     "per_seed_method": {
+      "0": 0.81,
+      "1": 0.79,
+      "2": 0.82,
+      "3": 0.83,
+      "4": 0.82
+     },
+     "per_seed_reference": {
+      "0": 0.81,
+      "1": 0.79,
+      "2": 0.82,
+      "3": 0.83,
+      "4": 0.82
+     },
+     "mean_difference": 0.0,
+     "paired_t_p": null,
+     "d_z": NaN,
+     "hedges_g_av": 0.0,
+     "same_sign_all_seeds": true
+    }
+   },
+   "C_deadlock_without_filter": {
+    "difference": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "p_boot": 1.0,
+    "seed_level": {
+     "per_seed_method": {
+      "0": 0.0,
+      "1": 0.02,
+      "2": 0.0,
+      "3": 0.01,
+      "4": 0.02
+     },
+     "per_seed_reference": {
+      "0": 0.0,
+      "1": 0.02,
+      "2": 0.0,
+      "3": 0.01,
+      "4": 0.02
+     },
+     "mean_difference": 0.0,
+     "paired_t_p": null,
+     "d_z": NaN,
+     "hedges_g_av": 0.0,
+     "same_sign_all_seeds": true
+    }
+   }
+  },
+  "P3_non_inferior": true,
+  "identical_episodes": {
+   "matched": 2000,
+   "identical": 2000
+  }
+ },
+ "R": {
+  "rates": {}
+ },
+ "F": null,
+ "missing_inputs": [
+  "Part R set expert",
+  "Part R set intermediate",
+  "Part R set dense",
+  "Part R set heading",
+  "Part R condition localisation_error",
+  "Part R condition map_error",
+  "Part R condition sensed_map",
+  "Part R condition intermediate",
+  "Part R condition dense",
+  "Part R condition heading",
+  "Part F"
+ ]
+}
