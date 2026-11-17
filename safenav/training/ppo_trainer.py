@@ -128,7 +128,8 @@ class PPOTrainer:
         task = None
         if self.curriculum is None and cur_cfg.get("stages"):
             task = cur_cfg["stages"][-1]  # no curriculum: train on the hardest stage
-        self.env = make_env(config, task=task, curriculum=self.curriculum, safety_filter=safety_filter)
+        self.env = make_env(config, task=task, curriculum=self.curriculum, safety_filter=safety_filter,
+                            training=True)
 
         obs_dim = self.env.observation_space.shape[0]
         action_dim = self.env.action_space.shape[0]
@@ -263,6 +264,7 @@ class PPOTrainer:
         self.buffer.reset()
         self.model.eval()
         interventions = 0
+        penalty_sum, filter_gap_sum = 0.0, 0.0
 
         for _ in range(self.rollout_steps):
             obs_tensor = torch.as_tensor(obs, dtype=torch.float32, device=self.device).unsqueeze(0)
@@ -275,6 +277,11 @@ class PPOTrainer:
             if info.get("safety_intervened", False):
                 interventions += 1
                 self._ep_interventions += 1
+            # Logged only (E1): the correction penalty applied to this reward, and how far the
+            # filter moved the in-bounds action, ||clip(u) - u_exec||^2, with or without a penalty.
+            penalty_sum += float(info.get("correction_penalty", 0.0))
+            if "nominal_action" in info:
+                filter_gap_sum += float(np.sum((info["nominal_action"] - info["executed_action"]) ** 2))
 
             # Time-limit truncation is not a real terminal state: bootstrap from
             # the value of the final observation (Pardo et al., 2018).
@@ -313,7 +320,9 @@ class PPOTrainer:
             obs_tensor = torch.as_tensor(obs, dtype=torch.float32, device=self.device).unsqueeze(0)
             last_value = self.model.get_value(obs_tensor).item()
         self.buffer.compute_advantages(last_value=last_value)
-        return obs, {"intervention_rate": interventions / self.rollout_steps}
+        return obs, {"intervention_rate": interventions / self.rollout_steps,
+                     "correction_penalty_mean": penalty_sum / self.rollout_steps,
+                     "filter_gap_sq_mean": filter_gap_sum / self.rollout_steps}
 
     def _ppo_update(self) -> Dict[str, float]:
         """n_epochs passes over the rollout buffer, updating policy and value function."""

@@ -77,6 +77,7 @@ def main() -> int:
     ap.add_argument("--kappa", type=float, default=0.0, help="heading escape (0 = plain filter)")
     ap.add_argument("--sampled", action="store_true", help="sample actions instead of the policy mean")
     ap.add_argument("--deadline-s", type=float, default=600.0)
+    ap.add_argument("--out-root", default=None, help="results root (default: results/ next to this script)")
     args = ap.parse_args()
 
     proc = lower_priority()
@@ -91,7 +92,7 @@ def main() -> int:
     agents = [a for a in find_agents(Path(args.agents).resolve(), args.checkpoint_name) if a[0] in args.variants]
     if not agents:
         raise SystemExit(f"no checkpoints found under {args.agents}")
-    out = OUT_ROOT / args.tag
+    out = (Path(args.out_root).resolve() if args.out_root else OUT_ROOT) / args.tag
     out.mkdir(parents=True, exist_ok=True)
     csv_path = out / "episodes.csv"
     done = set()

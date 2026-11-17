@@ -247,12 +247,23 @@ class SafetyFilterWrapper(gym.Wrapper):
     log-probabilities stay consistent; the filter is part of the environment
     from the agent's point of view.
 
-    Extra info keys: nominal_action, safe_action, safety_intervened, speed_limit.
+    Extra info keys: nominal_action, safe_action, safety_intervened, speed_limit,
+    correction_penalty.
+
+    Optional correction penalty (off by default): with correction_penalty = α > 0
+    the reward is reduced by α‖u − u_exec‖², where u is the policy's raw action
+    and u_exec the executed one (after the action bounds and the filter). This is
+    the penalty of Pizarro Bejarano, Brunke & Schoellig (RA-L 2025), whose
+    certified action also includes the input constraints. The trainer enables it
+    only for training environments (make_env(..., training=True)).
     """
 
-    def __init__(self, env: gym.Env, safety_filter: CBFSafetyFilter):
+    def __init__(self, env: gym.Env, safety_filter: CBFSafetyFilter, correction_penalty: float = 0.0):
         super().__init__(env)
+        if correction_penalty < 0:
+            raise ValueError("correction_penalty must be >= 0")
         self.safety_filter = safety_filter
+        self.correction_penalty = float(correction_penalty)
 
     def step(self, action):
         base = self.env.unwrapped
@@ -265,4 +276,9 @@ class SafetyFilterWrapper(gym.Wrapper):
         info["safe_action"] = safe
         info["safety_intervened"] = finfo["intervened"]
         info["speed_limit"] = finfo["v_limit"]
+        penalty = 0.0
+        if self.correction_penalty > 0:
+            penalty = self.correction_penalty * float(np.sum((nominal - info["executed_action"]) ** 2))
+            reward = reward - penalty
+        info["correction_penalty"] = penalty
         return obs, reward, terminated, truncated, info

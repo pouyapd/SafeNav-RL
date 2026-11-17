@@ -13,14 +13,21 @@ Nothing in this file has been run, except where it says **done**. Expensive runs
 | E2 with sampled actions (L4) | **deferred**: battery and background load; secondary | — |
 | Final checkpoints of the agents trained without the filter | **deferred** (load) | — |
 | E3 with a *corrected* generator | **not done**: needs an opt-in generator change (≈ 2–3 h of code) | — |
-| E1a correction penalty (10 runs × 300k steps) | **not run**: needs approval (≈ 2.5–3 h in one process) | `exp/e1-correction-penalty` |
-| E1-pilot (1 seed × 2 arms × 150k steps) | **proposed, not run**: ≈ 15–20 min in one process | `research/experiments/lightweight/README.md` |
+| E1a correction penalty (10 runs × 300k steps) | **not run**: needs approval. Revised estimate after the pilot: ≈ 1.3–1.5 h of training plus ≈ 0.5–1 h of evaluation, one process, idle machine | `research/experiments/E1_correction_penalty.md` |
+| E1 pilot (1 seed × 2 arms × 150k steps) | **done** (2026-10-26; protocol committed before the runs, `3fcc5c5`). Configuration verified (the penalty reaches the PPO reward; the control is bit-identical to `main`). 0 collisions; the control shows the stalls. **Effect screen inconclusive**: deadlock −1.2 [−5.2, 2.8] points, best checkpoints, interval over scenarios only. **Pilot evidence, not a test** | `research/experiments/e1_pilot/` (branch `exp/e1-pilot`) |
 | E4, E6, E7, E8 | not done | below |
 
 **Resource lessons from 2026-10-26.**
 - Evaluation needs about 206 MB of RAM in one process.
 - Speed: ≈ 0.055 s per episode at κ = 0 on mains power, and ≈ 0.1–0.26 s per episode at κ = 0.5 or under background load or on battery.
 - With only ≈ 2 GB of RAM free on this laptop, run one process at a time. The earlier `--jobs 3/4` suggestions in this file are withdrawn.
+- **Training (E1 pilot):**
+  - peak memory ≈ 320 MB per process;
+  - 150k steps in 203 s when the machine is idle;
+  - about 30 steps/s when another program occupies all cores;
+  - paging when free RAM falls below about 1 GB.
+  - Use `research/experiments/e1_pilot/train_pilot.py`. It trains in exact-resume chunks and stops on low memory or low throughput.
+  - In Git Bash, `timeout` does not reliably stop a native Windows Python process.
 
 ## How costs were estimated (measured on this laptop, 2026-10-25, on mains power)
 
@@ -51,10 +58,14 @@ Nothing in this file has been run, except where it says **done**. Expensive runs
 | Seeds / scenarios / episodes | E1a: 2 arms × 5 seeds = 10 runs. Evaluation per agent: 500 fresh expert scenarios (seed base 5,000,000; primary) + 300 committed test scenarios (secondary), each with mean and sampled actions. |
 | CPU | E1a ≈ 3–5 core-h training + ≈ 1 core-h evaluation; E1b ≈ 5–9 core-h. |
 | Wall-clock | E1a ≈ 2–3 h in total with 3 parallel runs; E1b ≈ 2–4 h. |
-| On the laptop? | Yes, but **one run at a time** (`--jobs 1`), on mains power: ≈ 2.5–3 h for E1a. Training memory per process is not yet measured; measure it in the E1-pilot first. |
+| On the laptop? | Yes, **one run at a time**, on mains power, with the pilot's driver (commands in `E1_correction_penalty.md`). Training memory was measured in the pilot: ≈ 320 MB per process. E1a ≈ 1.3–1.5 h of training when the machine is idle. |
+| Pilot (done, 2026-10-26) | Seed 0, 150k steps per arm, evaluated on 500 fresh scenarios (seeds 9,000,000–9,000,499; base 5,000,000 kept unused for E1a).
+- **Penalty − control:** deadlock −1.2 [−5.2, 2.8], Type I −7.0 [−11.6, −2.4], Type II +5.4 [1.2, 9.6], success −3.2 [−7.0, 0.6] (best checkpoints; scenario-only intervals). At the final checkpoints: deadlock −3.4, Type I 0.0, Type II −3.4.
+- **Training:** the penalty reduced the filter gap about 5× and interventions from 45 % to 29 %.
+- **Reading:** a single seed, so the pre-registered reading is **inconclusive**. It can neither confirm nor rule out an effect smaller than 10 points. |
 | Success / failure | Decision table in `E1_correction_penalty.md`. Success = deadlock reduction ≥ 10 points with the paired 95 % interval excluding 0 (Holm-adjusted over the two primary tests). |
 | Effect on the paper | If the penalty removes both stall types, the paper's main message becomes "the published penalty fixes the deadlocks; here is why (both aliasing regions are penalised)". The heading-escape result (E2) then becomes secondary. If it removes only one type, the taxonomy is the key insight. If it removes neither, it is a strong negative result that motivates E2. |
-| Safeguards | Implementation is opt-in (default 0). Weights are bit-identical to `main` with the default config (checked). 93 tests pass on the branch. |
+| Safeguards | Implementation is opt-in (default 0). Weights are bit-identical to `main` with the default config (checked again in the pilot, with chunked resumption). On `exp/e1-pilot`, 99 tests pass, including an end-to-end test that the penalty reaches the training reward. |
 
 ### E2: Does a heading-level escape remove filter-blocked stalls without retraining? (**done** for mean actions; see the status table)
 
