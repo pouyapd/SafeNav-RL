@@ -1,5 +1,7 @@
 # Q1 readiness review and submission decision (2026-11-17)
 
+> **Update after integration (2026-11-17).** All PRs, #2–#4 and #6–#16, were merged into `main` in stack order with merge commits. The branch and PR audit in §1 and the merge advice in §7 describe the state *before* that integration and are kept as written.
+
 This review covers the state of `paper/submission`, which builds on `paper/round4` (draft PR #15). It is an internal review written as three reviewers and an editor, not an external peer review. **No acceptance is predicted.**
 
 ## Decision

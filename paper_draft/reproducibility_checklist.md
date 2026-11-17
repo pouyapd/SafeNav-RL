@@ -1,6 +1,8 @@
 # Reproducibility checklist
 
-Branch `paper/manuscript-draft` (local), based on `docs/correct-failure-mechanism-and-goal-distances` (`83c95e8`, pushed; draft PR #2), which is based on `main` `d257eca`.
+All work is on `main`. On 2026-11-17, PRs #2–#4 and #6–#16 were merged in stack order with merge commits; no squash and no rebase. Every commit hash cited below as pre-registration evidence is therefore reachable from `main`.
+
+*History:* this checklist was started on branch `paper/manuscript-draft`, based on `main` `d257eca`.
 
 ## Environment used for every result in the draft
 
@@ -14,7 +16,7 @@ Windows 11, Python 3.12.7, torch 2.10.0+cpu, gymnasium 1.2.3, numpy 2.4.1, CPU o
 | Trained agents committed | ✅ | `results/checkpoints/{filtered,unfiltered}/seed_{0..4}.pt` (hashes below) |
 | Per-episode results committed | ✅ | `results/benchmark/episodes.csv`, `results/stochastic_eval/episodes.csv` |
 | Benchmark regenerates from the checkpoints | ✅ | per-episode files byte-identical (audit §1); `summary.csv` differs by ≤ 1.8e-15 (summation order) |
-| Tests | ✅ | 166 on `paper/round4` (2026-11-17); 138 on `exp/round3-recovery` (2026-11-14), CI passed there; 113 on `exp/research-extensions`; 99 on `exp/e1-pilot`; 90 on `main` |
+| Tests | ✅ | 166 on `main` after integration (2026-11-17); 166 on `paper/round4`; 138 on `exp/round3-recovery` (2026-11-14), CI passed there; 113 on `exp/research-extensions`; 99 on `exp/e1-pilot`; 90 on `main` |
 | Independent audit of round 2 | ✅ | `research/experiments/round3/audit_round2.py`: 223 checks, 820 episodes replayed identically from the committed checkpoint copies. The loader fix that makes this replay possible is on `exp/round3-recovery` |
 | Round 3 pre-registration | ✅ | protocol and analysis `c1abd93`, amendment 1 `5d2838d`, both pushed before the main run |
 | Round 4 pre-registration | ✅ | protocol, runner and analysis `c0629f7` (before the pilots); amendment 1 `f0194a1` (before every confirmatory run); Part P results `eeeeadc`; Parts R, F, T `b2b563b` |

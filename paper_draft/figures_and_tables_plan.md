@@ -1,6 +1,6 @@
 # Figures, tables and claim-to-evidence map
 
-Draft: `paper_draft/manuscript.tex` (branch `paper/manuscript-draft`).
+Manuscript: `paper_draft/manuscript.tex` on `main`. The supplement is `paper_draft/supplementary.tex`.
 
 Every figure and table below is generated from files in the repository. Status:
 - **exists**: committed and used as is;
