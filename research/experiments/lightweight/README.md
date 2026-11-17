@@ -2,6 +2,8 @@
 
 Branch `research/lightweight-experiments`. Written and committed **before** running L2–L5. Results are added in a later commit, below the line marked *Results*.
 
+> **Later status (2026-11-01).** This note was added afterwards; the protocol below is unchanged. The E1 pilot proposed here has since been run: [`../e1_pilot/README.md`](../e1_pilot/README.md) (one seed, inconclusive). The correction-penalty code is now also on branch `exp/e1-pilot`. E1a has still not been run.
+
 ## Resource limits applied to every run
 
 - One process at a time, one torch thread, below-normal CPU priority (`psutil`), and a hard internal deadline. Results are written to CSV one episode at a time, so an interrupted run keeps its rows and resumes.
