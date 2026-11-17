@@ -19,7 +19,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 FIG = ROOT / "paper_draft" / "figures"
 RES = HERE / "results"
-C = {"success": "#2a78d6", "type1": "#eb6834", "type2": "#1baf7a", "other": "#eda100"}
+C = {"success": "#2a78d6", "type1": "#eb6834", "type2": "#1baf7a", "other": "#eda100", "collision": "#2b2b2b"}
 INK, MUTED, SURF = "#0b0b0b", "#52514e", "#fcfcfb"
 plt.rcParams.update({"font.size": 8, "axes.edgecolor": MUTED, "axes.labelcolor": INK, "xtick.color": MUTED,
                      "ytick.color": MUTED, "axes.spines.top": False, "axes.spines.right": False,
@@ -30,20 +30,24 @@ STALLS = ("filter-blocked", "self-stop", "other stall")
 def comp(g):
     n, c = len(g), g["class"].fillna("")
     return {"success": (g.outcome == "success").mean(), "type1": (c == "filter-blocked").sum() / n,
-            "type2": c.isin(["self-stop", "other stall"]).sum() / n, "other": ((c == "moving") | (g.outcome == "collision")).sum() / n}
+            "type2": c.isin(["self-stop", "other stall"]).sum() / n,
+            "other": ((c == "moving") & (g.outcome != "collision")).sum() / n, "collision": (g.outcome == "collision").sum() / n}
 
 
 def stacked(ax, labels, comps, title):
     y = np.arange(len(labels))[::-1]
     left = np.zeros(len(labels))
-    names = {"success": "success", "type1": "filter-blocked", "type2": "self-stop / other stall", "other": "moving timeout or collision"}
-    for k in ("success", "type1", "type2", "other"):
+    names = {"success": "success", "type1": "filter-blocked", "type2": "self-stop / other stall", "other": "moving timeout",
+             "collision": "collision"}
+    keys = ["success", "type1", "type2", "other"] + (["collision"] if any(c["collision"] > 0 for c in comps) else [])
+    for k in keys:
         w = np.array([c[k] for c in comps])
         ax.barh(y, w, left=left, color=C[k], edgecolor=SURF, linewidth=1.0, height=0.62, label=names[k],
                 hatch="////" if k == "type1" else None)
         for yi, li, wi in zip(y, left, w):
             if wi >= 0.08:
-                ax.text(li + wi / 2, yi, f"{wi * 100:.0f}", ha="center", va="center", fontsize=6.5, color=INK)
+                ax.text(li + wi / 2, yi, f"{wi * 100:.0f}", ha="center", va="center", fontsize=6.5,
+                        color=SURF if k == "collision" else INK)
         left += w
     ax.set_yticks(y, labels)
     ax.set_xlim(0, 1)
@@ -134,7 +138,7 @@ def fig_timeouts():
     labels = [lab for v, lab in order if v in set(cf.variant)]
     comps = [comp(cf[cf.variant == v]) for v, _ in order if v in set(cf.variant)]
     fig, ax = plt.subplots(figsize=(5.0, 2.2))
-    stacked(ax, labels, comps, "200 sampled moving timeouts of C (round 3), one factor changed at a time")
+    stacked(ax, labels, comps, "200 moving timeouts of C (round 3); one factor changed")
     ax.legend(ncol=2, fontsize=6.0, frameon=False, loc="upper left", bbox_to_anchor=(0, -0.14))
     fig.tight_layout()
     fig.savefig(FIG / "r4_timeouts.pdf")

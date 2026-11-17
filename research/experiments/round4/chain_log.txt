@@ -1,0 +1,55 @@
+{"episodes_completed": 4000, "stopped_at_deadline": false, "wall_s_this_invocation": 1421.1, "on_mains_power": true, "system_cpu_percent_mean": 32.7}
+latency complete (4000)
+{"episodes_completed": 8301, "stopped_at_deadline": true, "wall_s_this_invocation": 1500.5, "on_mains_power": true, "system_cpu_percent_mean": 24.1}
+{"episodes_completed": 14600, "stopped_at_deadline": false, "wall_s_this_invocation": 1346.5, "on_mains_power": true, "system_cpu_percent_mean": 36.8}
+r_expert complete (14600)
+{"episodes_completed": 4000, "stopped_at_deadline": false, "wall_s_this_invocation": 294.1, "on_mains_power": true, "system_cpu_percent_mean": 13.6}
+r_intermediate complete (4000)
+{"episodes_completed": 4000, "stopped_at_deadline": false, "wall_s_this_invocation": 1150.5, "on_mains_power": true, "system_cpu_percent_mean": 24.5}
+r_dense complete (4000)
+{"episodes_completed": 4000, "stopped_at_deadline": false, "wall_s_this_invocation": 624.9, "on_mains_power": true, "system_cpu_percent_mean": 17.3}
+r_heading complete (4000)
+{
+ "control": {
+  "n": 200,
+  "success": 0.0,
+  "moving_timeout": 1.0,
+  "deadlock": 0.0,
+  "collision": 0.0
+ },
+ "gamma_1.0": {
+  "n": 200,
+  "success": 0.495,
+  "moving_timeout": 0.495,
+  "deadlock": 0.01,
+  "collision": 0.0
+ },
+ "max_steps_800": {
+  "n": 200,
+  "success": 0.75,
+  "moving_timeout": 0.225,
+  "deadlock": 0.025,
+  "collision": 0.0
+ },
+ "no_handback": {
+  "n": 200,
+  "success": 0.405,
+  "moving_timeout": 0.555,
+  "deadlock": 0.04,
+  "collision": 0.0
+ },
+ "planner_only": {
+  "n": 200,
+  "success": 0.82,
+  "moving_timeout": 0.145,
+  "deadlock": 0.035,
+  "collision": 0.0
+ },
+ "window_15": {
+  "n": 200,
+  "success": 0.425,
+  "moving_timeout": 0.57,
+  "deadlock": 0.005,
+  "collision": 0.0
+ }
+} 700 / 700
