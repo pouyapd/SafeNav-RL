@@ -33,6 +33,10 @@ Every figure and table below is generated from files in the repository. Status:
 | Table 4 | pre-registered fresh-scenario evaluation: κ = 0 / 0.5, final checkpoints | **new (2026-10-26)** | `research/experiments/lightweight/results/summary.json` |
 | Table 6 | recovery experiment: success, deadlock, moving timeouts, loops per method and agent type | **new (2026-11-14)** | `research/experiments/round3/results/main/summary.json` |
 | Fig. 8 `r3_outcomes.pdf`, `r3_trajectories.pdf` | recovery experiment: outcome composition; rule-selected trajectories | **new (2026-11-14)** | `research/experiments/round3/results/main/episodes.csv`; `python research/experiments/round3/make_figures_r3.py` |
+| Table 7 | round 4: robustness of C, 6 conditions × 2 agent types | **new (2026-11-17)** | `research/experiments/round4/results/summary.json` |
+| Fig. 9 `r4_robustness.pdf` | round 4: outcome composition per condition | **new (2026-11-17)** | `research/experiments/round4/results/r_*/episodes.csv`; `python research/experiments/round4/make_figures_r4.py` |
+| Fig. 10 `r4_fairness.pdf` | round 4: all methods on the same 200 expert scenarios | **new (2026-11-17)** | `research/experiments/round4/results/r_expert/episodes.csv` |
+| (repository only) `r4_latency.pdf`, `r4_timeouts.pdf` | round 4: call-latency exceedance curves; timeout counterfactuals | **new (2026-11-17)** | `results/latency/calls.csv`; `timeouts/counterfactuals.csv` |
 | Table 5 | success on the corrected generator (E3), all controllers, mean and sampled | **new (2026-11-08)** | `research/experiments/round2/results/summary.json` (plus `dwa_margin_0p35_e3_expert` for the exploratory row) |
 | Table R | remedies incl. correction penalty | **required** (E1) | E1 |
 

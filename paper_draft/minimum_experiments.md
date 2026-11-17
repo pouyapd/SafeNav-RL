@@ -2,6 +2,18 @@
 
 Nothing in this file has been run, except where it says **done**. Expensive runs wait for the author's approval.
 
+## Status on 2026-11-17 (round 4; adds to the tables below)
+
+| Item | Status | Result | Where |
+|---|---|---|---|
+| Audit of round 3 | **completed** | 68 checks, 0 failed; 776 unrecorded episodes replayed identically | `research/experiments/round4/audit/` |
+| Planner profiling and equivalent faster planner | **completed** | identical plans; 0.58 of the CPU time per call | `research/experiments/round4/profile/` |
+| Latency test (Part P, 4,000 episodes) | **completed, confirmatory** | P1–P3 met; call p99 25.0 ms (original 45.7 ms) on one laptop; not a real-time guarantee | `research/experiments/round4/PROTOCOL.md` |
+| Robustness of C (Part R, 26,600 episodes incl. baselines) | **completed, confirmatory** | all 24 tests and 12 claims hold; wrong map raises deadlock by 18–21 points vs. exact | same |
+| Baselines without the policy (Part F) | **completed, secondary** | planner alone 95.0 % success vs. C 85–86 %; path follower 11 % (inflated, exploratory: 64.5 %) | same |
+| Timeout analysis (Part T) | **completed, exploratory** | mostly slow progress under the filter | `research/experiments/round4/timeouts/` |
+| Recovery with a real perception or mapping stack; tuned classical baseline; E4 agents under recovery | **not executed** | – | – |
+
 ## Status on 2026-11-14 (round 3; adds to the table of 2026-11-08 below)
 
 | Experiment | Status | Result | Where |

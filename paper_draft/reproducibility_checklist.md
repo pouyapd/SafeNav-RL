@@ -14,9 +14,11 @@ Windows 11, Python 3.12.7, torch 2.10.0+cpu, gymnasium 1.2.3, numpy 2.4.1, CPU o
 | Trained agents committed | ✅ | `results/checkpoints/{filtered,unfiltered}/seed_{0..4}.pt` (hashes below) |
 | Per-episode results committed | ✅ | `results/benchmark/episodes.csv`, `results/stochastic_eval/episodes.csv` |
 | Benchmark regenerates from the checkpoints | ✅ | per-episode files byte-identical (audit §1); `summary.csv` differs by ≤ 1.8e-15 (summation order) |
-| Tests | ✅ | 138 on `exp/round3-recovery` (2026-11-14), CI passed there; 113 on `exp/research-extensions`; 99 on `exp/e1-pilot`; 90 on `main` |
+| Tests | ✅ | 166 on `paper/round4` (2026-11-17); 138 on `exp/round3-recovery` (2026-11-14), CI passed there; 113 on `exp/research-extensions`; 99 on `exp/e1-pilot`; 90 on `main` |
 | Independent audit of round 2 | ✅ | `research/experiments/round3/audit_round2.py`: 223 checks, 820 episodes replayed identically from the committed checkpoint copies. The loader fix that makes this replay possible is on `exp/round3-recovery` |
 | Round 3 pre-registration | ✅ | protocol and analysis `c1abd93`, amendment 1 `5d2838d`, both pushed before the main run |
+| Round 4 pre-registration | ✅ | protocol, runner and analysis `c0629f7` (before the pilots); amendment 1 `f0194a1` (before every confirmatory run); Part P results `eeeeadc`; Parts R, F, T `b2b563b` |
+| Round 4 latency configuration | ⚠️ | one laptop (i7-1255U, Windows 11), normal priority, mains power, user applications running; stated, not controlled. Not a real-time guarantee |
 | Training reproducible | ⚠️ partly | deterministic and exactly resumable at small scale (tests); the 10 × 1M-step runs were not repeated |
 | Analysis scripts read stored outputs only | ✅ | `research/scripts/*.py` |
 | Fixed seeds for every evaluation | ✅ | test 2,000,000 + 100,000·stage + i; validation 1,000,000 + …; fresh E1 set 5,000,000 + i |
@@ -84,6 +86,16 @@ python research/experiments/round3/run_recovery.py --tag main --agent filtered=r
     --set env.goal_sampling=rejection        # resumable; repeat until 25,000 rows (pilot: --tag pilot --seed-base 8300000 --n 40)
 python research/experiments/round3/analyze_round3.py --tag main
 python research/experiments/round3/make_figures_r3.py --tag main
+
+# 4e. round 4 (2026-11-17): audit of round 3, profiling, latency, robustness, baselines, timeouts
+python research/experiments/round4/audit_round3.py
+python research/experiments/round4/profile_planner.py
+bash research/experiments/round4/run_sets.sh pilot          # exploratory
+bash research/experiments/round4/run_sets.sh latency        # Part P (normal priority, mains power)
+bash research/experiments/round4/run_sets.sh confirmatory   # Parts R and F (resumable)
+python research/experiments/round4/timeout_analysis.py --sample 200
+python research/experiments/round4/analyze_round4.py
+python research/experiments/round4/make_figures_r4.py
 
 # 5. manuscript
 cd paper_draft && latexmk -pdf manuscript.tex
