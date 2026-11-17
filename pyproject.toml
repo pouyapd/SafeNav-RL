@@ -21,7 +21,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7"]
+dev = ["pytest>=7", "psutil>=5.9"]  # psutil: round-4 runner (priority, load and power records)
 ros2 = ["rclpy"]
 
 [project.scripts]
