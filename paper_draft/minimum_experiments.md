@@ -2,6 +2,26 @@
 
 Nothing in this file has been run, except where it says **done**. Expensive runs wait for the author's approval.
 
+## Status on 2026-11-08 (supersedes the table of 2026-10-26 below, which is kept for the record)
+
+| Experiment | Status | Result | Where |
+|---|---|---|---|
+| E1a correction penalty, 5 seeds × 300k per arm | **completed, confirmatory** | primary deadlock −5.1 points [−11.6, +1.7] (Holm p = 0.28), success +0.5 [−5.8, +6.3]: **H1 not supported**. Secondary: self-stops −19.7 [−32.2, −6.9], filter-blocked +14.0 [+2.4, +26.6] | `research/experiments/e1a/` |
+| E3 corrected generator (1,000 scenarios per stage, mean + sampled) | **completed, confirmatory** | expert H3 **partly supported** (3 of 4); contrast 4 (sampling vs. Type I) is +7.3 [+2.5, +14.3], no longer null. Intermediate: supported | `research/experiments/round2/` |
+| E3-dense (15–25 obstacles) | completed, exploratory | same ranking, lower success | same |
+| E4 Beta policy and risk-free reward, 5 seeds × 300k each | **completed, confirmatory** | H4a and H4b both hold (−33.8 and −31.6 points of policy-side stalls); **in both arms filter-blocked stalls replace self-stops** | same |
+| E4-diagnostics (committed agents, raw speed commands) | completed, descriptive | every self-stop has a raw speed ≤ 0 in at least half of the last 100 steps | same |
+| E6 (part): DWA-style local planner | **completed** (tuned on validation, frozen) | expert test 96 % without the filter, 48 % with it; every timeout filter-blocked | same |
+| E6 (part): filter-aware DWA margin | completed, **exploratory** (post hoc) | 0 filter-blocked stalls; planner local minima instead | same, `exploratory_dwa_margin.md` |
+| E6 (rest): PPO-Lagrangian, MPC with a DT-CBF | **not executed** | needs its own protocol (cost design) or a solver implementation | – |
+| E1b (penalty at 1M steps) | **not executed** | the primary E1a result is null; E1b would now be exploratory only | – |
+| E2 with sampled actions (L4); final checkpoints of the agents trained without the filter | not executed | – | – |
+| E7 (more seeds), E8 (standard simulator or hardware) | not executed | – | – |
+
+**Measured cost, 2026-11-08 (laptop on mains power, one process at a time, below-normal priority).**
+- **Training:** 20 runs × 300k steps took 320–5,900 s of summed wall time each. Most took 5–20 min; one (Beta, seed 0) took 99 min. One of its chunks ran at 1 step/s, probably because the machine was suspended or paging; the throughput rule stopped it, and the run resumed exactly (`records/train_beta_policy_seed0.json`). The E1a queue took 1.5 h and the E4 queue 3.7 h, including waits. Peak memory was about 320 MB per process.
+- **Evaluation:** about 4–6 episodes/s per process. In total about 100,000 evaluation episodes were run in this round; peak memory was about 210 MB.
+
 ## Status on 2026-10-26
 
 | Experiment | Status | Where |

@@ -14,15 +14,17 @@ Windows 11, Python 3.12.7, torch 2.10.0+cpu, gymnasium 1.2.3, numpy 2.4.1, CPU o
 | Trained agents committed | ✅ | `results/checkpoints/{filtered,unfiltered}/seed_{0..4}.pt` (hashes below) |
 | Per-episode results committed | ✅ | `results/benchmark/episodes.csv`, `results/stochastic_eval/episodes.csv` |
 | Benchmark regenerates from the checkpoints | ✅ | per-episode files byte-identical (audit §1); `summary.csv` differs by ≤ 1.8e-15 (summation order) |
-| Tests | ✅ | 99 collected on `exp/e1-pilot` (2026-11-01); CI (`tests` workflow, Python 3.10 and 3.12) passed on its head `bad41e9`. 90 on `main` |
+| Tests | ✅ | 113 on `exp/research-extensions` (2026-11-08), CI passed there; 99 on `exp/e1-pilot`; 90 on `main` |
 | Training reproducible | ⚠️ partly | deterministic and exactly resumable at small scale (tests); the 10 × 1M-step runs were not repeated |
 | Analysis scripts read stored outputs only | ✅ | `research/scripts/*.py` |
 | Fixed seeds for every evaluation | ✅ | test 2,000,000 + 100,000·stage + i; validation 1,000,000 + …; fresh E1 set 5,000,000 + i |
-| Pre-registered analysis for the new experiments | ⚠️ partly | E1 decision rules fixed in `research/experiments/E1_correction_penalty.md` before running; E2/E3 still to be written down |
+| Pre-registered analysis for the new experiments | ✅ | E1a (`research/experiments/e1a/README.md`, `d65e576`), E3/E4/DWA (`research/experiments/round2/README.md` and `analyze_round2.py`, `cbbe766`/`3aed35e`), all pushed before the runs; the exploratory DWA-margin note (`8702fb7`) before its runs |
+| Independent re-computation of primary results | ✅ | `research/experiments/tools/verify_primary.py` (separate code, different bootstrap seed): 8 of 8 primary contrasts agree (`verify_primary.json`) |
+| New training runs recorded | ✅ | per-invocation records (command, commit, versions, power state, speed, memory) in `research/experiments/{e1a,round2}/records/`; `best.pt` and `final.pt` of all 20 runs in `research/experiments/{e1a,round2}/checkpoints/`; SHA-256 in each `results/*/run_record.json` |
 | Held-out test set never used for design choices | ⚠️ partly | the 300 test scenarios were inspected; a pre-registered evaluation on 500 unused scenarios (seeds 9,000,000–9,000,499, same generator) was added on 2026-10-26 |
 | Pre-registration of hypothesis-testing evaluations | ✅ for L2–L5 | protocol committed before running (`9ced888`, `research/experiments/lightweight/README.md`); deviations listed there |
 | All evaluated checkpoints public | ⚠️ | the 10 committed agents yes; the 5 `final.pt` checkpoints used in L5 are local only (hashes in `results/L5_fresh_final_k0/run_record.json`); committing them needs approval |
-| Archived release with a DOI | ❌ | create a Zenodo release when the experiments are complete |
+| Archived release with a DOI | ❌ | create a Zenodo release once the round-2 PRs are reviewed and merged |
 | Compute reported | ✅ | `minimum_experiments.md` (measured training and evaluation speed) |
 | Statistical methods described with their limits | ✅ | manuscript §5; approximate intervals with 5 seeds stated |
 | Limitations stated | ✅ | manuscript §8, README Limitations |
@@ -55,6 +57,22 @@ python research/experiments/lightweight/run_eval.py --tag L3_fresh_mean_k0   --a
 python research/experiments/lightweight/run_eval.py --tag L3_fresh_mean_k0.5 --agents results/checkpoints --stage expert --seed-base 9000000 --n 500 --kappa 0.5
 python research/experiments/lightweight/run_eval.py --tag L5_fresh_final_k0 --agents runs/benchmark --checkpoint-name final --variants filtered --stage expert --seed-base 9000000 --n 500 --kappa 0   # needs the local final.pt files
 python research/experiments/lightweight/analyze.py
+
+# 4c. round 2 (2026-11-08): E1a training + evaluation, E4 training, evaluation-only tasks, analysis
+python research/experiments/tools/run_queue.py --queue research/experiments/e1a/queue.json --max-hours 10   # 10 x 300k steps
+python research/experiments/e1_evaluate.py --arm penalty=runs/e1a/penalty/filtered --arm control=runs/e1a/control/filtered \
+    --arm committed=results/checkpoints/filtered --out research/experiments/e1a/eval --jobs 1
+python research/experiments/tools/run_queue.py --queue research/experiments/round2/e4_queue.json --max-hours 10  # 10 x 300k steps
+python research/experiments/round2/run_all_eval.py      # DWA tuning, DWA, E4-diagnostics, E3, E3-dense (resumable)
+python research/experiments/round2/run_eval2.py --tag e4_mean --agent control=runs/e1a/control/filtered \
+    --agent riskfree=runs/e4/riskfree/filtered --agent beta_policy=runs/e4/beta_policy/filtered \
+    --stages expert --seed-base 6500000 --n 500          # and --tag e4_sampled ... --sampled
+python research/experiments/round2/analyze_round2.py    # -> results/summary.json
+python research/experiments/tools/verify_primary.py     # independent re-computation
+python research/experiments/round2/make_figures.py      # -> paper_draft/figures/{e1a_seeds,e3_outcomes,dwa_filter,e4_seeds}.pdf
+# The evaluations can use the committed copies of the checkpoints instead of runs/:
+#   control=research/experiments/e1a/checkpoints/control  riskfree=research/experiments/round2/checkpoints/riskfree ...
+#   (same seed_<k>/best.pt files; their SHA-256 hashes are in the run records)
 
 # 5. manuscript
 cd paper_draft && latexmk -pdf manuscript.tex

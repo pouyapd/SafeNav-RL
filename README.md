@@ -41,7 +41,8 @@ Safety filters are a common way to make learned controllers usable in safety-cri
 **What this repository contributes.** These claims are restricted to what the saved results support; see [`paper_draft/manuscript.pdf`](paper_draft/manuscript.pdf), Section 1.
 - **Elementary properties of the one-step speed filter for a unicycle.** One-step safety does not depend on the turn rate, so heading changes keep the guarantee. Near the keep-out boundary, the headings that allow motion collapse to a half-plane. These follow directly from the model and are not new theory; they explain which remedies can work.
 - **A diagnostic procedure for this setting.** It checks every failure against a geometric feasibility oracle and classifies every timeout as *blocked by the filter* or *stopped by the policy*. It reports uncertainty over both training seeds and test scenarios.
-- **Evidence that two stall mechanisms exist and depend on training.** The evidence comes from ten PPO agents and two classical controllers, and it was replicated in a pre-registered evaluation on 500 previously unused scenarios.
+- **Evidence that two stall mechanisms exist and depend on training.** The evidence comes from ten PPO agents and three classical controllers. It was replicated in pre-registered evaluations on 500 previously unused scenarios and on a corrected scenario generator.
+- **Evidence that removing one mechanism produces the other.** In pre-registered training experiments, the published correction penalty, a Beta policy and a reward without the risk term each removed self-stops, wholly or in part. Filter-blocked stalls took their place, and total deadlock hardly changed.
 
 It does **not** propose a new safety filter or a new training algorithm. The correction penalty tested in E1 is the established method of Pizarro Bejarano et al. (RA-L 2025), used here as a baseline.
 
@@ -53,9 +54,10 @@ It does **not** propose a new safety filter or a new training algorithm. The cor
 | **Completed** | stall taxonomy (filter-blocked vs. self-stop), threshold and window sensitivity | [`research/audit_outputs/`](research/audit_outputs/) |
 | **Completed, pre-registered** | replication on 500 unused scenarios; test-time heading escape; final vs. selected checkpoints | [`research/experiments/lightweight/`](research/experiments/lightweight/README.md) |
 | **Pilot only** | E1 pilot: correction penalty vs. control, 1 seed × 150k steps per arm. **Inconclusive**, supports no claim | [`research/experiments/e1_pilot/`](research/experiments/e1_pilot/README.md) |
-| **Pre-registered, not run** | E1a: correction penalty vs. control, 5 seeds × 300k steps per arm | [`research/experiments/E1_correction_penalty.md`](research/experiments/E1_correction_penalty.md) |
-| **Untested hypothesis** | cause of self-stops: action aliasing under clipped actions vs. the reward (E4) | manuscript, Discussion |
-| **Not done** | corrected scenario generator (E3); published baselines (PPO-Lagrangian, DWA or MPC); any physical robot or 3D simulator | [`paper_draft/minimum_experiments.md`](paper_draft/minimum_experiments.md) |
+| **Completed, pre-registered** (2026-11-08) | **E1a**: correction penalty vs. control, 5 seeds × 300k steps per arm. Primary result **null** | [`research/experiments/e1a/`](research/experiments/e1a/README.md) |
+| **Completed, pre-registered** (2026-11-08) | **E3**: corrected scenario generator, 1,000 scenarios per stage. **E4**: cause of self-stops (Beta policy and risk-free reward, 5 seeds × 300k steps each) | [`research/experiments/round2/`](research/experiments/round2/README.md) |
+| **Completed** (2026-11-08) | DWA-style local planner (tuned on validation scenarios, then frozen); exploratory filter-aware variant | same |
+| **Not done** | PPO-Lagrangian; MPC with a DT-CBF; E1b (penalty at 1M steps); any physical robot or 3D simulator | [`paper_draft/minimum_experiments.md`](paper_draft/minimum_experiments.md) |
 
 ## Key results
 
@@ -70,6 +72,12 @@ It does **not** propose a new safety filter or a new training algorithm. The cor
   - Sampling actions instead of taking the policy mean removes most self-stops, but no filter-blocked stalls.
   - A test-time heading escape reduces filter-blocked stalls modestly and leaves self-stops unchanged.
 - **The findings replicate on unused scenarios.** In a pre-registered evaluation on 500 new expert scenarios, both training effects were confirmed, and self-stops became *more* frequent with longer training ([details](#follow-up-experiments)).
+- **Removing self-stops does not remove deadlock** (pre-registered training experiments, 5 seeds × 300k steps per arm, 0 collisions). Changes were measured against an identical control on 500 unused expert scenarios.
+  - The **correction penalty** (α = 1) cut self-stops by 19.7 points but raised filter-blocked stalls by 14.0. Total deadlock: −5.1 points [−11.6, +1.7], so the pre-registered primary test is **null**.
+  - A **Beta policy** (no clipping of speed samples) removed self-stops completely (−33.8 points [−41.3, −25.2]), but filter-blocked stalls rose by 33.6 points; total deadlock was unchanged.
+  - A **reward without the risk term** removed them almost completely (−31.6 points [−39.4, −22.9]); filter-blocked stalls rose by 26.2 points, and success rose by 6.2 points [1.2, 11.2].
+- **A classical planner shows the same exchange.** A DWA-style planner solves 96 % of the expert test scenarios without the filter. With the filter, its success falls to 48 %, and every one of its timeouts is filter-blocked. Exploratory follow-up: when its own margin exceeds the filter's, it is never blocked again, but it then stalls in its own local minima.
+- **Honest goal distances roughly halve expert success.** On a corrected generator that keeps the requested start-goal distance, success falls to 37–43 % for PPO and to 57 % for the potential field ([details](research/experiments/round2/README.md)). The training contrasts replicate. One earlier null result does not: there, sampling also adds filter-blocked stalls.
 - **Training with the filter did not clearly help.** With the policy mean, the filter-trained agent reached 61.0 % expert success, against 65.0 % for the agent trained without it and given the filter at test time. With sampled actions the figures were 76.4 % [68.2, 84.6] and 70.0 % [66.3, 73.7]. The intervals overlap.
 
 | Expert stage (100 test scenarios, 8–12 obstacles) | success | collision | timeout |
@@ -144,7 +152,7 @@ The next position depends only on the speed, so the filter can slow the robot bu
 |---|---|
 | **RQ1.** Which properties of a one-step CBF speed filter determine where and how a filtered robot can stall? | analysis of the filter (manuscript, Section 4) |
 | **RQ2.** By which mechanisms do learned policies deadlock behind the filter, and does training with the filter change the mechanism? | 5 seeds per variant × 100 test scenarios per stage; every timeout replayed and classified; paired hierarchical bootstrap over seeds and scenarios; replication on 500 unused scenarios |
-| **RQ3.** Which simple remedies remove which mechanism? | sampled actions; test-time heading escape (pre-registered); correction penalty (E1, pilot only) |
+| **RQ3.** Which simple remedies remove which mechanism? | sampled actions; test-time heading escape (pre-registered); correction penalty (E1a), Beta policy and risk-free reward (E4), all pre-registered |
 
 ## Results in detail
 
@@ -212,7 +220,23 @@ The correction penalty of Pizarro Bejarano et al. (RA-L 2025) is implemented as 
 - **Effect on actions.** The penalty reduced how much the filter had to correct the policy (the squared correction was about 5× smaller at the end of training) and the intervention rate (45 % → 29 %).
 - **Effect on deadlocks.** Penalty − control was −1.2 points [−5.2, 2.8]. This interval reflects scenario variation only, not seed variation.
 - **Reading.** By the pre-registered rule, the result is **inconclusive**. With one seed it can neither confirm nor rule out an effect, and it supports no claim in the manuscript.
-- **Next step.** The multi-seed experiment (**E1a**, 5 seeds × 300k steps per arm, primary evaluation on 500 unused scenarios with seed base 5,000,000) is pre-registered but **has not been run** ([plan](research/experiments/E1_correction_penalty.md)).
+- **Next step.** This was the multi-seed experiment E1a, which has now been run (below).
+
+### Round 2: E1a, E3, E4 and a DWA-style planner (pre-registered; 2026-11-08)
+
+The protocols, analysis scripts and decision rules were committed and pushed **before** any of these runs (`d65e576`, `cbbe766`, `3aed35e`). The results, run records, checkpoints and per-episode files are in [`research/experiments/e1a/`](research/experiments/e1a/README.md) and [`research/experiments/round2/`](research/experiments/round2/README.md). The primary contrasts were recomputed by an independent script ([`verify_primary.py`](research/experiments/tools/verify_primary.py)), and all 8 agree.
+
+| Experiment | Status | Primary result | Decision |
+|---|---|---|---|
+| **E1a** correction penalty (α = 1) vs. control, 5 seeds × 300k | completed, confirmatory | deadlock −5.1 points [−11.6, +1.7] (Holm p = 0.28); success +0.5 [−5.8, +6.3] | **H1 not supported.** Secondary: self-stops −19.7, filter-blocked +14.0 |
+| **E3** corrected generator, 1,000 scenarios per stage | completed, confirmatory | expert: 3 of 4 contrasts as before; sampling now *adds* filter-blocked stalls (+7.3 [+2.5, +14.3]) | **H3 partly supported** (expert); supported (intermediate) |
+| **E4** Beta policy / risk-free reward vs. control, 5 seeds × 300k each | completed, confirmatory | policy-side stalls −33.8 [−41.3, −25.2] / −31.6 [−39.4, −22.9] | **both H4a and H4b hold**; in both arms filter-blocked stalls take the place of self-stops |
+| DWA-style planner (frozen after tuning on 100 validation scenarios) | completed, descriptive | expert test success 96 % without the filter, 48 % with it (all timeouts filter-blocked) | – |
+| Filter-aware DWA margin (0.35 / 0.45 m) | completed, **exploratory** (post hoc) | no filter-blocked stalls at all; expert test success 63 % / 55 % | – |
+| E3-dense (15–25 obstacles) | completed, exploratory | same ranking, lower success | – |
+| PPO-Lagrangian, MPC with DT-CBF, E1b | **not executed** | – | reasons in the [round-2 protocol](research/experiments/round2/README.md) |
+
+<sub>Brackets: 95 % paired hierarchical bootstrap intervals (scenarios paired, seeds resampled), so they include seed-level uncertainty. Per-seed rates, seed-level t-intervals, Welch tests and Hedges' g are reported next to them in the experiment READMEs.</sub>
 
 ## Manuscript and literature review
 
@@ -224,26 +248,23 @@ The correction penalty of Pizarro Bejarano et al. (RA-L 2025) is implemented as 
 | [`research/literature_review_gap_analysis.md`](research/literature_review_gap_analysis.md) | targeted (not systematic) literature review: closest work, claim-by-claim novelty assessment, reading depth for each source |
 | [`research/LITERATURE_REVIEW.md`](research/LITERATURE_REVIEW.md) · [`research/REPOSITORY_AUDIT.md`](research/REPOSITORY_AUDIT.md) | earlier review and repository audit |
 
-The manuscript marks every claim that the current evidence does not support with **[EVIDENCE REQUIRED]**. There are eight such markers:
-- the correction-penalty result (E1, in four places);
-- published baselines;
-- a corrected scenario generator (E3);
-- the cause of self-stops (E4);
+The manuscript marks every claim that the current evidence does not support with **[EVIDENCE REQUIRED]**. Six of the eight earlier markers (E1 in four places, E3, E4) were removed on 2026-11-08, once their experiments had run and the primary results had been recomputed independently. Two remain:
+- the missing PPO-Lagrangian and MPC baselines;
 - an archived release with a DOI.
 
 ## Limitations and open evidence
 
 | Verified | Not verified or not done |
 |---|---|
-| 99 tests pass; GitHub Actions runs them on Python 3.10 and 3.12 | any physical robot, Gazebo or sim-to-real transfer |
+| 113 tests pass; GitHub Actions runs them on Python 3.10 and 3.12 | any physical robot, Gazebo or sim-to-real transfer |
 | the committed checkpoints reproduce the published per-episode benchmark results byte for byte | the ROS 2 node in `ros2_integration/` (an untested scaffold; only its scan helpers are tested) |
 | the filter's one-step bound under an adversarial policy, and the gap between samples | safety between samples for continuous-time dynamics, moving obstacles or sensing errors |
-| the stall taxonomy is insensitive to its thresholds and replicates on 500 unused scenarios (pre-registered) | E1a (correction penalty, multi-seed); E3 (corrected generator); E4 (cause of self-stops); classical and safe-RL baselines |
+| the stall taxonomy is insensitive to its thresholds and replicates on 500 unused scenarios (pre-registered) | PPO-Lagrangian and MPC baselines; E1b (1M steps); more than 5 seeds; the new arms (E1a, E4) were trained for 300k steps only |
 | the training pipeline end to end at a tiny scale (test); deterministic training and exact resumption | the 1M-step training runs were not repeated on another machine |
 
 - **Simulation only:** 2D, static circular obstacles, exact kinematics, perfect obstacle knowledge for the filter.
 - **Scale and tuning:** five training seeds per variant and 100 test scenarios per stage; PPO hyperparameters were not tuned for the filtered setting; the potential field was tuned briefly by hand.
-- **Scenario generator:** goal distances are often shorter than the configured stage ranges (see *Environment details*). Three of the 300 test scenarios start inside the goal region, which adds 1–2 points to every success rate in their stages.
+- **Scenario generator:** with the default generator, goal distances are often shorter than the configured stage ranges (see *Environment details*). An opt-in corrected generator (`env.goal_sampling: rejection`) keeps them, and with it expert success roughly halves (E3). Three of the 300 test scenarios start inside the goal region, which adds 1–2 points to every success rate in their stages.
 - **Test-set reuse:** the safety margin and the sampled-action evaluation were chosen after inspecting the test scenarios. The pre-registered evaluation on 500 unused scenarios reduces this problem but uses the same generator.
 - **Literature:** the search behind the novelty claim was targeted, not systematic; some sources were checked only through abstracts or arXiv versions ([details](research/literature_review_gap_analysis.md)).
 
@@ -338,16 +359,16 @@ Training is deterministic for a given seed on CPU, and resumption is exact; test
 ## Tests
 
 ```bash
-pytest            # 99 tests, about one to four minutes depending on the machine
+pytest            # 113 tests, about two to four minutes depending on the machine
 ```
 
 The tests cover:
 - **Simulator:** the unicycle update, termination and reward terms, the range sensor against analytic geometry, and seeding.
 - **Safety filter:** its closed-form limits, its invariance under an adversarial policy, and the gap between samples.
-- **Opt-in options:** the heading escape and the correction penalty, including an end-to-end check that the penalty reaches the training reward.
+- **Opt-in options:** the heading escape and the correction penalty, including an end-to-end check that the penalty reaches the training reward; the Beta policy (bounds, log-probabilities, training and reloading); the corrected goal sampling; and the DWA-style planner.
 - **Training:** GAE against hand-computed values, bit-for-bit reproducibility, and exact resumption.
 - **Evaluation:** metrics and intervals, and the feasibility oracle.
-- **The rest:** config validation, the baselines, the committed checkpoints, the ROS 2 scan conversion, and an end-to-end train → benchmark → plot run.
+- **The rest:** the supplementary seed-level statistics, config validation, the baselines, the committed checkpoints, the ROS 2 scan conversion, and an end-to-end train → benchmark → plot run.
 
 ## Repository map
 
@@ -369,7 +390,8 @@ SafeNav-RL/
 ├── scripts/          # visualize, train/evaluate wrappers, stochastic_eval.py, v01_safety_layer_check.py
 ├── research/
 │   ├── experiments/  # lightweight/ (pre-registered evaluation), e1_pilot/ (E1 pilot),
-│   │                 # E1_correction_penalty.md and e1_evaluate.py (E1a plan, not run)
+│   │                 # E1_correction_penalty.md, e1_evaluate.py and e1a/ (E1a results),
+│   │                 # round2/ (E3, E4, DWA: protocol, runners, results), tools/ (queue, statistics)
 │   ├── scripts/      # stall taxonomy, statistics, audit diagnostics (read stored outputs only)
 │   ├── audit_outputs/
 │   └── *.md          # audit, literature reviews, plans
@@ -400,7 +422,8 @@ An audit of version 0.2.0 ([`research/REPOSITORY_AUDIT.md`](research/REPOSITORY_
 - an opt-in heading escape (`safenav/safety/heading_escape.py`);
 - an opt-in correction penalty (`safety.correction_penalty`, default 0) and per-update logging of the penalty and of the filter's correction;
 - low-resource runners for evaluation and chunked training;
-- the pre-registered follow-up evaluation, the E1 pilot, and the manuscript draft.
+- the pre-registered follow-up evaluation, the E1 pilot, and the manuscript draft;
+- an opt-in Beta policy (`network.distribution: beta`), an opt-in corrected goal sampling (`env.goal_sampling: rejection`), and a DWA-style baseline (`--baseline dwa`). With the default configuration, training gives bit-identical weights to the earlier code.
 
 </details>
 

@@ -17,7 +17,10 @@ Every figure and table below is generated from files in the repository. Status:
 | (candidate) `cbf_speed_limit.png` | speed limit field around obstacles; illustrates Prop. 2 | exists, not yet in the draft | `docs/figures/` | `python -m safenav plot ...` |
 | (candidate) `failure_cases_expert.png` | first six failed expert episodes, filter-trained seed 0 (4 self-stops, 1 filter-blocked, 1 moving) | exists, not yet in the draft | `results/benchmark/` + checkpoints | `python -m safenav plot ...` |
 | (candidate) `safety_margin_sweep.png` | oracle feasibility vs margin | exists | `results/safety_sweep/` | `python -m safenav plot ...` |
-| Fig. R1 | Type I/II rates with the correction penalty (E1) | **required** | E1 outputs | `research/experiments/e1_evaluate.py` (on `exp/e1-pilot`; E1a not run; the one-seed pilot is not a source for this figure) |
+| Fig. 4 `e3_outcomes.pdf` | outcome composition on the corrected generator (E3), intermediate and expert | **new (2026-11-08)** | `research/experiments/round2/results/e3_*/episodes.csv` | `python research/experiments/round2/make_figures.py` |
+| Fig. 5 `dwa_filter.pdf` | DWA-style planner, filter off/on, filter-aware margins | **new (2026-11-08)** | `research/experiments/round2/results/dwa_*` | same |
+| Fig. 6 `e1a_seeds.pdf` (was R1) | per-seed success, Type I, Type II, deadlock: committed, control, penalty | **new (2026-11-08)** | `research/experiments/e1a/eval/episodes.csv` | same |
+| Fig. 7 `e4_seeds.pdf` | per-seed success, Type I, policy-side stalls: control, risk-free, Beta | **new (2026-11-08)** | `research/experiments/round2/results/e4_mean/episodes.csv` | same |
 | Fig. R2 | Type I rates with the heading-level escape ψ (E2) | optional: the numbers are in Table 4 | `research/experiments/lightweight/results/` | a figure could be added; not needed |
 
 ## Tables
@@ -28,6 +31,7 @@ Every figure and table below is generated from files in the repository. Status:
 | Table 2 | expert success / collision / timeout / interventions, 9 conditions | exists (numbers) | `results/benchmark/summary.csv`, `results/stochastic_eval/summary.json` |
 | Table 3 | stall-class counts, intermediate and expert | new | `research/audit_outputs/stall_taxonomy_all.csv` |
 | Table 4 | pre-registered fresh-scenario evaluation: κ = 0 / 0.5, final checkpoints | **new (2026-10-26)** | `research/experiments/lightweight/results/summary.json` |
+| Table 5 | success on the corrected generator (E3), all controllers, mean and sampled | **new (2026-11-08)** | `research/experiments/round2/results/summary.json` (plus `dwa_margin_0p35_e3_expert` for the exploratory row) |
 | Table R | remedies incl. correction penalty | **required** (E1) | E1 |
 
 ## Claim-to-evidence map (manuscript sections)
