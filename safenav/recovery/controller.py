@@ -38,6 +38,8 @@ import numpy as np
 from safenav.recovery.costmap import EuclideanField, GeodesicField
 from safenav.recovery.model import FilteredUnicycleModel
 from safenav.recovery.planner import EscapePlanner
+from safenav.recovery.perception import ExactInfo
+from safenav.recovery.timing import thread_cpu_s
 
 _WALL_DIRS = np.array([[-1.0, 0.0], [1.0, 0.0], [0.0, -1.0], [0.0, 1.0]])
 MODES = ("A", "B", "C")
@@ -61,12 +63,15 @@ class RecoveryConfig:
     go_steps: int = 30           # B
     turn_tol: float = 0.1        # B: radians
     k_turn: float = 2.0          # B: turn-rate gain
+    planner: str = "reference"   # "reference" (round 3) or "fast" (round 4, same plans; fast.py)
 
     def __post_init__(self):
         if self.mode not in MODES:
             raise ValueError(f"mode must be one of {MODES}")
         if self.cost not in ("geodesic", "euclidean"):
             raise ValueError("cost must be geodesic or euclidean")
+        if self.planner not in ("reference", "fast"):
+            raise ValueError("planner must be reference or fast")
 
 
 @dataclass
@@ -87,6 +92,10 @@ class EpisodeStats:
     planner_calls: int = 0
     planner_time_s: float = 0.0
     planner_max_call_s: float = 0.0
+    planner_cpu_s: float = 0.0            # thread CPU time of the planner calls (timing.py; excludes pre-emption)
+    planner_max_call_cpu_s: float = 0.0
+    call_wall_ms: list = field(default_factory=list)   # every planner call, wall clock
+    call_cpu_ms: list = field(default_factory=list)    # every planner call, thread CPU time
     controller_time_s: float = 0.0
     recovery_steps: int = 0
 
@@ -96,26 +105,39 @@ def _wrap(a):
 
 
 class RecoveryController:
-    def __init__(self, policy, cfg: Optional[RecoveryConfig] = None):
+    def __init__(self, policy, cfg: Optional[RecoveryConfig] = None, info=None):
         self.policy = policy
         self.cfg = cfg or RecoveryConfig()
-        self.planner = EscapePlanner(self.cfg.horizon)
+        if self.cfg.planner == "fast":
+            from safenav.recovery.fast import FastEscapePlanner
+            self.planner = FastEscapePlanner(self.cfg.horizon)
+        else:
+            self.planner = EscapePlanner(self.cfg.horizon)
+        # what the recovery controller knows (perception.py); the filter always uses the truth
+        self.info = info if info is not None else ExactInfo()
         self.env = None
 
     # ── episode set-up ──────────────────────────────────────────────────────
-    def bind(self, env):
+    def bind(self, env, seed=None):
         """Call after env.reset(): builds the model and cost fields for this episode's map."""
         self.env = env
         base = env.unwrapped
         self.base = base
+        self.info.bind(env, seed)
         self.model = FilteredUnicycleModel.from_env(env)
         flt = getattr(env, "safety_filter", None)
-        kw = dict(workspace_size=self.model.W, robot_radius=self.model.r, safe_distance=self.model.d,
-                  wall_margin=self.model.wall_margin, goal_radius=self.model.goal_radius)
+        self._kw = dict(workspace_size=self.model.W, robot_radius=self.model.r, safe_distance=self.model.d,
+                        wall_margin=self.model.wall_margin, goal_radius=self.model.goal_radius)
         t0 = time.perf_counter()
-        self.geo = GeodesicField(base.obstacle_map.obstacles, base.goal_pos, **kw)
+        # true cost-to-go: used to *score* activations (and, with exact information, to plan)
+        self.geo = GeodesicField(base.obstacle_map.obstacles, base.goal_pos, **self._kw)
         self.field_setup_s = time.perf_counter() - t0
-        self.plan_field = self.geo if self.cfg.cost == "geodesic" else EuclideanField(base.goal_pos)
+        self.map_rebuilds, self.map_rebuild_s = 0, 0.0
+        if self.info.exact_map:
+            self.plan_geo = self.geo
+        else:
+            self._rebuild_map()
+        self.plan_field = self.plan_geo if self.cfg.cost == "geodesic" else EuclideanField(base.goal_pos)
         self.hist = deque(maxlen=self.cfg.window + 1)
         self.active: Optional[Activation] = None
         self.queue = []            # committed controls (A, C)
@@ -128,30 +150,52 @@ class RecoveryController:
     def reset(self, seed=None):
         self.policy.reset(seed=seed)
 
+    def _rebuild_map(self):
+        """Planner model and cost-to-go from the planner's own map (imperfect-information modes only)."""
+        t0 = time.perf_counter()
+        obstacles = self.info.obstacles()
+        self.model = FilteredUnicycleModel.from_env(self.env, obstacles=obstacles)
+        self.plan_geo = GeodesicField(obstacles, self.base.goal_pos, **self._kw)
+        if getattr(self, "plan_field", None) is not None and self.cfg.cost == "geodesic":
+            self.plan_field = self.plan_geo
+        self.map_rebuilds += 1
+        self.map_rebuild_s += time.perf_counter() - t0
+
     # ── helpers ────────────────────────────────────────────────────────────
     def _state(self):
-        return self.base.robot_pos.copy(), float(self.base.robot_theta)
+        """The controller's estimate of the robot state (exact by default)."""
+        return self.info.state()
+
+    def _true_pos(self):
+        return self.base.robot_pos.copy()
 
     def _cost(self, pos):
+        """True geodesic cost-to-go (scoring only)."""
         return float(self.geo(pos))
 
     def _plan(self, pos, theta, extra=None):
-        t0 = time.perf_counter()
+        t0, c0 = time.perf_counter(), thread_cpu_s()
         p = self.planner.plan(self.model, self.plan_field, pos, theta, extra)
-        dt = time.perf_counter() - t0
+        dt, dc = time.perf_counter() - t0, thread_cpu_s() - c0
+        self.stats.planner_cpu_s += dc
+        self.stats.planner_max_call_cpu_s = max(self.stats.planner_max_call_cpu_s, dc)
+        self.stats.call_wall_ms.append(1000 * dt)
+        self.stats.call_cpu_ms.append(1000 * dc)
         self.stats.planner_calls += 1
         self.stats.planner_time_s += dt
         self.stats.planner_max_call_s = max(self.stats.planner_max_call_s, dt)
         return p
 
     def _start(self, step, pos):
-        self.active = Activation(step, (float(pos[0]), float(pos[1])), self._cost(pos),
+        """pos: the controller's estimate (decisions); the activation is scored at the true position."""
+        tp = self._true_pos()
+        self.active = Activation(step, (float(tp[0]), float(tp[1])), self._cost(tp),
                                  start_plan_cost=float(self.plan_field(np.asarray(pos, dtype=float))))
         self.stats.activations.append(self.active)
 
     def _end(self, step, pos, reason):
         a = self.active
-        a.end_step, a.end_cost, a.reason = step, self._cost(pos), reason
+        a.end_step, a.end_cost, a.reason = step, self._cost(self._true_pos()), reason
         a.success = bool(np.isfinite(a.start_cost) and a.end_cost <= a.start_cost - self.cfg.exit_gain)
         self.active, self.queue, self.since_plan = None, [], 0
         self.hist.clear()
@@ -179,6 +223,8 @@ class RecoveryController:
     def act(self, obs):
         t0 = time.perf_counter()
         step = int(self.base._step_count)
+        if self.info.update(obs):          # the planner's map changed (sensed map only)
+            self._rebuild_map()
         pos, theta = self._state()
         mode = self.cfg.mode
         out = None
@@ -206,7 +252,9 @@ class RecoveryController:
         if signature:
             hold = np.repeat(a[None, :], c.horizon, axis=0)
             p = self._plan(pos, theta, extra=hold[None])
-            hold_cost = self.planner.predicted_cost(self.model, self.plan_field, pos, theta, hold)
+            extra = getattr(p, "extra_costs", None)   # the fast planner already scored the hold candidate
+            hold_cost = (float(extra[0]) if extra is not None
+                         else self.planner.predicted_cost(self.model, self.plan_field, pos, theta, hold))
             if p.index < len(self.planner.library) and p.cost_end <= hold_cost - c.plan_margin:
                 if self.active is None:            # back-to-back commitments form one activation
                     self._start(step, pos)

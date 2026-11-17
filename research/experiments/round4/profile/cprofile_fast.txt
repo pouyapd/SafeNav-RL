@@ -1,0 +1,33 @@
+         920101 function calls in 4.240 seconds
+
+   Ordered by: internal time
+   List reduced from 53 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      300    2.785    0.009    4.143    0.014 C:\Users\user\Desktop\GITHUB\SafeNav-RL\safenav\recovery\fast.py:35(rollout_end)
+    24000    0.355    0.000    0.409    0.000 D:\python3.12\Lib\site-packages\numpy\_core\shape_base.py:378(stack)
+    37800    0.221    0.000    0.231    0.000 D:\python3.12\Lib\site-packages\numpy\_core\_methods.py:96(_clip)
+    12000    0.121    0.000    0.121    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+    37800    0.091    0.000    0.431    0.000 D:\python3.12\Lib\site-packages\numpy\_core\fromnumeric.py:2207(clip)
+    62100    0.079    0.000    0.420    0.000 D:\python3.12\Lib\site-packages\numpy\_core\fromnumeric.py:48(_wrapfunc)
+    24000    0.078    0.000    0.278    0.000 D:\python3.12\Lib\site-packages\numpy\_core\numeric.py:679(flatnonzero)
+    24000    0.043    0.000    0.087    0.000 D:\python3.12\Lib\site-packages\numpy\_core\fromnumeric.py:1879(ravel)
+    37200    0.041    0.000    0.262    0.000 {method 'clip' of 'numpy.ndarray' objects}
+    24000    0.038    0.000    0.038    0.000 {method 'nonzero' of 'numpy.ndarray' objects}
+   120600    0.034    0.000    0.034    0.000 {built-in method numpy.asanyarray}
+    62100    0.027    0.000    0.027    0.000 {built-in method builtins.getattr}
+    24300    0.026    0.000    0.039    0.000 D:\python3.12\Lib\site-packages\numpy\_core\shape_base.py:206(_arrays_for_stack_dispatcher)
+    24000    0.024    0.000    0.024    0.000 {method 'ravel' of 'numpy.ndarray' objects}
+    24000    0.023    0.000    0.101    0.000 D:\python3.12\Lib\site-packages\numpy\_core\fromnumeric.py:1993(nonzero)
+    24000    0.022    0.000    0.061    0.000 D:\python3.12\Lib\site-packages\numpy\_core\shape_base.py:368(_stack_dispatcher)
+    12000    0.020    0.000    0.152    0.000 {method 'min' of 'numpy.ndarray' objects}
+      300    0.020    0.000    4.240    0.014 C:\Users\user\Desktop\GITHUB\SafeNav-RL\safenav\recovery\fast.py:94(plan)
+    60300    0.019    0.000    0.019    0.000 D:\python3.12\Lib\site-packages\numpy\_core\multiarray.py:403(where)
+      600    0.015    0.000    0.055    0.000 C:\Users\user\Desktop\GITHUB\SafeNav-RL\safenav\recovery\costmap.py:69(cell)
+    37800    0.014    0.000    0.014    0.000 D:\python3.12\Lib\site-packages\numpy\_core\fromnumeric.py:2202(_clip_dispatcher)
+    24300    0.013    0.000    0.013    0.000 {built-in method builtins.hasattr}
+    24000    0.013    0.000    0.013    0.000 {built-in method numpy.lib.array_utils.normalize_axis_index}
+    48600    0.012    0.000    0.012    0.000 D:\python3.12\Lib\site-packages\numpy\_core\multiarray.py:197(concatenate)
+    24000    0.012    0.000    0.012    0.000 {built-in method builtins.isinstance}
+
+

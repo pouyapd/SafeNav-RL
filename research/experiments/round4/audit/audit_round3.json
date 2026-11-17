@@ -1,0 +1,733 @@
+{
+ "n_checks": 68,
+ "n_failed": 0,
+ "findings": [],
+ "checks": [
+  {
+   "section": "A",
+   "check": "C-baseline deadlock with_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.5823999999999999,
+     [
+      -0.64201,
+      -0.5244
+     ]
+    ],
+    "stored": [
+     -0.5823999999999999,
+     [
+      -0.6428,
+      -0.5236000000000001
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level C-baseline deadlock with_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     3.081719452953193e-05,
+     3.081719452953193e-05
+    ],
+    "d_z": [
+     -9.358555742507644,
+     -9.358555742507644
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "C-baseline success with_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.46719999999999995,
+     [
+      0.4076,
+      0.5276
+     ]
+    ],
+    "stored": [
+     0.46719999999999995,
+     [
+      0.40640000000000004,
+      0.5256000000000001
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level C-baseline success with_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     8.240687492747796e-05,
+     8.240687492747796e-05
+    ],
+    "d_z": [
+     7.300712995069335,
+     7.300712995069335
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "C-baseline deadlock without_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.5299999999999999,
+     [
+      -0.5744,
+      -0.48559000000000013
+     ]
+    ],
+    "stored": [
+     -0.5299999999999999,
+     [
+      -0.5752,
+      -0.4852
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level C-baseline deadlock without_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     1.5281368639574372e-06,
+     1.5281368639574372e-06
+    ],
+    "d_z": [
+     -19.89054556358125,
+     -19.89054556358125
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "C-baseline success without_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.388,
+     [
+      0.3436,
+      0.4352
+     ]
+    ],
+    "stored": [
+     0.388,
+     [
+      0.344,
+      0.434
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level C-baseline success without_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     1.3672144165280236e-05,
+     1.3672144165280236e-05
+    ],
+    "d_z": [
+     11.481501149740332,
+     11.481501149740332
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "A-baseline deadlock with_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.5087999999999999,
+     [
+      -0.5516,
+      -0.4636
+     ]
+    ],
+    "stored": [
+     -0.5087999999999999,
+     [
+      -0.5508000000000001,
+      -0.4644
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level A-baseline deadlock with_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     5.967671790115683e-06,
+     5.967671790115683e-06
+    ],
+    "d_z": [
+     -14.13769749379966,
+     -14.13769749379966
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "A-baseline success with_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.4868,
+     [
+      0.43400000000000005,
+      0.536
+     ]
+    ],
+    "stored": [
+     0.4868,
+     [
+      0.4335899999999999,
+      0.5351999999999999
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level A-baseline success with_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     2.4151358177769477e-05,
+     2.4151358177769477e-05
+    ],
+    "d_z": [
+     9.95087045596291,
+     9.95087045596291
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "A-baseline deadlock without_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.51,
+     [
+      -0.5548000000000001,
+      -0.4664
+     ]
+    ],
+    "stored": [
+     -0.51,
+     [
+      -0.5559999999999999,
+      -0.4655900000000001
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level A-baseline deadlock without_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     2.540017443707548e-06,
+     2.540017443707548e-06
+    ],
+    "d_z": [
+     -17.51347190345786,
+     -17.51347190345786
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "A-baseline success without_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.4776,
+     [
+      0.43320000000000003,
+      0.5236
+     ]
+    ],
+    "stored": [
+     0.4776,
+     [
+      0.43198999999999993,
+      0.5240099999999999
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level A-baseline success without_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     4.322679561634478e-06,
+     4.322679561634478e-06
+    ],
+    "d_z": [
+     15.328492096841007,
+     15.328492096841007
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "B-baseline deadlock with_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.4896,
+     [
+      -0.5564,
+      -0.4112
+     ]
+    ],
+    "stored": [
+     -0.4896,
+     [
+      -0.5568,
+      -0.4104
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level B-baseline deadlock with_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     0.00019171206324862714,
+     0.00019171206324862714
+    ],
+    "d_z": [
+     -5.892042317350354,
+     -5.892042317350354
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "B-baseline success with_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.3036,
+     [
+      0.26759999999999995,
+      0.34199999999999997
+     ]
+    ],
+    "stored": [
+     0.3036,
+     [
+      0.2672,
+      0.34199999999999997
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level B-baseline success with_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     2.4251785638381278e-05,
+     2.4251785638381278e-05
+    ],
+    "d_z": [
+     9.940483265272857,
+     9.940483265272857
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "B-baseline deadlock without_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     -0.3044,
+     [
+      -0.34640000000000004,
+      -0.26359999999999995
+     ]
+    ],
+    "stored": [
+     -0.3044,
+     [
+      -0.3472,
+      -0.264
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level B-baseline deadlock without_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     2.298798741922007e-05,
+     2.298798741922007e-05
+    ],
+    "d_z": [
+     -10.07527322642936,
+     -10.07527322642936
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "B-baseline success without_filter",
+   "ok": true,
+   "detail": {
+    "recomputed": [
+     0.28200000000000003,
+     [
+      0.24119999999999997,
+      0.3244
+     ]
+    ],
+    "stored": [
+     0.28200000000000003,
+     [
+      0.24160000000000004,
+      0.3244
+     ]
+    ]
+   }
+  },
+  {
+   "section": "B",
+   "check": "seed level B-baseline success without_filter",
+   "ok": true,
+   "detail": {
+    "p": [
+     3.776772303039552e-05,
+     3.776772303039552e-05
+    ],
+    "d_z": [
+     8.890989921783987,
+     8.890989921783987
+    ]
+   }
+  },
+  {
+   "section": "A",
+   "check": "primary Holm: all bootstrap p = 0 -> adjusted 0 (< 1e-4)",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "A",
+   "check": "claim rule with_filter",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "A",
+   "check": "claim rule without_filter",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row filtered baseline",
+   "ok": true,
+   "detail": "$39.2\\pm6.3$ & $58.8\\pm6.1$ & 2.0"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table filtered baseline",
+   "ok": true,
+   "detail": "39.2 % / 58.8 % / 2.0 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table filtered baseline",
+   "ok": true,
+   "detail": "39.2 \u00b1 6.3"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row filtered A",
+   "ok": true,
+   "detail": "$87.9\\pm4.7$ & $7.9\\pm3.9$ & 4.2"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table filtered A",
+   "ok": true,
+   "detail": "87.9 % / 7.9 % / 4.2 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table filtered A",
+   "ok": true,
+   "detail": "87.9 \u00b1 4.7"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row filtered B",
+   "ok": true,
+   "detail": "$69.6\\pm3.4$ & $9.8\\pm3.7$ & 20.6"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table filtered B",
+   "ok": true,
+   "detail": "69.6 % / 9.8 % / 20.6 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table filtered B",
+   "ok": true,
+   "detail": "69.6 \u00b1 3.4"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row filtered C",
+   "ok": true,
+   "detail": "$85.9\\pm1.8$ & $0.6\\pm0.2$ & 13.5"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table filtered C",
+   "ok": true,
+   "detail": "85.9 % / 0.6 % / 13.5 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table filtered C",
+   "ok": true,
+   "detail": "85.9 \u00b1 1.8"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row filtered C_euclid",
+   "ok": true,
+   "detail": "$72.9\\pm1.5$ & $25.3\\pm0.9$ & 1.8"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table filtered C_euclid",
+   "ok": true,
+   "detail": "72.9 % / 25.3 % / 1.8 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table filtered C_euclid",
+   "ok": true,
+   "detail": "72.9 \u00b1 1.5"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row unfiltered baseline",
+   "ok": true,
+   "detail": "$46.4\\pm2.7$ & $53.4\\pm2.7$ & 0.3"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table unfiltered baseline",
+   "ok": true,
+   "detail": "46.4 % / 53.4 % / 0.3 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table unfiltered baseline",
+   "ok": true,
+   "detail": "46.4 \u00b1 2.7"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row unfiltered A",
+   "ok": true,
+   "detail": "$94.1\\pm0.8$ & $2.4\\pm0.7$ & 3.5"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table unfiltered A",
+   "ok": true,
+   "detail": "94.1 % / 2.4 % / 3.5 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table unfiltered A",
+   "ok": true,
+   "detail": "94.1 \u00b1 0.8"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row unfiltered B",
+   "ok": true,
+   "detail": "$74.6\\pm1.0$ & $22.9\\pm1.0$ & 2.5"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table unfiltered B",
+   "ok": true,
+   "detail": "74.6 % / 22.9 % / 2.5 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table unfiltered B",
+   "ok": true,
+   "detail": "74.6 \u00b1 1.0"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row unfiltered C",
+   "ok": true,
+   "detail": "$85.2\\pm1.2$ & $0.4\\pm0.1$ & 14.5"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table unfiltered C",
+   "ok": true,
+   "detail": "85.2 % / 0.4 % / 14.5 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table unfiltered C",
+   "ok": true,
+   "detail": "85.2 \u00b1 1.2"
+  },
+  {
+   "section": "C",
+   "check": "manuscript Table 6 row unfiltered C_euclid",
+   "ok": true,
+   "detail": "$72.2\\pm1.1$ & $27.0\\pm0.9$ & 0.8"
+  },
+  {
+   "section": "C",
+   "check": "README round-3 table unfiltered C_euclid",
+   "ok": true,
+   "detail": "72.2 % / 27.0 % / 0.8 %"
+  },
+  {
+   "section": "C",
+   "check": "PROTOCOL results table unfiltered C_euclid",
+   "ok": true,
+   "detail": "72.2 \u00b1 1.1"
+  },
+  {
+   "section": "D",
+   "check": "25,000 unique rows",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "D",
+   "check": "balanced design",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "D",
+   "check": "seeds 8,500,000-8,500,499 only",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "D",
+   "check": "0 collisions, clearance >= 0.30 m",
+   "ok": true,
+   "detail": 0.3000000012174275
+  },
+  {
+   "section": "D",
+   "check": "baseline rows have no recovery activity",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "section": "D",
+   "check": "run record: recorded invocations cover the end of the run",
+   "ok": true,
+   "detail": {
+    "invocations": 8,
+    "commits": [
+     "914eda8"
+    ],
+    "first_recorded_completed": 2428
+   }
+  },
+  {
+   "section": "G",
+   "check": "B: episodes without activation identical to baseline",
+   "ok": true,
+   "detail": 1965
+  },
+  {
+   "section": "G",
+   "check": "C: episodes without activation identical to baseline",
+   "ok": true,
+   "detail": 1965
+  },
+  {
+   "section": "G",
+   "check": "C_euclid: episodes without activation identical to baseline",
+   "ok": true,
+   "detail": 1965
+  },
+  {
+   "section": "E",
+   "check": "the 776 rows without a run record replay identically (all non-timing columns)",
+   "ok": true,
+   "detail": {
+    "matched": 776,
+    "differing_cells": 0,
+    "combos": [
+     {
+      "agent": "filtered",
+      "train_seed": 0,
+      "method": "A",
+      "min": 8500000,
+      "max": 8500275,
+      "size": 276
+     },
+     {
+      "agent": "filtered",
+      "train_seed": 0,
+      "method": "baseline",
+      "min": 8500000,
+      "max": 8500499,
+      "size": 500
+     }
+    ]
+   }
+  },
+  {
+   "section": "F",
+   "check": "replay sample (unfiltered seeds 1 and 3, scenarios 200-219, 5 methods)",
+   "ok": true,
+   "detail": {
+    "matched": 200,
+    "differing_cells": 0
+   }
+  }
+ ]
+}

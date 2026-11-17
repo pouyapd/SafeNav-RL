@@ -45,8 +45,10 @@ class FilteredUnicycleModel:
         self.v_max, self.omega_max, self.goal_radius = float(v_max), float(omega_max), float(goal_radius)
 
     @classmethod
-    def from_env(cls, env) -> "FilteredUnicycleModel":
-        """Build the model from a (wrapped) environment that uses the default CBF filter parameters."""
+    def from_env(cls, env, obstacles=None) -> "FilteredUnicycleModel":
+        """Build the model from a (wrapped) environment that uses the default CBF filter parameters.
+
+        obstacles: the planner's own map (round 4, imperfect information); default: the true map."""
         base = env.unwrapped
         flt = getattr(env, "safety_filter", None)
         kw = {}
@@ -56,7 +58,8 @@ class FilteredUnicycleModel:
                       omega_max=flt.omega_max)
         else:
             kw = dict(dt=base.dt, robot_radius=base.robot_radius)
-        return cls(base.obstacle_map.obstacles, base.goal_pos, goal_radius=base.goal_radius, **kw)
+        obs = base.obstacle_map.obstacles if obstacles is None else obstacles
+        return cls(obs, base.goal_pos, goal_radius=base.goal_radius, **kw)
 
     def barriers(self, px, py, theta):
         """Barrier values and closing rates, shape (N, M+4), for positions (N,) and headings (N,)."""
