@@ -326,7 +326,7 @@ No **[EVIDENCE REQUIRED]** markers remain.
 
 | Verified | Not verified or not done |
 |---|---|
-| 138 tests pass; GitHub Actions runs them on Python 3.10 and 3.12 | any physical robot, Gazebo or sim-to-real transfer |
+| 166 tests pass; GitHub Actions runs them on Python 3.10 and 3.12 | any physical robot, Gazebo or sim-to-real transfer |
 | the committed checkpoints reproduce the published per-episode benchmark results byte for byte | the ROS 2 node in `ros2_integration/` (an untested scaffold; only its scan helpers are tested) |
 | the filter's one-step bound under an adversarial policy, and the gap between samples | safety between samples for continuous-time dynamics, moving obstacles or sensing errors |
 | the stall taxonomy is insensitive to its thresholds and replicates on 500 unused scenarios (pre-registered) | PPO-Lagrangian and MPC baselines; E1b (1M steps); more than 5 seeds; the new arms (E1a, E4) were trained for 300k steps only |
@@ -429,7 +429,7 @@ Training is deterministic for a given seed on CPU, and resumption is exact; test
 ## Tests
 
 ```bash
-pytest            # 138 tests, about two to four minutes depending on the machine
+pytest            # 166 tests, about two to four minutes depending on the machine
 ```
 
 The tests cover:
